@@ -11,3 +11,4 @@ GoogleService-Info.plist
 vendor/
 *.gem
 .bundle/
+src/services/firebase.ts
