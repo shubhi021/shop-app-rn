@@ -36,7 +36,7 @@ export default function Input({
   style,
   inputStyle,
 }: InputProps) {
-  const {colors, fontSizes, fontWeights} = useTheme();
+  const {colors, fonts, fontSizes, fontWeights} = useTheme();
 
   return (
     <View style={[styles.container, style]}>
@@ -47,7 +47,7 @@ export default function Input({
             {
               color: colors.textSecondary,
               fontSize: fontSizes.sm,
-              fontWeight: fontWeights.medium,
+              fontFamily: fonts.medium,
             },
           ]}>
           {label}
@@ -68,6 +68,7 @@ export default function Input({
             borderColor: error ? colors.error : colors.border,
             backgroundColor: colors.surface,
             fontSize: fontSizes.md,
+            fontFamily: fonts.regular,
           },
           inputStyle,
         ]}
@@ -76,7 +77,7 @@ export default function Input({
         <Text
           style={[
             styles.errorText,
-            {color: colors.error, fontSize: fontSizes.sm},
+            {color: colors.error, fontSize: fontSizes.sm, fontFamily: fonts.regular},
           ]}>
           {error}
         </Text>

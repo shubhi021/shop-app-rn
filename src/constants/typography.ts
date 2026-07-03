@@ -1,8 +1,10 @@
+import { Platform } from 'react-native';
+
 export const Fonts = {
-  regular: 'System',
-  medium: 'System',
-  semiBold: 'System',
-  bold: 'System',
+  regular: Platform.OS === 'ios' ? 'Inter18pt-Regular' : 'Inter_18pt-Regular',
+  medium: Platform.OS === 'ios' ? 'Inter18pt-Medium' : 'Inter_18pt-Medium',
+  semiBold: Platform.OS === 'ios' ? 'Inter18pt-SemiBold' : 'Inter_18pt-SemiBold',
+  bold: Platform.OS === 'ios' ? 'Inter18pt-Bold' : 'Inter_18pt-Bold',
 };
 
 export const FontSizes = {

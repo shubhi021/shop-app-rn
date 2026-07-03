@@ -29,7 +29,7 @@ export default function Button({
   style,
   textStyle,
 }: ButtonProps) {
-  const { colors, fontSizes, fontWeights } = useTheme();
+  const { colors, fonts, fontSizes, fontWeights } = useTheme();
 
   const getButtonStyle = (): ViewStyle => {
     const base: ViewStyle = {
@@ -66,7 +66,7 @@ export default function Button({
   const getTextStyle = () => {
     const base: TextStyle = {
       fontSize: fontSizes.md,
-      fontWeight: fontWeights.semiBold,
+      fontFamily: fonts.semiBold,
     };
 
     if (variant === 'solid') {
