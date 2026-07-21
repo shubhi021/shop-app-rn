@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,119 +8,117 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import { useFormik } from 'formik';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import Toast from 'react-native-toast-message';
-import {auth} from '../../services/firebase';
-import {useTheme} from '../../hooks/useTheme';
-import {useAppDispatch} from '../../store/hooks';
-import {setLoading, setError, setUser} from '../../store/slices/authSlice';
+import { auth } from '../../services/firebase';
+import { useTheme } from '../../hooks/useTheme';
+import { useAppDispatch } from '../../store/hooks';
+import { setLoading, setError, setUser } from '../../store/slices/authSlice';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
-import {validateEmail, validatePassword} from '../../utils/validation';
+import { registerSchema } from '../../utils/validationSchemas';
 
-export default function RegisterScreen({navigation}: any) {
-  const {colors, fontSizes, fontWeights} = useTheme();
+export default function RegisterScreen({ navigation }: any) {
+  const { colors, fontSizes, fontWeights } = useTheme();
   const dispatch = useAppDispatch();
-
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const isMounted = useRef(true);
   const [isLoadingState, setIsLoadingState] = useState(false);
 
-  const handleRegister = async () => {
-    let isValid = true;
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
-    if (!name.trim()) {
-      setNameError('Please enter your name.');
-      isValid = false;
-    } else {
-      setNameError(null);
+  const formatAuthError = (err: any): string => {
+    const code = err?.code || '';
+    if (code.includes('email-already-in-use')) {
+      return 'An account with this email address already exists.';
     }
-
-    if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(null);
+    if (code.includes('invalid-email')) {
+      return 'Please enter a valid email address.';
     }
-
-    if (!validatePassword(password)) {
-      setPasswordError('Password must be at least 6 characters.');
-      isValid = false;
-    } else {
-      setPasswordError(null);
+    if (code.includes('weak-password')) {
+      return 'Password should be at least 6 characters long.';
     }
-
-    if (!isValid) return;
-
-    setIsLoadingState(true);
-    dispatch(setLoading(true));
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email.trim(),
-        password,
-      );
-      
-      // Update firebase user profile displayName
-      await updateProfile(userCredential.user, {
-        displayName: name.trim(),
-      });
-
-      // Synchronize dispatch update
-      dispatch(
-        setUser({
-          uid: userCredential.user.uid,
-          email: userCredential.user.email,
-          displayName: name.trim(),
-          photoURL: userCredential.user.photoURL,
-        }),
-      );
-
-      Toast.show({
-        type: 'success',
-        text1: 'Account Created',
-        text2: 'Welcome to ShopApp!',
-      });
-    } catch (err: any) {
-      const message = err.message || 'Registration failed. Please try again.';
-      dispatch(setError(message));
-      Toast.show({
-        type: 'error',
-        text1: 'Registration Failed',
-        text2: message,
-      });
-    } finally {
-      setIsLoadingState(false);
-      dispatch(setLoading(false));
-    }
+    return err?.message || 'Registration failed. Please try again.';
   };
+
+  const formik = useFormik({
+    initialValues: { name: '', email: '', password: '' },
+    validationSchema: registerSchema,
+    onSubmit: async (values) => {
+      if (isMounted.current) setIsLoadingState(true);
+      dispatch(setLoading(true));
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          values.email.trim(),
+          values.password,
+        );
+
+        if (userCredential.user) {
+          await updateProfile(userCredential.user, {
+            displayName: values.name.trim(),
+          }).catch(e => console.log('Profile update background error:', e));
+
+          dispatch(
+            setUser({
+              uid: userCredential.user.uid,
+              email: userCredential.user.email,
+              displayName: values.name.trim(),
+              photoURL: userCredential.user.photoURL,
+            }),
+          );
+        }
+
+        Toast.show({
+          type: 'success',
+          text1: 'Account Created 🎉',
+          text2: 'Welcome to ShopApp!',
+        });
+      } catch (err: any) {
+        const message = formatAuthError(err);
+        dispatch(setError(message));
+        Toast.show({
+          type: 'error',
+          text1: 'Registration Failed',
+          text2: message,
+        });
+      } finally {
+        if (isMounted.current) {
+          setIsLoadingState(false);
+        }
+        dispatch(setLoading(false));
+      }
+    },
+  });
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={[styles.container, {backgroundColor: colors.background}]}>
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text
             style={[
               styles.logoText,
-              {color: colors.primary, fontSize: 32, fontWeight: fontWeights.bold},
+              { color: colors.primary, fontSize: 32, fontWeight: fontWeights.bold },
             ]}>
             Create Account
           </Text>
           <Text
             style={[
               styles.tagline,
-              {color: colors.textSecondary, fontSize: fontSizes.md},
+              { color: colors.textSecondary, fontSize: fontSizes.md },
             ]}>
-            Sign up to start shopping on ShopApp
+            Sign up to start shopping on ShopApp DE
           </Text>
         </View>
 
@@ -128,18 +126,20 @@ export default function RegisterScreen({navigation}: any) {
           <Input
             label="Full Name"
             placeholder="Enter your name"
-            value={name}
-            onChangeText={setName}
-            error={nameError}
+            value={formik.values.name}
+            onChangeText={formik.handleChange('name')}
+            onBlur={formik.handleBlur('name')}
+            error={formik.touched.name && formik.errors.name ? formik.errors.name : null}
             autoCapitalize="words"
           />
 
           <Input
             label="Email Address"
             placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            error={emailError}
+            value={formik.values.email}
+            onChangeText={formik.handleChange('email')}
+            onBlur={formik.handleBlur('email')}
+            error={formik.touched.email && formik.errors.email ? formik.errors.email : null}
             keyboardType="email-address"
             autoCapitalize="none"
           />
@@ -147,22 +147,23 @@ export default function RegisterScreen({navigation}: any) {
           <Input
             label="Password"
             placeholder="Choose a password"
-            value={password}
-            onChangeText={setPassword}
-            error={passwordError}
+            value={formik.values.password}
+            onChangeText={formik.handleChange('password')}
+            onBlur={formik.handleBlur('password')}
+            error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
             secureTextEntry
             autoCapitalize="none"
           />
 
           <Button
             title="Sign Up"
-            onPress={handleRegister}
+            onPress={() => formik.handleSubmit()}
             loading={isLoadingState}
             style={styles.registerBtn}
           />
 
           <View style={styles.footer}>
-            <Text style={{color: colors.textSecondary, fontSize: fontSizes.md}}>
+            <Text style={{ color: colors.textSecondary, fontSize: fontSizes.md }}>
               Already have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>

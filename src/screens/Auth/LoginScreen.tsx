@@ -8,77 +8,63 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import { useFormik } from 'formik';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import Toast from 'react-native-toast-message';
 import { auth } from '../../services/firebase';
+import { ENV } from '../../config/env';
 import { useTheme } from '../../hooks/useTheme';
 import { useAppDispatch } from '../../store/hooks';
 import { setLoading, setError } from '../../store/slices/authSlice';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
-import { validateEmail, validatePassword } from '../../utils/validation';
+import { loginSchema } from '../../utils/validationSchemas';
 
 export default function LoginScreen({ navigation }: any) {
-  const { colors, fonts, fontSizes, fontWeights } = useTheme();
+  const { colors, fonts, fontSizes } = useTheme();
   const dispatch = useAppDispatch();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [emailError, setEmailError] = useState<string | null>(null);
-  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [isLoadingState, setIsLoadingState] = useState(false);
 
   useEffect(() => {
-    // Configure Google Sign-in
-    GoogleSignin.configure({
-      webClientId: '655029842121-gcr3lg7e0d7cnm7q85pqt04rjsa09tji.apps.googleusercontent.com', // Web Client ID from Google console
-      offlineAccess: true,
-    });
+    try {
+      GoogleSignin.configure({
+        webClientId: ENV.GOOGLE_WEB_CLIENT_ID,
+        offlineAccess: true,
+      });
+    } catch (e) {
+      console.log('GoogleSignin init warning:', e);
+    }
   }, []);
 
-  const handleLogin = async () => {
-    let isValid = true;
+  const formik = useFormik({
+    initialValues: { email: '', password: '' },
+    validationSchema: loginSchema,
+    onSubmit: async (values) => {
+      setIsLoadingState(true);
+      dispatch(setLoading(true));
 
-    if (!validateEmail(email)) {
-      setEmailError('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(null);
-    }
-
-    if (!validatePassword(password)) {
-      setPasswordError('Password must be at least 6 characters.');
-      isValid = false;
-    } else {
-      setPasswordError(null);
-    }
-
-    if (!isValid) return;
-
-    setIsLoadingState(true);
-    dispatch(setLoading(true));
-
-    try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
-      Toast.show({
-        type: 'success',
-        text1: 'Welcome back!',
-        text2: 'You have logged in successfully.',
-      });
-    } catch (err: any) {
-      const message = err.message || 'Failed to sign in. Please check your credentials.';
-      dispatch(setError(message));
-      Toast.show({
-        type: 'error',
-        text1: 'Authentication Error',
-        text2: message,
-      });
-    } finally {
-      setIsLoadingState(false);
-      dispatch(setLoading(false));
-    }
-  };
+      try {
+        await signInWithEmailAndPassword(auth, values.email.trim(), values.password);
+        Toast.show({
+          type: 'success',
+          text1: 'Welcome back!',
+          text2: 'You have logged in successfully.',
+        });
+      } catch (err: any) {
+        const message = err.message || 'Failed to sign in. Please check your credentials.';
+        dispatch(setError(message));
+        Toast.show({
+          type: 'error',
+          text1: 'Authentication Error',
+          text2: message,
+        });
+      } finally {
+        setIsLoadingState(false);
+        dispatch(setLoading(false));
+      }
+    },
+  });
 
   const handleGoogleSignIn = async () => {
     setIsLoadingState(true);
@@ -106,7 +92,6 @@ export default function LoginScreen({ navigation }: any) {
       }
     } catch (err: any) {
       console.error('Google Sign-In Error: ', err);
-      // Fallback UI helper for configuration constraints
       const msg = err.code === 'DEVELOPER_ERROR'
         ? 'Google Sign-in configuration missing. Check Firebase console setup.'
         : err.message || 'Google Sign-In cancelled or failed.';
@@ -124,11 +109,12 @@ export default function LoginScreen({ navigation }: any) {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled">
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text
             style={[
@@ -142,7 +128,7 @@ export default function LoginScreen({ navigation }: any) {
               styles.tagline,
               { color: colors.textSecondary, fontSize: fontSizes.md, fontFamily: fonts.regular },
             ]}>
-            Explore premium products at Zalando style
+            Explore premium products with DACH standards
           </Text>
         </View>
 
@@ -150,9 +136,10 @@ export default function LoginScreen({ navigation }: any) {
           <Input
             label="Email Address"
             placeholder="Enter your email"
-            value={email}
-            onChangeText={setEmail}
-            error={emailError}
+            value={formik.values.email}
+            onChangeText={formik.handleChange('email')}
+            onBlur={formik.handleBlur('email')}
+            error={formik.touched.email && formik.errors.email ? formik.errors.email : null}
             keyboardType="email-address"
             autoCapitalize="none"
           />
@@ -160,16 +147,17 @@ export default function LoginScreen({ navigation }: any) {
           <Input
             label="Password"
             placeholder="Enter your password"
-            value={password}
-            onChangeText={setPassword}
-            error={passwordError}
+            value={formik.values.password}
+            onChangeText={formik.handleChange('password')}
+            onBlur={formik.handleBlur('password')}
+            error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
             secureTextEntry
             autoCapitalize="none"
           />
 
           <Button
             title="Log In"
-            onPress={handleLogin}
+            onPress={() => formik.handleSubmit()}
             loading={isLoadingState}
             style={styles.loginBtn}
           />
