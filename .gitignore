@@ -6,9 +6,9 @@ android/
 *.log
 .DS_Store
 *.keystore
-google-services.json
-GoogleService-Info.plist
+**/google-services.json
+**/GoogleService-Info.plist
 vendor/
 *.gem
 .bundle/
-src/services/firebase.ts
+src/config/env.ts
