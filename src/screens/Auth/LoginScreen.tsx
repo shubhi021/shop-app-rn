@@ -32,7 +32,7 @@ export default function LoginScreen({ navigation }: any) {
   useEffect(() => {
     // Configure Google Sign-in
     GoogleSignin.configure({
-      webClientId: '977247538614-o194957p7s3k6562n9e27301c2g6ea7a.apps.googleusercontent.com', // Web Client ID from Google console
+      webClientId: '655029842121-gcr3lg7e0d7cnm7q85pqt04rjsa09tji.apps.googleusercontent.com', // Web Client ID from Google console
       offlineAccess: true,
     });
   }, []);

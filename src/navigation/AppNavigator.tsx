@@ -13,6 +13,7 @@ import MainTabNavigator from './MainTabNavigator';
 import ProductDetailScreen from '../screens/Product/ProductDetailScreen';
 import CheckoutScreen from '../screens/Checkout/CheckoutScreen';
 import OrderSuccessScreen from '../screens/Checkout/OrderSuccessScreen';
+import { ImpressumScreen } from '../screens/Profile/ImpressumScreen';
 import AuthNavigator from './AuthNavigator';
 import { auth } from '../services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -99,6 +100,11 @@ export default function AppNavigator() {
             <Stack.Screen
               name="OrderSuccess"
               component={OrderSuccessScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Impressum"
+              component={ImpressumScreen}
               options={{ headerShown: false }}
             />
           </Stack.Group>

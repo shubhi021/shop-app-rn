@@ -147,7 +147,7 @@ export default function ProductDetailScreen({ route, navigation }: any) {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
-      
+
       {/* Header Bar */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.headerBtn} onPress={() => navigation.goBack()}>
