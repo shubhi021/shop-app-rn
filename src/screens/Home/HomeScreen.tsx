@@ -13,6 +13,7 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../hooks/useTheme';
 import { useProducts } from '../../hooks/useProducts';
 import ProductCard from '../../components/product/ProductCard';
@@ -108,7 +109,7 @@ export default function HomeScreen({ navigation }: any) {
           onPress={() => navigation.navigate('Search')}
           activeOpacity={0.9}
         >
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={{ marginRight: 8 }} />
           <Text style={[styles.searchTextMock, { color: colors.textTertiary, fontFamily: fonts.regular }]}>
             Search premium items, styles...
           </Text>

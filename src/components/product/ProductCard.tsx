@@ -8,12 +8,14 @@ import {
   Dimensions,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Product } from '../../types';
 import { useTheme } from '../../hooks/useTheme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { addToCart } from '../../store/slices/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../store/slices/wishlistSlice';
-import { formatPrice } from '../../utils/formatPrice';
+import { useTranslation } from '../../hooks/useTranslation';
+import { EcoScoreBadge } from '../EcoScoreBadge';
 
 interface ProductCardProps {
   product: Product;
@@ -24,7 +26,8 @@ const { width } = Dimensions.get('window');
 const COLUMN_WIDTH = (width - 40) / 2; // Spacing adjustment for 2 columns
 
 export default function ProductCard({ product, onPress }: ProductCardProps) {
-  const { colors, fonts, fontSizes, fontWeights } = useTheme();
+  const { colors, fonts } = useTheme();
+  const { formatCurrency } = useTranslation();
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector(state => state.wishlist.items);
   
@@ -77,7 +80,11 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
           onPress={handleWishlistToggle}
           activeOpacity={0.8}
         >
-          <Text style={styles.heartIcon}>{isWishlisted ? '❤️' : '🤍'}</Text>
+          <Ionicons
+            name={isWishlisted ? 'heart' : 'heart-outline'}
+            size={18}
+            color={isWishlisted ? '#EF4444' : colors.textSecondary}
+          />
         </TouchableOpacity>
       </View>
 
@@ -97,9 +104,19 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
           {product.title}
         </Text>
 
+        {/* Eco Score Badge */}
+        <View style={{ marginBottom: 6 }}>
+          <EcoScoreBadge
+            score={product.ecoScore || (product.id % 2 === 0 ? 'A' : 'B')}
+            co2Grams={product.co2Grams || Math.round(product.price * 25)}
+            hasPfand={product.hasPfand || product.category?.includes('beverage')}
+            size="small"
+          />
+        </View>
+
         {/* Rating Row */}
         <View style={styles.ratingRow}>
-          <Text style={styles.star}>⭐</Text>
+          <Ionicons name="star" size={13} color="#F59E0B" style={{ marginRight: 4 }} />
           <Text style={[styles.ratingText, { color: colors.text, fontFamily: fonts.medium }]}>
             {product.rating.rate.toFixed(1)}
           </Text>
@@ -111,7 +128,7 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
         {/* Price & Action Row */}
         <View style={styles.bottomRow}>
           <Text style={[styles.price, { color: colors.primary, fontFamily: fonts.bold }]}>
-            {formatPrice(product.price)}
+            {formatCurrency(product.price)}
           </Text>
           
           <TouchableOpacity
@@ -119,7 +136,7 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
             onPress={handleAddToCart}
             activeOpacity={0.8}
           >
-            <Text style={styles.addCartBtnText}>➕</Text>
+            <Ionicons name="add" size={18} color="#FFFFFF" />
           </TouchableOpacity>
         </View>
       </View>

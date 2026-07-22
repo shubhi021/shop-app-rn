@@ -11,6 +11,8 @@ import {
   StatusBar,
   Dimensions,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../hooks/useTheme';
 import { useDebounce } from '../../hooks/useDebounce';
 import { ProductService } from '../../services/api';
@@ -60,6 +62,26 @@ export default function SearchScreen({ navigation }: any) {
         setResults(items);
       } catch (err: any) {
         setError(err.message || 'Failed to fetch search results.');
+        // Offline Fallback for SearchScreen
+        try {
+          const cachedData = await AsyncStorage.getItem('shop_app_cached_products');
+          if (cachedData) {
+            let cachedItems: Product[] = JSON.parse(cachedData);
+            if (debouncedQuery.trim()) {
+              cachedItems = cachedItems.filter(p =>
+                p.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase())
+              );
+            }
+            if (selectedCategory !== 'All') {
+              cachedItems = cachedItems.filter(
+                p => p.category.toLowerCase() === selectedCategory.toLowerCase()
+              );
+            }
+            setResults(cachedItems);
+          }
+        } catch (cacheErr) {
+          console.error('SearchScreen offline cache error:', cacheErr);
+        }
       } finally {
         setLoading(false);
       }
@@ -80,7 +102,7 @@ export default function SearchScreen({ navigation }: any) {
     if (loading) return null;
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyIcon}>🔍</Text>
+        <Ionicons name="search-outline" size={48} color={colors.textTertiary} style={{ marginBottom: 16 }} />
         <Text style={[styles.emptyTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
           No results found
         </Text>
@@ -107,7 +129,7 @@ export default function SearchScreen({ navigation }: any) {
       {/* Header Search Input */}
       <View style={styles.header}>
         <View style={[styles.searchContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={{ marginRight: 8 }} />
           <TextInput
             placeholder="Search premium items, styles..."
             placeholderTextColor={colors.textTertiary}
@@ -119,7 +141,7 @@ export default function SearchScreen({ navigation }: any) {
           />
           {searchQuery ? (
             <TouchableOpacity onPress={clearSearch} style={styles.clearBtn}>
-              <Text style={{ color: colors.textSecondary, fontSize: 16 }}>✕</Text>
+              <Ionicons name="close-circle" size={18} color={colors.textSecondary} />
             </TouchableOpacity>
           ) : null}
         </View>
