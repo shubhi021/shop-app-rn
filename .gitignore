@@ -1,6 +1,4 @@
 node_modules/
-ios/
-android/
 .env
 .env.local
 *.log
@@ -12,3 +10,20 @@ vendor/
 *.gem
 .bundle/
 src/config/env.ts
+
+# iOS specific ignores
+ios/Pods/
+ios/build/
+ios/DerivedData/
+ios/.xcode.env.local
+ios/*.xcodeproj/xcuserdata/
+ios/*.xcworkspace/xcuserdata/
+ios/*.xcuserstate
+
+# Android specific ignores
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/*.iml
+android/.idea/
