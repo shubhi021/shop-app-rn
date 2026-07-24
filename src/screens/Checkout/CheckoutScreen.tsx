@@ -15,22 +15,30 @@ import { addDoc, collection } from 'firebase/firestore';
 import { useTheme } from '../../hooks/useTheme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { clearCart } from '../../store/slices/cartSlice';
-import { formatPrice } from '../../utils/formatPrice';
 import { db } from '../../services/firebase';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
+import { useTranslation } from '../../hooks/useTranslation';
+import { CO2FootprintCard } from '../../components/CO2FootprintCard';
+import { TaxBreakdownCard } from '../../components/TaxBreakdownCard';
+import { KlarnaPaymentModal } from '../../components/KlarnaPaymentModal';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 export default function CheckoutScreen({ navigation }: any) {
-  const { colors, fonts, fontSizes, fontWeights, isDark } = useTheme();
+  const { colors, fonts, isDark } = useTheme();
+  const { t, formatCurrency, validateGermanPLZ } = useTranslation();
   const dispatch = useAppDispatch();
 
   const reduxUser = useAppSelector((state) => state.auth.user);
-  const { items, total: subtotal } = useAppSelector((state) => state.cart);
+  const { items, total: subtotal, totalPfand, isGoGreenShipping, vat19Amount, vat7Amount } = useAppSelector(
+    (state) => state.cart
+  );
 
-  // Math calculations
-  const shippingFee = subtotal > 50 ? 0 : 5.00;
-  const tax = subtotal * 0.08;
-  const grandTotal = subtotal + shippingFee + tax;
+  // Shipping logic
+  const shippingFee = subtotal > 39 ? 0 : 4.99;
+  const greenOffset = isGoGreenShipping ? 0.99 : 0;
+  const grandTotal = subtotal + shippingFee + greenOffset;
 
   // Form Fields
   const [fullName, setFullName] = useState(reduxUser?.displayName || '');
@@ -46,43 +54,44 @@ export default function CheckoutScreen({ navigation }: any) {
   const [cityError, setCityError] = useState<string | null>(null);
   const [zipCodeError, setZipCodeError] = useState<string | null>(null);
 
-  // Payment Selection
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cod' | 'paypal'>('card');
+  // Payment Selection (DACH Region Focused)
+  const [paymentMethod, setPaymentMethod] = useState<'klarna' | 'sofort' | 'sepa' | 'applePay' | 'card'>('klarna');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [showKlarnaModal, setShowKlarnaModal] = useState(false);
 
   const validateForm = (): boolean => {
     let isValid = true;
 
     if (!fullName.trim()) {
-      setFullNameError('Full name is required.');
+      setFullNameError('Name ist erforderlich.');
       isValid = false;
     } else {
       setFullNameError(null);
     }
 
-    if (!phone.trim() || phone.length < 9) {
-      setPhoneError('Please enter a valid phone number.');
+    if (!phone.trim() || phone.length < 8) {
+      setPhoneError('Gültige Telefonnummer erforderlich.');
       isValid = false;
     } else {
       setPhoneError(null);
     }
 
     if (!address.trim()) {
-      setAddressError('Street address is required.');
+      setAddressError('Straße & Hausnummer erforderlich.');
       isValid = false;
     } else {
       setAddressError(null);
     }
 
     if (!city.trim()) {
-      setCityError('City is required.');
+      setCityError('Stadt erforderlich.');
       isValid = false;
     } else {
       setCityError(null);
     }
 
-    if (!zipCode.trim() || zipCode.length < 4) {
-      setZipCodeError('Please enter a valid postal code.');
+    if (!validateGermanPLZ(zipCode)) {
+      setZipCodeError('Gültige 5-stellige deutsche PLZ eingeben (z.B. 10115).');
       isValid = false;
     } else {
       setZipCodeError(null);
@@ -91,13 +100,12 @@ export default function CheckoutScreen({ navigation }: any) {
     return isValid;
   };
 
-  const handlePlaceOrder = async () => {
-    if (!validateForm()) return;
+  const executeOrder = async () => {
     if (!reduxUser?.uid) {
       Toast.show({
         type: 'error',
-        text1: 'Authentication Error',
-        text2: 'You must be signed in to place an order.',
+        text1: 'Anmeldung Erforderlich',
+        text2: 'Bitte melden Sie sich an, um zu bestellen.',
       });
       return;
     }
@@ -114,6 +122,10 @@ export default function CheckoutScreen({ navigation }: any) {
           image: item.product.image,
         })),
         total: grandTotal,
+        pfandTotal: totalPfand,
+        vat19: vat19Amount,
+        vat7: vat7Amount,
+        isGoGreenShipping,
         shippingAddress: {
           fullName: fullName.trim(),
           phone: phone.trim(),
@@ -133,8 +145,8 @@ export default function CheckoutScreen({ navigation }: any) {
 
       Toast.show({
         type: 'success',
-        text1: 'Order Placed!',
-        text2: 'Thank you for shopping with us.',
+        text1: 'Bestellung Erfolgreich! 🎉',
+        text2: 'Vielen Dank für Ihren Einkauf.',
       });
 
       // Navigate to success screen
@@ -143,11 +155,22 @@ export default function CheckoutScreen({ navigation }: any) {
       console.error('Order placement failed:', err);
       Toast.show({
         type: 'error',
-        text1: 'Order Failed',
-        text2: err.message || 'An error occurred during checkout.',
+        text1: 'Bestellfehler',
+        text2: err.message || 'Ein Fehler ist aufgetreten.',
       });
     } finally {
       setIsPlacingOrder(false);
+      setShowKlarnaModal(false);
+    }
+  };
+
+  const handlePlaceOrderClick = () => {
+    if (!validateForm()) return;
+
+    if (paymentMethod === 'klarna') {
+      setShowKlarnaModal(true);
+    } else {
+      executeOrder();
     }
   };
 
@@ -156,44 +179,47 @@ export default function CheckoutScreen({ navigation }: any) {
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-          {/* Progress / Step indicator */}
-          <Text style={[styles.sectionTitle, { color: colors.text, fontFamily: fonts.bold }]}>
-            Shipping Address
-          </Text>
+          {/* Header */}
+          <View style={styles.headerRow}>
+            <Ionicons name="location-outline" size={20} color={colors.text} />
+            <Text style={[styles.sectionTitle, styles.headerTitle, { color: colors.text, fontFamily: fonts.bold }]}>
+              Lieferadresse
+            </Text>
+          </View>
 
           {/* Form */}
           <View style={styles.formContainer}>
             <Input
-              label="Full Name"
-              placeholder="e.g. John Doe"
+              label="Vollständiger Name"
+              placeholder="z.B. Max Mustermann"
               value={fullName}
               onChangeText={setFullName}
               error={fullNameError}
               autoCapitalize="words"
             />
             <Input
-              label="Phone Number"
-              placeholder="e.g. +1 234 567 890"
+              label="Telefonnummer"
+              placeholder="z.B. +49 170 1234567"
               value={phone}
               onChangeText={setPhone}
               error={phoneError}
               keyboardType="phone-pad"
             />
             <Input
-              label="Street Address"
-              placeholder="e.g. 123 Main St, Apt 4B"
+              label="Straße & Hausnummer"
+              placeholder="z.B. Unter den Linden 10"
               value={address}
               onChangeText={setAddress}
               error={addressError}
             />
             <View style={styles.rowInputs}>
               <Input
-                label="City"
-                placeholder="e.g. New York"
+                label={t('cityPlaceholder')}
+                placeholder="z.B. Berlin"
                 value={city}
                 onChangeText={setCity}
                 error={cityError}
@@ -201,8 +227,8 @@ export default function CheckoutScreen({ navigation }: any) {
                 autoCapitalize="words"
               />
               <Input
-                label="Postal Code"
-                placeholder="10001"
+                label="PLZ (Postleitzahl)"
+                placeholder="10115"
                 value={zipCode}
                 onChangeText={setZipCode}
                 error={zipCodeError}
@@ -212,13 +238,21 @@ export default function CheckoutScreen({ navigation }: any) {
             </View>
           </View>
 
-          {/* Payment Method */}
-          <Text style={[styles.sectionTitle, { color: colors.text, fontFamily: fonts.bold }]}>
-            Payment Method
-          </Text>
+          {/* Eco Sustainability Section */}
+          <CO2FootprintCard />
+
+          {/* Payment Method Selector */}
+          <View style={styles.headerRow}>
+            <Ionicons name="card-outline" size={20} color={colors.text} />
+            <Text style={[styles.sectionTitle, styles.headerTitle, { color: colors.text, fontFamily: fonts.bold }]}>
+              {t('paymentMethod')} (DACH Region)
+            </Text>
+          </View>
+
           <View style={[styles.paymentCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            {/* Klarna */}
             <TouchableOpacity
-              onPress={() => setPaymentMethod('card')}
+              onPress={() => setPaymentMethod('klarna')}
               style={[
                 styles.paymentOption,
                 { borderBottomWidth: 1, borderBottomColor: colors.border },
@@ -226,20 +260,22 @@ export default function CheckoutScreen({ navigation }: any) {
               activeOpacity={0.8}
             >
               <View style={[styles.radioCircle, { borderColor: colors.primary }]}>
-                {paymentMethod === 'card' && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
+                {paymentMethod === 'klarna' && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
               </View>
               <View style={styles.paymentInfo}>
                 <Text style={[styles.paymentLabel, { color: colors.text, fontFamily: fonts.semiBold }]}>
-                  Credit/Debit Card
+                  {t('klarnaPayLater')}
                 </Text>
                 <Text style={[styles.paymentSub, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                  Pay securely with Visa, Mastercard, or Amex
+                  {t('payIn30Days')}
                 </Text>
               </View>
+              <Ionicons name="heart" size={18} color="#FFB3C7" />
             </TouchableOpacity>
 
+            {/* Sofortüberweisung */}
             <TouchableOpacity
-              onPress={() => setPaymentMethod('cod')}
+              onPress={() => setPaymentMethod('sofort')}
               style={[
                 styles.paymentOption,
                 { borderBottomWidth: 1, borderBottomColor: colors.border },
@@ -247,93 +283,130 @@ export default function CheckoutScreen({ navigation }: any) {
               activeOpacity={0.8}
             >
               <View style={[styles.radioCircle, { borderColor: colors.primary }]}>
-                {paymentMethod === 'cod' && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
+                {paymentMethod === 'sofort' && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
               </View>
               <View style={styles.paymentInfo}>
                 <Text style={[styles.paymentLabel, { color: colors.text, fontFamily: fonts.semiBold }]}>
-                  Cash on Delivery (COD)
+                  {t('sofortBank')}
                 </Text>
                 <Text style={[styles.paymentSub, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                  Pay in cash when order is delivered
+                  Direktes Online-Banking mit PIN/TAN
                 </Text>
               </View>
+              <Ionicons name="business-outline" size={18} color={colors.textSecondary} />
             </TouchableOpacity>
 
+            {/* SEPA */}
             <TouchableOpacity
-              onPress={() => setPaymentMethod('paypal')}
+              onPress={() => setPaymentMethod('sepa')}
+              style={[
+                styles.paymentOption,
+                { borderBottomWidth: 1, borderBottomColor: colors.border },
+              ]}
+              activeOpacity={0.8}
+            >
+              <View style={[styles.radioCircle, { borderColor: colors.primary }]}>
+                {paymentMethod === 'sepa' && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
+              </View>
+              <View style={styles.paymentInfo}>
+                <Text style={[styles.paymentLabel, { color: colors.text, fontFamily: fonts.semiBold }]}>
+                  {t('sepaDebit')}
+                </Text>
+                <Text style={[styles.paymentSub, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
+                  Bequem per IBAN abbuchen lassen
+                </Text>
+              </View>
+              <Ionicons name="wallet-outline" size={18} color={colors.textSecondary} />
+            </TouchableOpacity>
+
+            {/* Apple Pay */}
+            <TouchableOpacity
+              onPress={() => setPaymentMethod('applePay')}
               style={styles.paymentOption}
               activeOpacity={0.8}
             >
               <View style={[styles.radioCircle, { borderColor: colors.primary }]}>
-                {paymentMethod === 'paypal' && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
+                {paymentMethod === 'applePay' && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}
               </View>
               <View style={styles.paymentInfo}>
                 <Text style={[styles.paymentLabel, { color: colors.text, fontFamily: fonts.semiBold }]}>
-                  PayPal
+                  {t('applePay')}
                 </Text>
                 <Text style={[styles.paymentSub, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                  Fast and secure checkout using your account
+                  Schnell & sicher mit Touch/Face ID
                 </Text>
               </View>
+              <Ionicons name="logo-apple" size={18} color={colors.text} />
             </TouchableOpacity>
           </View>
 
-          {/* Pricing Recap */}
-          <Text style={[styles.sectionTitle, { color: colors.text, fontFamily: fonts.bold }]}>
-            Summary
-          </Text>
+          {/* Tax Breakdown */}
+          <TaxBreakdownCard />
+
+          {/* Summary Card */}
+          <View style={styles.headerRow}>
+            <Ionicons name="stats-chart-outline" size={18} color={colors.text} />
+            <Text style={[styles.sectionTitle, styles.headerTitle, { color: colors.text, fontFamily: fonts.bold }]}>
+              {t('orderTotal')}
+            </Text>
+          </View>
           <View style={[styles.summaryCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                Items Count
+              <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
+                {t('subtotal')}
               </Text>
-              <Text style={[styles.summaryValue, { color: colors.text, fontFamily: fonts.medium }]}>
-                {items.length} items
+              <Text style={[styles.summaryValue, { color: colors.text }]}>
+                {formatCurrency(subtotal)}
               </Text>
             </View>
+
             <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                Subtotal
+              <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
+                Versandkosten
               </Text>
-              <Text style={[styles.summaryValue, { color: colors.text, fontFamily: fonts.medium }]}>
-                {formatPrice(subtotal)}
-              </Text>
-            </View>
-            <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                Shipping
-              </Text>
-              <Text style={[styles.summaryValue, { color: shippingFee === 0 ? colors.success : colors.text, fontFamily: fonts.medium }]}>
-                {shippingFee === 0 ? 'FREE' : formatPrice(shippingFee)}
+              <Text style={[styles.summaryValue, { color: shippingFee === 0 ? colors.success : colors.text }]}>
+                {shippingFee === 0 ? 'KOSTENLOS' : formatCurrency(shippingFee)}
               </Text>
             </View>
-            <View style={styles.summaryRow}>
-              <Text style={[styles.summaryLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                Tax (8%)
-              </Text>
-              <Text style={[styles.summaryValue, { color: colors.text, fontFamily: fonts.medium }]}>
-                {formatPrice(tax)}
-              </Text>
-            </View>
+
+            {isGoGreenShipping ? (
+              <View style={styles.summaryRow}>
+                <Text style={[styles.summaryLabel, { color: '#059669' }]}>
+                  🌱 DHL GoGreen Klima-Offset
+                </Text>
+                <Text style={[styles.summaryValue, { color: '#059669' }]}>
+                  {formatCurrency(greenOffset)}
+                </Text>
+              </View>
+            ) : null}
+
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
-            <View style={[styles.summaryRow, { marginTop: 8, marginBottom: 0 }]}>
+
+            <View style={[styles.summaryRow, { marginTop: hp(1.0) }]}>
               <Text style={[styles.totalLabel, { color: colors.text, fontFamily: fonts.bold }]}>
-                Total Cost
+                {t('orderTotal')}
               </Text>
               <Text style={[styles.totalValue, { color: colors.primary, fontFamily: fonts.bold }]}>
-                {formatPrice(grandTotal)}
+                {formatCurrency(grandTotal)}
               </Text>
             </View>
           </View>
 
           <Button
-            title="Place Order"
-            onPress={handlePlaceOrder}
+            title={t('placeOrder')}
+            onPress={handlePlaceOrderClick}
             loading={isPlacingOrder}
             style={styles.placeOrderBtn}
           />
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <KlarnaPaymentModal
+        visible={showKlarnaModal}
+        amount={grandTotal}
+        onConfirm={executeOrder}
+        onCancel={() => setShowKlarnaModal(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -343,16 +416,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 40,
+    padding: wp(4.27),
+    paddingBottom: hp(4.9),
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(1.6),
+    marginBottom: hp(1.5),
+    marginTop: hp(1.0),
+  },
+  headerTitle: {
+    marginBottom: 0,
+    marginTop: 0,
   },
   sectionTitle: {
-    fontSize: 16,
-    marginBottom: 12,
-    marginTop: 8,
+    fontSize: fp(4.27),
+    marginBottom: hp(1.5),
+    marginTop: hp(1.0),
   },
   formContainer: {
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   rowInputs: {
     flexDirection: 'row',
@@ -361,79 +445,69 @@ const styles = StyleSheet.create({
   },
   paymentCard: {
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: wp(4.27),
     overflow: 'hidden',
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.03,
-    shadowRadius: 6,
-    elevation: 1,
+    marginBottom: hp(2.0),
   },
   paymentOption: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: wp(4.27),
   },
   radioCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: wp(5.33),
+    height: wp(5.33),
+    borderRadius: wp(2.67),
     borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: wp(3.73),
   },
   radioDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: wp(2.67),
+    height: wp(2.67),
+    borderRadius: wp(1.33),
   },
   paymentInfo: {
     flex: 1,
   },
   paymentLabel: {
-    fontSize: 14,
-    marginBottom: 2,
+    fontSize: fp(3.73),
+    marginBottom: hp(0.25),
   },
   paymentSub: {
-    fontSize: 11,
+    fontSize: fp(2.93),
   },
   summaryCard: {
     borderWidth: 1,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.03,
-    shadowRadius: 6,
-    elevation: 1,
+    borderRadius: wp(4.27),
+    padding: wp(4.27),
+    marginBottom: hp(2.96),
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: hp(1.23),
   },
   summaryLabel: {
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   summaryValue: {
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   divider: {
     height: 1,
     width: '100%',
-    marginVertical: 6,
+    marginVertical: hp(0.74),
   },
   totalLabel: {
-    fontSize: 15,
+    fontSize: fp(4.0),
   },
   totalValue: {
-    fontSize: 16,
+    fontSize: fp(4.27),
   },
   placeOrderBtn: {
-    height: 52,
-    borderRadius: 14,
+    height: hp(6.4),
+    borderRadius: wp(3.73),
   },
 });

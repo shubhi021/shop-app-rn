@@ -6,11 +6,13 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../hooks/useTheme';
 import Button from '../../components/common/Button';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 export default function OrderSuccessScreen({ navigation }: any) {
-  const { colors, fonts, fontSizes, fontWeights, isDark } = useTheme();
+  const { colors, fonts, fontSizes, isDark } = useTheme();
 
   const handleContinueShopping = () => {
     // Reset the navigation stack to prevent going back to checkout screens
@@ -27,7 +29,7 @@ export default function OrderSuccessScreen({ navigation }: any) {
       <View style={styles.content}>
         {/* Success Icon Badge */}
         <View style={[styles.successIconBadge, { backgroundColor: colors.success + '15' }]}>
-          <Text style={styles.successEmoji}>🎉</Text>
+          <Ionicons name="checkmark-circle-outline" size={56} color={colors.success} />
         </View>
 
         {/* Success Text */}
@@ -74,35 +76,32 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
+    justifyContent: 'center',
+    paddingHorizontal: wp(6.4),
   },
   successIconBadge: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    justifyContent: 'center',
+    width: wp(25.6),
+    height: wp(25.6),
+    borderRadius: wp(12.8),
     alignItems: 'center',
-    marginBottom: 28,
-  },
-  successEmoji: {
-    fontSize: 54,
+    justifyContent: 'center',
+    marginBottom: hp(2.96),
   },
   title: {
+    marginBottom: hp(1.0),
     textAlign: 'center',
-    marginBottom: 12,
   },
   subtitle: {
     textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 32,
+    lineHeight: hp(2.7),
+    marginBottom: hp(3.94),
   },
   infoCard: {
     width: '100%',
-    borderRadius: 16,
+    padding: wp(4.27),
+    borderRadius: wp(4.27),
     borderWidth: 1,
-    padding: 16,
   },
   infoRow: {
     flexDirection: 'row',
@@ -110,26 +109,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoLabel: {
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
   infoValue: {
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
   divider: {
     height: 1,
-    width: '100%',
-    marginVertical: 12,
+    marginVertical: hp(1.5),
   },
   infoSubText: {
-    fontSize: 12,
-    textAlign: 'center',
-    lineHeight: 16,
+    fontSize: fp(3.2),
+    lineHeight: hp(1.97),
   },
   footer: {
-    padding: 24,
+    padding: wp(6.4),
   },
   continueBtn: {
-    height: 52,
-    borderRadius: 14,
+    height: hp(6.4),
   },
 });
