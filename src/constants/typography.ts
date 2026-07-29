@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+import { fp } from '../theme/dimensions';
 
 export const Fonts = {
   regular: Platform.OS === 'ios' ? 'Inter18pt-Regular' : 'Inter_18pt-Regular',
@@ -8,13 +9,13 @@ export const Fonts = {
 };
 
 export const FontSizes = {
-  xs: 11,
-  sm: 13,
-  md: 15,
-  lg: 17,
-  xl: 20,
-  xxl: 24,
-  xxxl: 30,
+  xs: fp(2.93),  // 11
+  sm: fp(3.47),  // 13
+  md: fp(4.0),   // 15
+  lg: fp(4.53),  // 17
+  xl: fp(5.33),  // 20
+  xxl: fp(6.4),  // 24
+  xxxl: fp(8.0), // 30
 };
 
 export const FontWeights = {

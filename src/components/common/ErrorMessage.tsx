@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {useTheme} from '../../hooks/useTheme';
 import Button from './Button';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 interface ErrorMessageProps {
   message: string;
@@ -48,16 +49,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: wp(6.4),
   },
   title: {
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   message: {
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: hp(2.46),
   },
   button: {
-    minWidth: 150,
+    minWidth: wp(40.0),
   },
 });

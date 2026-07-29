@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -10,11 +10,13 @@ import {
   KeyboardTypeOptions,
 } from 'react-native';
 import {useTheme} from '../../hooks/useTheme';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 interface InputProps {
   label?: string;
   value: string;
   onChangeText: (text: string) => void;
+  onBlur?: (e: any) => void;
   placeholder?: string;
   error?: string | null;
   secureTextEntry?: boolean;
@@ -28,6 +30,7 @@ export default function Input({
   label,
   value,
   onChangeText,
+  onBlur,
   placeholder,
   error,
   secureTextEntry,
@@ -36,7 +39,22 @@ export default function Input({
   style,
   inputStyle,
 }: InputProps) {
-  const {colors, fonts, fontSizes, fontWeights} = useTheme();
+  const {colors, fonts, fontSizes} = useTheme();
+
+  const combinedInputStyle = useMemo(
+    () => [
+      styles.input,
+      {
+        color: colors.text,
+        borderColor: error ? colors.error : colors.border,
+        backgroundColor: colors.surface,
+        fontSize: fontSizes.md,
+        fontFamily: fonts.regular,
+      },
+      inputStyle,
+    ],
+    [colors.text, colors.error, colors.border, colors.surface, error, fontSizes.md, fonts.regular, inputStyle]
+  );
 
   return (
     <View style={[styles.container, style]}>
@@ -56,22 +74,13 @@ export default function Input({
       <TextInput
         value={value}
         onChangeText={onChangeText}
+        onBlur={onBlur}
         placeholder={placeholder}
         placeholderTextColor={colors.textTertiary}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         autoCapitalize={autoCapitalize}
-        style={[
-          styles.input,
-          {
-            color: colors.text,
-            borderColor: error ? colors.error : colors.border,
-            backgroundColor: colors.surface,
-            fontSize: fontSizes.md,
-            fontFamily: fonts.regular,
-          },
-          inputStyle,
-        ]}
+        style={combinedInputStyle}
       />
       {error ? (
         <Text
@@ -88,20 +97,20 @@ export default function Input({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: hp(2.0),
     width: '100%',
   },
   label: {
-    marginBottom: 6,
+    marginBottom: hp(0.74),
   },
   input: {
-    height: 48,
+    height: hp(5.9),
     borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
+    borderRadius: wp(3.2),
+    paddingHorizontal: wp(4.27),
   },
   errorText: {
-    marginTop: 4,
+    marginTop: hp(0.5),
     fontWeight: '400',
   },
 });

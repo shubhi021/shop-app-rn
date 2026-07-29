@@ -9,6 +9,7 @@ import {
   TextStyle,
 } from 'react-native';
 import { useTheme } from '../../hooks/useTheme';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 interface ButtonProps {
   title: string;
@@ -33,11 +34,11 @@ export default function Button({
 
   const getButtonStyle = (): ViewStyle => {
     const base: ViewStyle = {
-      height: variant === 'text' ? undefined : 48,
-      borderRadius: 12,
+      height: variant === 'text' ? undefined : hp(5.9),
+      borderRadius: wp(3.2),
       justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: variant === 'text' ? 0 : 16,
+      paddingHorizontal: variant === 'text' ? 0 : wp(4.27),
       flexDirection: 'row',
     };
 
