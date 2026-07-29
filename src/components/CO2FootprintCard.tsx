@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { toggleGoGreenShipping } from '../store/slices/cartSlice';
+import { hp, wp, fp } from '../theme/dimensions';
 
 export const CO2FootprintCard: React.FC = () => {
   const { t, formatCurrency } = useTranslation();
@@ -21,7 +22,7 @@ export const CO2FootprintCard: React.FC = () => {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Ionicons name="leaf-outline" size={18} color="#065F46" style={{ marginRight: 6 }} />
+        <Ionicons name="leaf-outline" size={18} color="#065F46" style={styles.headerIcon} />
         <Text style={styles.title}>{t('sustainabilityScore')}</Text>
       </View>
 
@@ -32,7 +33,7 @@ export const CO2FootprintCard: React.FC = () => {
 
       {totalPfand > 0 ? (
         <View style={styles.row}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <View style={styles.rowLabelContainer}>
             <Ionicons name="refresh-circle-outline" size={16} color="#047857" />
             <Text style={styles.label}>{t('pfandDeposit')}:</Text>
           </View>
@@ -44,7 +45,7 @@ export const CO2FootprintCard: React.FC = () => {
 
       <View style={styles.shippingRow}>
         <View style={styles.shippingTextContainer}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <View style={styles.rowLabelContainer}>
             <Ionicons name="cube-outline" size={16} color="#065F46" />
             <Text style={styles.shippingTitle}>{t('greenShipping')}</Text>
           </View>
@@ -66,23 +67,31 @@ export default CO2FootprintCard;
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#F0FDF4',
-    borderRadius: 12,
-    padding: 14,
-    marginVertical: 10,
+    borderRadius: wp(3.2),
+    padding: wp(3.73),
+    marginVertical: hp(1.23),
     borderWidth: 1,
     borderColor: '#BBF7D0',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: hp(1.0),
+  },
+  headerIcon: {
+    marginRight: wp(1.6),
+  },
+  rowLabelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(1.07),
   },
   leafIcon: {
-    fontSize: 16,
-    marginRight: 6,
+    fontSize: fp(4.27),
+    marginRight: wp(1.6),
   },
   title: {
-    fontSize: 14,
+    fontSize: fp(3.73),
     fontWeight: '700',
     color: '#065F46',
   },
@@ -90,26 +99,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 3,
+    marginVertical: hp(0.37),
   },
   label: {
-    fontSize: 13,
+    fontSize: fp(3.47),
     color: '#047857',
   },
   co2Value: {
-    fontSize: 13,
+    fontSize: fp(3.47),
     fontWeight: '700',
     color: '#065F46',
   },
   pfandValue: {
-    fontSize: 13,
+    fontSize: fp(3.47),
     fontWeight: '700',
     color: '#047857',
   },
   divider: {
     height: 1,
     backgroundColor: '#A7F3D0',
-    marginVertical: 8,
+    marginVertical: hp(1.0),
   },
   shippingRow: {
     flexDirection: 'row',
@@ -118,16 +127,16 @@ const styles = StyleSheet.create({
   },
   shippingTextContainer: {
     flex: 1,
-    paddingRight: 10,
+    paddingRight: wp(2.67),
   },
   shippingTitle: {
-    fontSize: 13,
+    fontSize: fp(3.47),
     fontWeight: '600',
     color: '#065F46',
   },
   shippingDesc: {
-    fontSize: 11,
+    fontSize: fp(2.93),
     color: '#047857',
-    marginTop: 1,
+    marginTop: hp(0.12),
   },
 });

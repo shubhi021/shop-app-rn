@@ -17,19 +17,23 @@ import {auth, db} from '../../services/firebase';
 import {useTheme} from '../../hooks/useTheme';
 import {useAppDispatch, useAppSelector} from '../../store/hooks';
 import {setUser} from '../../store/slices/authSlice';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
-import {formatPrice} from '../../utils/formatPrice';
+import { useTranslation } from '../../hooks/useTranslation';
+import { PrivacyModal } from '../../components/PrivacyModal';
+import { hp, wp, fp } from '../../theme/dimensions';
 
-export default function ProfileScreen() {
-  const {colors, fontSizes, fontWeights, themeMode, setThemeMode, isDark} =
-    useTheme();
+export default function ProfileScreen({ navigation }: any) {
+  const { colors, fontSizes, fontWeights, themeMode, setThemeMode, isDark } = useTheme();
+  const { t, language, changeLanguage } = useTranslation();
   const dispatch = useAppDispatch();
   const reduxUser = useAppSelector(state => state.auth.user);
 
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(reduxUser?.displayName || '');
   const [isSaving, setIsSaving] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   const [orders, setOrders] = useState<any[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
@@ -219,15 +223,65 @@ export default function ProfileScreen() {
         )}
       </View>
 
-      {/* Theme Setting */}
+      {/* Theme & Language & Legal Preferences */}
       <View style={[styles.sectionCard, {backgroundColor: colors.card}]}>
         <Text
           style={[
             styles.sectionTitle,
             {color: colors.text, fontWeight: fontWeights.semiBold},
           ]}>
-          Preferences
+          Preferences & Legal (DE/EU)
         </Text>
+
+        {/* Language Switcher */}
+        <View style={styles.settingRow}>
+          <View>
+            <Text
+              style={[
+                styles.settingLabel,
+                {color: colors.text, fontWeight: fontWeights.medium},
+              ]}>
+              Language / Sprache
+            </Text>
+            <Text style={[styles.settingSub, {color: colors.textSecondary}]}>
+              {language === 'de' ? 'Deutsch (DE)' : 'English (EN)'}
+            </Text>
+          </View>
+          <View style={styles.langBtnContainer}>
+            <TouchableOpacity
+              style={[
+                styles.langBtn,
+                language === 'de' && { backgroundColor: colors.primary },
+              ]}
+              onPress={() => changeLanguage('de')}>
+              <Text
+                style={[
+                  styles.langBtnText,
+                  language === 'de' && { color: '#FFF' },
+                ]}>
+                DE
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.langBtn,
+                language === 'en' && { backgroundColor: colors.primary },
+              ]}
+              onPress={() => changeLanguage('en')}>
+              <Text
+                style={[
+                  styles.langBtnText,
+                  language === 'en' && { color: '#FFF' },
+                ]}>
+                EN
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.divider} />
+
+        {/* Dark Mode */}
         <View style={styles.settingRow}>
           <View>
             <Text
@@ -252,15 +306,36 @@ export default function ProfileScreen() {
             thumbColor={Platform.OS === 'android' ? colors.background : ''}
           />
         </View>
-        {themeMode !== 'system' && (
-          <TouchableOpacity
-            style={styles.resetThemeBtn}
-            onPress={() => setThemeMode('system')}>
-            <Text style={{color: colors.primary, fontSize: fontSizes.sm}}>
-              Follow System Theme Settings
+
+        <View style={styles.divider} />
+
+        {/* DSGVO Privacy Settings */}
+        <TouchableOpacity
+          style={styles.legalRow}
+          onPress={() => setShowPrivacyModal(true)}>
+          <View style={styles.legalLabelRow}>
+            <Ionicons name="lock-closed-outline" size={18} color={colors.text} />
+            <Text style={[styles.legalText, { color: colors.text }]}>
+              {t('privacySettings')}
             </Text>
-          </TouchableOpacity>
-        )}
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+        </TouchableOpacity>
+
+        <View style={styles.divider} />
+
+        {/* Impressum Legal Notice */}
+        <TouchableOpacity
+          style={styles.legalRow}
+          onPress={() => navigation.navigate('Impressum')}>
+          <View style={styles.legalLabelRow}>
+            <Ionicons name="document-text-outline" size={18} color={colors.text} />
+            <Text style={[styles.legalText, { color: colors.text }]}>
+              {t('impressum')} (§ 5 DDG)
+            </Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+        </TouchableOpacity>
       </View>
 
       {/* Order History */}
@@ -333,8 +408,13 @@ export default function ProfileScreen() {
       />
 
       <Text style={[styles.appVersion, {color: colors.textTertiary}]}>
-        ShopApp v1.0.0 (Build 1)
+        ShopApp DE Showcase v1.0.0 (DSGVO & Eco Ready)
       </Text>
+
+      <PrivacyModal
+        visible={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+      />
     </ScrollView>
   );
 }
@@ -344,18 +424,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
+    padding: wp(4.27),
+    paddingBottom: hp(3.94),
   },
   screenTitle: {
-    marginBottom: 20,
-    marginTop: 10,
+    marginBottom: hp(2.46),
+    marginTop: hp(1.23),
   },
   profileCard: {
     alignItems: 'center',
-    padding: 24,
-    borderRadius: 16,
-    marginBottom: 16,
+    padding: wp(6.4),
+    borderRadius: wp(4.27),
+    marginBottom: hp(2.0),
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.05,
@@ -363,41 +443,41 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: wp(21.33),
+    height: wp(21.33),
+    borderRadius: wp(10.67),
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: hp(2.0),
   },
   avatarText: {
     color: '#FFFFFF',
-    fontSize: 28,
+    fontSize: fp(7.47),
   },
   userDetails: {
     alignItems: 'center',
     width: '100%',
   },
   userName: {
-    fontSize: 20,
-    marginBottom: 4,
+    fontSize: fp(5.33),
+    marginBottom: hp(0.5),
   },
   userEmail: {
-    fontSize: 14,
-    marginBottom: 16,
+    fontSize: fp(3.73),
+    marginBottom: hp(2.0),
   },
   editButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: wp(4.27),
+    paddingVertical: hp(1.0),
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: wp(2.13),
   },
   editForm: {
     width: '100%',
     alignItems: 'center',
   },
   editInput: {
-    marginBottom: 12,
+    marginBottom: hp(1.5),
   },
   editActions: {
     flexDirection: 'row',
@@ -406,12 +486,12 @@ const styles = StyleSheet.create({
   },
   actionBtn: {
     flex: 0.48,
-    height: 40,
+    height: hp(4.9),
   },
   sectionCard: {
-    padding: 16,
-    borderRadius: 16,
-    marginBottom: 16,
+    padding: wp(4.27),
+    borderRadius: wp(4.27),
+    marginBottom: hp(2.0),
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.05,
@@ -419,8 +499,8 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   sectionTitle: {
-    fontSize: 16,
-    marginBottom: 16,
+    fontSize: fp(4.27),
+    marginBottom: hp(2.0),
   },
   settingRow: {
     flexDirection: 'row',
@@ -428,25 +508,57 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   settingLabel: {
-    fontSize: 15,
+    fontSize: fp(4.0),
   },
   settingSub: {
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: fp(3.2),
+    marginTop: hp(0.25),
   },
-  resetThemeBtn: {
-    marginTop: 12,
-    alignSelf: 'flex-start',
+  langBtnContainer: {
+    flexDirection: 'row',
+    gap: wp(1.6),
+  },
+  langBtn: {
+    paddingHorizontal: wp(2.67),
+    paddingVertical: hp(0.74),
+    borderRadius: wp(1.6),
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+  },
+  langBtnText: {
+    fontSize: fp(3.2),
+    fontWeight: '700',
+    color: '#374151',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#E5E7EB',
+    marginVertical: hp(1.5),
+  },
+  legalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: hp(0.5),
+  },
+  legalLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(2.13),
+  },
+  legalText: {
+    fontSize: fp(3.73),
+    fontWeight: '600',
   },
   spinner: {
-    paddingVertical: 16,
+    paddingVertical: hp(2.0),
   },
   emptyOrders: {
-    paddingVertical: 24,
+    paddingVertical: hp(2.96),
     alignItems: 'center',
   },
   emptyOrdersText: {
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
   ordersList: {
     width: '100%',
@@ -455,26 +567,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: hp(1.5),
   },
   orderId: {
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
   orderDate: {
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: fp(3.2),
+    marginTop: hp(0.25),
   },
   orderTotal: {
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
   signOutBtn: {
-    marginTop: 8,
-    marginBottom: 24,
-    height: 48,
+    marginTop: hp(1.0),
+    marginBottom: hp(2.96),
+    height: hp(5.9),
     borderWidth: 1,
   },
   appVersion: {
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: fp(3.2),
   },
 });

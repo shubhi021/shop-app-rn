@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAppSelector } from '../store/hooks';
+import { hp, wp, fp } from '../theme/dimensions';
 
 export const TaxBreakdownCard: React.FC = () => {
   const { t, formatCurrency } = useTranslation();
@@ -15,7 +16,7 @@ export const TaxBreakdownCard: React.FC = () => {
 
   return (
     <View style={styles.card}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+      <View style={styles.header}>
         <Ionicons name="receipt-outline" size={16} color="#374151" />
         <Text style={styles.title}>{t('vatIncluded')}</Text>
       </View>
@@ -60,52 +61,57 @@ export default TaxBreakdownCard;
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#F9FAFB',
-    borderRadius: 10,
-    padding: 12,
-    marginVertical: 8,
+    borderRadius: wp(2.7),
+    padding: wp(3.2),
+    marginVertical: hp(1.0),
     borderWidth: 1,
     borderColor: '#E5E7EB',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(1.6),
+    marginBottom: hp(1.0),
+  },
   title: {
-    fontSize: 13,
+    fontSize: fp(3.47),
     fontWeight: '700',
     color: '#374151',
-    marginBottom: 8,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginVertical: 2,
+    marginVertical: hp(0.25),
   },
   label: {
-    fontSize: 12,
+    fontSize: fp(3.2),
     color: '#4B5563',
     fontWeight: '600',
   },
   value: {
-    fontSize: 12,
+    fontSize: fp(3.2),
     fontWeight: '600',
     color: '#1F2937',
   },
   sublabel: {
-    fontSize: 11,
+    fontSize: fp(2.93),
     color: '#6B7280',
-    paddingLeft: 6,
+    paddingLeft: wp(1.6),
   },
   subvalue: {
-    fontSize: 11,
+    fontSize: fp(2.93),
     color: '#4B5563',
   },
   divider: {
     height: 0.5,
     backgroundColor: '#D1D5DB',
-    marginVertical: 8,
+    marginVertical: hp(1.0),
   },
   disclaimer: {
-    fontSize: 10,
+    fontSize: fp(2.67),
     color: '#9CA3AF',
     fontStyle: 'italic',
-    lineHeight: 13,
+    lineHeight: hp(1.6),
   },
 });

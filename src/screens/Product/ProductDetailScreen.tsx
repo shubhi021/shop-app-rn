@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   SafeAreaView,
   StatusBar,
-  Dimensions,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useTheme } from '../../hooks/useTheme';
@@ -19,13 +18,16 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { addToCart, updateQuantity } from '../../store/slices/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../store/slices/wishlistSlice';
 import { formatPrice } from '../../utils/formatPrice';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from '../../hooks/useTranslation';
+import { EcoScoreBadge } from '../../components/EcoScoreBadge';
 import Button from '../../components/common/Button';
-
-const { width } = Dimensions.get('window');
+import { hp, wp, fp, SCREEN_WIDTH } from '../../theme/dimensions';
 
 export default function ProductDetailScreen({ route, navigation }: any) {
   const { productId } = route.params;
   const { colors, fonts, fontSizes, fontWeights, isDark } = useTheme();
+  const { t, formatCurrency } = useTranslation();
   const dispatch = useAppDispatch();
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -84,10 +86,6 @@ export default function ProductDetailScreen({ route, navigation }: any) {
 
   const handleAddToCart = () => {
     if (!product) return;
-    // Dispatch add to cart multiple times if quantity > 1, or handle custom quantity injection.
-    // Since cartSlice.addToCart adds 1, we can dispatch it 'quantity' times or modify quantity.
-    // Wait, cartSlice has an action updateQuantity where we can set exact quantity.
-    // Let's first dispatch addToCart, then if quantity > 1, dispatch updateQuantity with total.
     dispatch(addToCart(product));
     if (quantity > 1) {
       dispatch(
@@ -132,7 +130,7 @@ export default function ProductDetailScreen({ route, navigation }: any) {
   if (error || !product) {
     return (
       <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
-        <Text style={styles.errorIcon}>⚠️</Text>
+        <Ionicons name="warning-outline" size={48} color="#F59E0B" style={styles.errorIcon} />
         <Text style={[styles.errorText, { color: colors.text, fontFamily: fonts.bold }]}>
           Error Loading Product
         </Text>
@@ -151,13 +149,17 @@ export default function ProductDetailScreen({ route, navigation }: any) {
       {/* Header Bar */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.headerBtn} onPress={() => navigation.goBack()}>
-          <Text style={[styles.headerIconText, { color: colors.text }]}>←</Text>
+          <Ionicons name="arrow-back" size={22} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text, fontFamily: fonts.bold }]} numberOfLines={1}>
           {product.title}
         </Text>
         <TouchableOpacity style={styles.headerBtn} onPress={handleWishlistToggle}>
-          <Text style={styles.headerIconText}>{isWishlisted ? '❤️' : '🤍'}</Text>
+          <Ionicons
+            name={isWishlisted ? 'heart' : 'heart-outline'}
+            size={22}
+            color={isWishlisted ? '#EF4444' : colors.text}
+          />
         </TouchableOpacity>
       </View>
 
@@ -176,10 +178,23 @@ export default function ProductDetailScreen({ route, navigation }: any) {
             {product.title}
           </Text>
 
+          {/* Eco Score Badge */}
+          <View style={styles.ecoScoreContainer}>
+            <EcoScoreBadge
+              score={product.ecoScore || (product.id % 2 === 0 ? 'A' : 'B')}
+              co2Grams={product.co2Grams || Math.round(product.price * 25)}
+              hasPfand={product.hasPfand || product.category?.includes('beverage')}
+              size="medium"
+            />
+          </View>
+
           {/* Rating Block */}
           <View style={styles.ratingRow}>
             <View style={styles.starsContainer}>
-              <Text style={styles.starText}>⭐ {product.rating.rate.toFixed(1)}</Text>
+              <View style={styles.ratingRowStars}>
+                <Ionicons name="star" size={14} color="#F59E0B" />
+                <Text style={styles.starText}>{product.rating.rate.toFixed(1)}</Text>
+              </View>
             </View>
             <View style={[styles.badgeLine, { backgroundColor: colors.border }]} />
             <Text style={[styles.ratingCount, { color: colors.textSecondary, fontFamily: fonts.medium }]}>
@@ -191,10 +206,10 @@ export default function ProductDetailScreen({ route, navigation }: any) {
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
           <View style={styles.priceRow}>
             <Text style={[styles.price, { color: colors.primary, fontFamily: fonts.bold }]}>
-              {formatPrice(product.price)}
+              {formatCurrency(product.price)}
             </Text>
             <Text style={[styles.taxLabel, { color: colors.textTertiary, fontFamily: fonts.regular }]}>
-              (Inclusive of all taxes)
+              ({t('vatIncluded')})
             </Text>
           </View>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
@@ -259,82 +274,87 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    height: 56,
+    paddingHorizontal: wp(4.27),
+    height: hp(6.9),
   },
   headerBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: wp(10.67),
+    height: wp(10.67),
+    borderRadius: wp(5.33),
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  headerIconText: {
-    fontSize: 22,
   },
   headerTitle: {
     flex: 1,
     textAlign: 'center',
-    fontSize: 16,
-    marginHorizontal: 12,
+    fontSize: fp(4.27),
+    marginHorizontal: wp(3.2),
   },
   scrollContent: {
-    paddingBottom: 40,
+    paddingBottom: hp(4.9),
   },
   imageCard: {
-    width: width - 32,
-    height: 320,
-    marginHorizontal: 16,
+    width: SCREEN_WIDTH - wp(8.53),
+    height: hp(39.4),
+    marginHorizontal: wp(4.27),
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    borderRadius: wp(6.4),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: wp(6.4),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 12,
     elevation: 2,
-    marginTop: 8,
+    marginTop: hp(1.0),
   },
   image: {
     width: '100%',
     height: '100%',
   },
   infoSection: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
+    paddingHorizontal: wp(5.33),
+    paddingTop: hp(2.96),
   },
   category: {
-    fontSize: 12,
+    fontSize: fp(3.2),
     letterSpacing: 1,
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   title: {
-    fontSize: 20,
-    lineHeight: 28,
-    marginBottom: 12,
+    fontSize: fp(5.33),
+    lineHeight: hp(3.45),
+    marginBottom: hp(1.5),
+  },
+  ecoScoreContainer: {
+    marginVertical: hp(1.0),
   },
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: hp(2.0),
   },
   starsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  ratingRowStars: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(1.07),
+  },
   starText: {
-    fontSize: 14,
+    fontSize: fp(3.73),
     fontWeight: 'bold',
   },
   badgeLine: {
     width: 1,
-    height: 14,
-    marginHorizontal: 12,
+    height: hp(1.72),
+    marginHorizontal: wp(3.2),
   },
   ratingCount: {
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   divider: {
     height: 1,
@@ -343,42 +363,42 @@ const styles = StyleSheet.create({
   priceRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    paddingVertical: 16,
+    paddingVertical: hp(2.0),
   },
   price: {
-    fontSize: 24,
+    fontSize: fp(6.4),
   },
   taxLabel: {
-    fontSize: 12,
-    marginLeft: 8,
+    fontSize: fp(3.2),
+    marginLeft: wp(2.13),
   },
   sectionTitle: {
-    fontSize: 16,
-    marginTop: 16,
-    marginBottom: 8,
+    fontSize: fp(4.27),
+    marginTop: hp(2.0),
+    marginBottom: hp(1.0),
   },
   description: {
-    fontSize: 14,
-    lineHeight: 22,
-    marginBottom: 16,
+    fontSize: fp(3.73),
+    lineHeight: hp(2.7),
+    marginBottom: hp(2.0),
   },
   quantityContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 12,
-    marginBottom: 16,
+    marginTop: hp(1.5),
+    marginBottom: hp(2.0),
   },
   quantityLabel: {
-    fontSize: 16,
+    fontSize: fp(4.27),
   },
   quantitySelector: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 12,
-    height: 40,
-    width: 120,
+    borderRadius: wp(3.2),
+    height: hp(4.9),
+    width: wp(32.0),
   },
   qtyBtn: {
     flex: 1,
@@ -387,18 +407,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   qtyBtnText: {
-    fontSize: 18,
+    fontSize: fp(4.8),
     fontWeight: '500',
   },
   qtyText: {
-    width: 40,
+    width: wp(10.67),
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: fp(4.0),
   },
   bottomActions: {
     flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: wp(4.27),
+    paddingVertical: hp(1.5),
     borderTopWidth: 1,
     justifyContent: 'space-between',
   },
@@ -414,29 +434,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    marginTop: 12,
-    fontSize: 14,
+    marginTop: hp(1.5),
+    fontSize: fp(3.73),
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: wp(8.53),
   },
   errorIcon: {
-    fontSize: 48,
-    marginBottom: 16,
+    marginBottom: hp(1.5),
   },
   errorText: {
-    fontSize: 18,
-    marginBottom: 8,
+    fontSize: fp(4.8),
+    marginBottom: hp(1.0),
   },
   errorSub: {
-    fontSize: 14,
+    fontSize: fp(3.73),
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: hp(2.96),
   },
   backBtn: {
-    width: 160,
+    width: wp(42.67),
   },
 });

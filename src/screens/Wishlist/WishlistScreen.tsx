@@ -7,10 +7,12 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../hooks/useTheme';
 import { useAppSelector } from '../../store/hooks';
 import ProductCard from '../../components/product/ProductCard';
 import Button from '../../components/common/Button';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 export default function WishlistScreen({ navigation }: any) {
   const { colors, fonts, fontSizes, fontWeights, isDark } = useTheme();
@@ -19,7 +21,7 @@ export default function WishlistScreen({ navigation }: any) {
   const renderEmptyState = () => {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyIcon}>❤️</Text>
+        <Ionicons name="heart-outline" size={64} color="#EF4444" style={styles.emptyIcon} />
         <Text style={[styles.emptyTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
           Your Wishlist is empty
         </Text>
@@ -66,42 +68,41 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingHorizontal: wp(4.27),
+    paddingTop: hp(1.5),
+    paddingBottom: hp(1.0),
   },
   headerTitle: {
     letterSpacing: 0.2,
   },
   columnWrapper: {
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: wp(4.27),
   },
   listContent: {
     flexGrow: 1,
-    paddingBottom: 24,
+    paddingBottom: hp(2.96),
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
-    marginTop: 64,
+    paddingHorizontal: wp(8.53),
+    marginTop: hp(7.88),
   },
   emptyIcon: {
-    fontSize: 64,
-    marginBottom: 16,
+    marginBottom: hp(2.0),
   },
   emptyTitle: {
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   emptySubtitle: {
     textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 24,
+    lineHeight: hp(2.46),
+    marginBottom: hp(2.96),
   },
   exploreBtn: {
-    width: 180,
-    height: 48,
+    width: wp(48.0),
+    height: hp(5.9),
   },
 });

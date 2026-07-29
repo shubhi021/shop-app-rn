@@ -1,9 +1,11 @@
+import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from '../../hooks/useTranslation';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../types';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Impressum'>;
 
@@ -18,7 +20,7 @@ export const ImpressumScreen: React.FC<Props> = ({ navigation }) => {
           <Ionicons name="arrow-back" size={20} color="#2563EB" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('impressum')}</Text>
-        <View style={{ width: 40 }} />
+        <View style={styles.headerRightPlaceholder} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -73,61 +75,64 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: wp(4.27),
+    paddingVertical: hp(1.5),
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
   backBtn: {
-    paddingVertical: 4,
-    paddingRight: 10,
+    paddingVertical: hp(0.5),
+    paddingRight: wp(2.67),
   },
   backBtnText: {
-    fontSize: 15,
+    fontSize: fp(4.0),
     color: '#2563EB',
     fontWeight: '600',
   },
   headerTitle: {
-    fontSize: 16,
+    fontSize: fp(4.27),
     fontWeight: '700',
     color: '#111827',
   },
+  headerRightPlaceholder: {
+    width: wp(10.67),
+  },
   content: {
-    padding: 16,
+    padding: wp(4.27),
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: fp(3.73),
     fontWeight: '700',
     color: '#374151',
-    marginTop: 14,
-    marginBottom: 6,
+    marginTop: hp(1.72),
+    marginBottom: hp(0.74),
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   box: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    padding: 14,
+    borderRadius: wp(2.67),
+    padding: wp(3.73),
     borderWidth: 1,
     borderColor: '#E5E7EB',
   },
   companyName: {
-    fontSize: 15,
+    fontSize: fp(4.0),
     fontWeight: '700',
     color: '#111827',
-    marginBottom: 6,
+    marginBottom: hp(0.74),
   },
   text: {
-    fontSize: 13,
+    fontSize: fp(3.47),
     color: '#4B5563',
-    lineHeight: 20,
+    lineHeight: hp(2.46),
   },
   boldText: {
-    fontSize: 13,
+    fontSize: fp(3.47),
     fontWeight: '700',
     color: '#111827',
-    marginBottom: 4,
+    marginBottom: hp(0.5),
   },
 });
 

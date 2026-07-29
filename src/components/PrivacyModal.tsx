@@ -12,6 +12,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from '../hooks/useTranslation';
+import { hp, wp, fp } from '../theme/dimensions';
 
 interface PrivacyModalProps {
   visible: boolean;
@@ -91,7 +92,7 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) 
     <Modal visible={visible} animationType="slide" transparent>
       <View style={styles.overlay}>
         <View style={styles.modalContent}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+          <View style={styles.header}>
             <Ionicons name="lock-closed-outline" size={20} color="#111827" />
             <Text style={styles.title}>{t('privacySettings')}</Text>
           </View>
@@ -139,14 +140,14 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) 
             <View style={styles.divider} />
 
             <TouchableOpacity style={styles.actionBtnSecondary} onPress={handleExportData}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <View style={styles.buttonRow}>
                 <Ionicons name="download-outline" size={16} color="#374151" />
                 <Text style={styles.actionBtnSecondaryText}>{t('exportData')}</Text>
               </View>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.actionBtnDanger} onPress={handleDeleteAccount}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <View style={styles.buttonRow}>
                 <Ionicons name="trash-outline" size={16} color="#991B1B" />
                 <Text style={styles.actionBtnDangerText}>{t('deleteAccount')}</Text>
               </View>
@@ -181,78 +182,89 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
+    borderTopLeftRadius: wp(5.3),
+    borderTopRightRadius: wp(5.3),
+    padding: wp(5.3),
     maxHeight: '85%',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(1.6),
+    marginBottom: hp(0.25),
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(1.6),
+  },
   title: {
-    fontSize: 18,
+    fontSize: fp(4.8),
     fontWeight: '700',
     color: '#111827',
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: fp(3.2),
     color: '#6B7280',
-    marginBottom: 16,
+    marginBottom: hp(2.0),
   },
   scroll: {
-    marginBottom: 16,
+    marginBottom: hp(2.0),
   },
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
+    paddingVertical: hp(1.5),
     borderBottomWidth: 1,
     borderBottomColor: '#F3F4F6',
   },
   optionTextContainer: {
     flex: 1,
-    paddingRight: 12,
+    paddingRight: wp(3.2),
   },
   optionTitle: {
-    fontSize: 14,
+    fontSize: fp(3.73),
     fontWeight: '600',
     color: '#1F2937',
   },
   optionDesc: {
-    fontSize: 12,
+    fontSize: fp(3.2),
     color: '#6B7280',
-    marginTop: 2,
+    marginTop: hp(0.25),
   },
   divider: {
     height: 1,
     backgroundColor: '#E5E7EB',
-    marginVertical: 12,
+    marginVertical: hp(1.5),
   },
   actionBtnSecondary: {
-    paddingVertical: 10,
+    paddingVertical: hp(1.23),
     alignItems: 'center',
   },
   actionBtnSecondaryText: {
     color: '#374151',
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   actionBtnDanger: {
-    paddingVertical: 10,
+    paddingVertical: hp(1.23),
     alignItems: 'center',
   },
   actionBtnDangerText: {
     color: '#991B1B',
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   footer: {
     flexDirection: 'row',
-    gap: 10,
-    paddingTop: 10,
+    gap: wp(2.67),
+    paddingTop: hp(1.23),
   },
   saveBtn: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: hp(1.5),
+    borderRadius: wp(2.7),
     borderWidth: 1,
     borderColor: '#D1D5DB',
     alignItems: 'center',
@@ -260,18 +272,18 @@ const styles = StyleSheet.create({
   saveBtnText: {
     color: '#374151',
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   acceptAllBtn: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: hp(1.5),
+    borderRadius: wp(2.7),
     backgroundColor: '#2563EB',
     alignItems: 'center',
   },
   acceptAllBtnText: {
     color: '#FFFFFF',
     fontWeight: '600',
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
 });

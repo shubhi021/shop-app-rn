@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   SafeAreaView,
   StatusBar,
-  Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -18,8 +17,8 @@ import { useDebounce } from '../../hooks/useDebounce';
 import { ProductService } from '../../services/api';
 import { Product } from '../../types';
 import ProductCard from '../../components/product/ProductCard';
+import { hp, wp, fp } from '../../theme/dimensions';
 
-const { width } = Dimensions.get('window');
 const CATEGORIES = ['All', 'Electronics', 'Jewelery', "Men's Clothing", "Women's Clothing"];
 
 export default function SearchScreen({ navigation }: any) {
@@ -102,7 +101,7 @@ export default function SearchScreen({ navigation }: any) {
     if (loading) return null;
     return (
       <View style={styles.emptyContainer}>
-        <Ionicons name="search-outline" size={48} color={colors.textTertiary} style={{ marginBottom: 16 }} />
+        <Ionicons name="search-outline" size={48} color={colors.textTertiary} style={styles.emptyIcon} />
         <Text style={[styles.emptyTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
           No results found
         </Text>
@@ -129,7 +128,7 @@ export default function SearchScreen({ navigation }: any) {
       {/* Header Search Input */}
       <View style={styles.header}>
         <View style={[styles.searchContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={{ marginRight: 8 }} />
+          <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={styles.searchIcon} />
           <TextInput
             placeholder="Search premium items, styles..."
             placeholderTextColor={colors.textTertiary}
@@ -221,21 +220,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingHorizontal: wp(4.27),
+    paddingTop: hp(1.5),
+    paddingBottom: hp(1.0),
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 48,
+    height: hp(5.9),
     borderWidth: 1,
-    borderRadius: 14,
-    paddingHorizontal: 12,
+    borderRadius: wp(3.73),
+    paddingHorizontal: wp(3.2),
   },
   searchIcon: {
-    fontSize: 16,
-    marginRight: 8,
+    marginRight: wp(2.13),
   },
   input: {
     flex: 1,
@@ -243,21 +241,21 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   clearBtn: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: wp(2.13),
+    paddingVertical: hp(0.5),
   },
   categoriesContainer: {
-    marginBottom: 12,
+    marginBottom: hp(1.5),
   },
   categoriesList: {
-    paddingHorizontal: 12,
+    paddingHorizontal: wp(3.2),
   },
   categoryBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 12,
+    paddingHorizontal: wp(4.27),
+    paddingVertical: hp(1.0),
+    borderRadius: wp(3.2),
     borderWidth: 1,
-    marginHorizontal: 4,
+    marginHorizontal: wp(1.07),
   },
   categoryText: {
     textAlign: 'center',
@@ -268,40 +266,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    marginTop: 12,
-    fontSize: 14,
+    marginTop: hp(1.5),
+    fontSize: fp(3.73),
   },
   columnWrapper: {
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: wp(4.27),
   },
   listContent: {
     flexGrow: 1,
-    paddingBottom: 24,
+    paddingBottom: hp(2.96),
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 32,
-    marginTop: 64,
+    paddingHorizontal: wp(8.53),
+    marginTop: hp(7.88),
   },
   emptyIcon: {
-    fontSize: 48,
-    marginBottom: 16,
+    marginBottom: hp(2.0),
   },
   emptyTitle: {
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   emptySubtitle: {
     textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 24,
+    lineHeight: hp(2.46),
+    marginBottom: hp(2.96),
   },
   resetBtn: {
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 12,
+    paddingHorizontal: wp(5.33),
+    paddingVertical: hp(1.5),
+    borderRadius: wp(3.2),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -310,6 +307,6 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
 });

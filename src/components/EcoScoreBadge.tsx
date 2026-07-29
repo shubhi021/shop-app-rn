@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from '../hooks/useTranslation';
+import { hp, wp, fp } from '../theme/dimensions';
 
 interface EcoScoreBadgeProps {
   score?: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -34,7 +35,7 @@ export const EcoScoreBadge: React.FC<EcoScoreBadgeProps> = ({
   return (
     <View style={styles.container}>
       <View style={[styles.badge, { backgroundColor: color }, isSmall && styles.badgeSmall, isLarge && styles.badgeLarge]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+        <View style={styles.row3}>
           <Ionicons name="leaf" size={iconSize} color="#FFFFFF" />
           <Text style={[styles.badgeText, isSmall && styles.textSmall, isLarge && styles.textLarge]}>
             {score}
@@ -48,7 +49,7 @@ export const EcoScoreBadge: React.FC<EcoScoreBadgeProps> = ({
       ) : null}
       {hasPfand && !isSmall ? (
         <View style={styles.pfandPill}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+          <View style={styles.row2}>
             <Ionicons name="refresh-circle-outline" size={12} color="#047857" />
             <Text style={styles.pfandText}>{t('pfandIncluded')}</Text>
           </View>
@@ -64,51 +65,61 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: wp(1.6),
+  },
+  row3: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(0.8),
+  },
+  row2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(0.53),
   },
   badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingHorizontal: wp(2.13),
+    paddingVertical: hp(0.37),
+    borderRadius: wp(1.6),
     justifyContent: 'center',
     alignItems: 'center',
   },
   badgeSmall: {
-    paddingHorizontal: 5,
-    paddingVertical: 1,
-    borderRadius: 4,
+    paddingHorizontal: wp(1.33),
+    paddingVertical: hp(0.12),
+    borderRadius: wp(1.07),
   },
   badgeLarge: {
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 8,
+    paddingHorizontal: wp(3.2),
+    paddingVertical: hp(0.62),
+    borderRadius: wp(2.13),
   },
   badgeText: {
     color: '#FFFFFF',
     fontWeight: '700',
-    fontSize: 12,
+    fontSize: fp(3.2),
   },
   textSmall: {
-    fontSize: 10,
+    fontSize: fp(2.67),
   },
   textLarge: {
-    fontSize: 15,
+    fontSize: fp(4.0),
   },
   co2Text: {
-    fontSize: 11,
+    fontSize: fp(2.93),
     color: '#059669',
     fontWeight: '600',
   },
   pfandPill: {
     backgroundColor: '#ECFDF5',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    paddingHorizontal: wp(1.6),
+    paddingVertical: hp(0.25),
+    borderRadius: wp(1.07),
     borderWidth: 0.5,
     borderColor: '#A7F3D0',
   },
   pfandText: {
-    fontSize: 10,
+    fontSize: fp(2.67),
     color: '#047857',
     fontWeight: '600',
   },

@@ -8,27 +8,31 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
-  Dimensions,
 } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../../hooks/useTheme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { updateQuantity, removeFromCart } from '../../store/slices/cartSlice';
 import { formatPrice } from '../../utils/formatPrice';
+import { useTranslation } from '../../hooks/useTranslation';
+import { EcoScoreBadge } from '../../components/EcoScoreBadge';
+import { CO2FootprintCard } from '../../components/CO2FootprintCard';
+import { TaxBreakdownCard } from '../../components/TaxBreakdownCard';
 import Button from '../../components/common/Button';
-
-const { width } = Dimensions.get('window');
+import { hp, wp, fp } from '../../theme/dimensions';
 
 export default function CartScreen({ navigation }: any) {
   const { colors, fonts, fontSizes, fontWeights, isDark } = useTheme();
+  const { t, formatCurrency } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const { items, total: subtotal } = useAppSelector((state) => state.cart);
+  const { items, total: subtotal, isGoGreenShipping } = useAppSelector((state) => state.cart);
 
-  // Math calculations
-  const shippingFee = subtotal > 50 || subtotal === 0 ? 0 : 5.00;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shippingFee + tax;
-  const freeShippingThreshold = 50;
+  // Shipping & Offset logic
+  const freeShippingThreshold = 39;
+  const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 4.99;
+  const greenOffset = isGoGreenShipping ? 0.99 : 0;
+  const total = subtotal + shippingFee + greenOffset;
   const remainingForFreeShipping = freeShippingThreshold - subtotal;
 
   const handleIncrement = (productId: number, currentQty: number) => {
@@ -60,31 +64,41 @@ export default function CartScreen({ navigation }: any) {
               {product.category.toUpperCase()}
             </Text>
             <TouchableOpacity onPress={() => handleRemove(product.id)} style={styles.removeBtn}>
-              <Text style={styles.removeIcon}>🗑️</Text>
+              <Ionicons name="trash-outline" size={16} color="#EF4444" />
             </TouchableOpacity>
           </View>
           <Text style={[styles.itemTitle, { color: colors.text, fontFamily: fonts.semiBold }]} numberOfLines={1}>
             {product.title}
           </Text>
+
+          <View style={styles.ecoScoreContainer}>
+            <EcoScoreBadge
+              score={product.ecoScore || (product.id % 2 === 0 ? 'A' : 'B')}
+              co2Grams={product.co2Grams || Math.round(product.price * 25)}
+              hasPfand={product.hasPfand || product.category?.includes('beverage')}
+              size="small"
+            />
+          </View>
+
           <Text style={[styles.itemPrice, { color: colors.primary, fontFamily: fonts.bold }]}>
-            {formatPrice(product.price)}
+            {formatCurrency(product.price)}
           </Text>
 
           {/* Quantity Actions */}
           <View style={styles.itemBottomRow}>
             <View style={[styles.qtySelector, { borderColor: colors.border }]}>
               <TouchableOpacity onPress={() => handleDecrement(product.id, quantity)} style={styles.qtyBtn}>
-                <Text style={[styles.qtyBtnText, { color: colors.text }]}>−</Text>
+                <Ionicons name="remove" size={16} color={colors.text} />
               </TouchableOpacity>
               <Text style={[styles.qtyText, { color: colors.text, fontFamily: fonts.bold }]}>
                 {quantity}
               </Text>
               <TouchableOpacity onPress={() => handleIncrement(product.id, quantity)} style={styles.qtyBtn}>
-                <Text style={[styles.qtyBtnText, { color: colors.text }]}>+</Text>
+                <Ionicons name="add" size={16} color={colors.text} />
               </TouchableOpacity>
             </View>
             <Text style={[styles.itemSubtotal, { color: colors.text, fontFamily: fonts.semiBold }]}>
-              Sub: {formatPrice(product.price * quantity)}
+              Summe: {formatCurrency(product.price * quantity)}
             </Text>
           </View>
         </View>
@@ -97,14 +111,14 @@ export default function CartScreen({ navigation }: any) {
       <SafeAreaView style={[styles.container, { backgroundColor: colors.background, justifyContent: 'center' }]}>
         <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyIcon}>🛒</Text>
+          <Ionicons name="cart-outline" size={64} color={colors.primary} style={styles.emptyIcon} />
           <Text style={[styles.emptyTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
-            Your cart is empty
+            {t('emptyCart')}
           </Text>
           <Text style={[styles.emptySubtitle, { color: colors.textSecondary, fontFamily: fonts.regular, fontSize: fontSizes.md }]}>
-            Looks like you haven't added anything to your cart yet. Explore premium products now!
+            Ihr Warenkorb ist leer. Entdecken Sie jetzt nachhaltige Produkte!
           </Text>
-          <Button title="Shop Now" onPress={() => navigation.navigate('Home')} style={styles.shopNowBtn} />
+          <Button title={t('home')} onPress={() => navigation.navigate('Home')} style={styles.shopNowBtn} />
         </View>
       </SafeAreaView>
     );
@@ -117,7 +131,7 @@ export default function CartScreen({ navigation }: any) {
       {/* Title */}
       <View style={styles.header}>
         <Text style={[styles.headerTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
-          Shopping Cart ({items.length})
+          {t('cart')} ({items.length})
         </Text>
       </View>
 
@@ -131,78 +145,74 @@ export default function CartScreen({ navigation }: any) {
           subtotal < freeShippingThreshold ? (
             <View style={[styles.shippingBanner, { backgroundColor: colors.surface, borderColor: colors.border }]}>
               <Text style={[styles.shippingBannerText, { color: colors.text, fontFamily: fonts.medium }]}>
-                Add <Text style={{ color: colors.primary, fontWeight: 'bold' }}>{formatPrice(remainingForFreeShipping)}</Text> more for <Text style={{ fontWeight: 'bold' }}>FREE shipping!</Text>
+                {t('freeShipping')}! Noch <Text style={{ color: colors.primary, fontWeight: 'bold' }}>{formatCurrency(remainingForFreeShipping)}</Text> hinzufügen.
               </Text>
             </View>
           ) : (
             <View style={[styles.shippingBannerSuccess, { backgroundColor: colors.success + '20', borderColor: colors.success }]}>
               <Text style={[styles.shippingBannerText, { color: colors.success, fontFamily: fonts.bold }]}>
-                🎉 You've unlocked FREE shipping!
+                🎉 Kostenloser Versand freigeschaltet!
               </Text>
             </View>
           )
         }
         ListFooterComponent={
           <View style={styles.footerContainer}>
-            {/* Promo code mock */}
-            <View style={[styles.promoRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-              <Text style={[styles.promoLabel, { color: colors.textSecondary, fontFamily: fonts.medium }]}>
-                Have a coupon code?
-              </Text>
-              <TouchableOpacity>
-                <Text style={[styles.promoAction, { color: colors.primary, fontFamily: fonts.bold }]}>
-                  Apply Coupon
-                </Text>
-              </TouchableOpacity>
-            </View>
+            {/* Sustainability Card */}
+            <CO2FootprintCard />
+
+            {/* German MwSt Tax Card */}
+            <TaxBreakdownCard />
 
             {/* Calculations Card */}
             <View style={[styles.summaryCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
               <Text style={[styles.summaryTitle, { color: colors.text, fontFamily: fonts.bold }]}>
-                Order Summary
+                {t('orderTotal')}
               </Text>
               
               <View style={styles.summaryRow}>
-                <Text style={[styles.summaryLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                  Subtotal
+                <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
+                  {t('subtotal')}
                 </Text>
                 <Text style={[styles.summaryValue, { color: colors.text, fontFamily: fonts.semiBold }]}>
-                  {formatPrice(subtotal)}
+                  {formatCurrency(subtotal)}
                 </Text>
               </View>
 
               <View style={styles.summaryRow}>
-                <Text style={[styles.summaryLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                  Shipping
+                <Text style={[styles.summaryLabel, { color: colors.textSecondary }]}>
+                  Versandkosten
                 </Text>
                 <Text style={[styles.summaryValue, { color: shippingFee === 0 ? colors.success : colors.text, fontFamily: fonts.semiBold }]}>
-                  {shippingFee === 0 ? 'FREE' : formatPrice(shippingFee)}
+                  {shippingFee === 0 ? 'KOSTENLOS' : formatCurrency(shippingFee)}
                 </Text>
               </View>
 
-              <View style={styles.summaryRow}>
-                <Text style={[styles.summaryLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>
-                  Estimated Tax (8%)
-                </Text>
-                <Text style={[styles.summaryValue, { color: colors.text, fontFamily: fonts.semiBold }]}>
-                  {formatPrice(tax)}
-                </Text>
-              </View>
+              {isGoGreenShipping ? (
+                <View style={styles.summaryRow}>
+                  <Text style={[styles.summaryLabel, { color: '#059669' }]}>
+                    🌱 DHL GoGreen
+                  </Text>
+                  <Text style={[styles.summaryValue, { color: '#059669', fontFamily: fonts.semiBold }]}>
+                    {formatCurrency(greenOffset)}
+                  </Text>
+                </View>
+              ) : null}
 
               <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-              <View style={[styles.summaryRow, { marginTop: 8 }]}>
+              <View style={styles.summaryTotalRow}>
                 <Text style={[styles.totalLabel, { color: colors.text, fontFamily: fonts.bold }]}>
-                  Order Total
+                  {t('orderTotal')}
                 </Text>
                 <Text style={[styles.totalValue, { color: colors.primary, fontFamily: fonts.bold }]}>
-                  {formatPrice(total)}
+                  {formatCurrency(total)}
                 </Text>
               </View>
             </View>
 
             <Button
-              title="Proceed to Checkout"
+              title={t('checkout')}
               onPress={() => navigation.navigate('Checkout')}
               style={styles.checkoutBtn}
             />
@@ -218,44 +228,44 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
+    paddingHorizontal: wp(4.27),
+    paddingTop: hp(1.5),
+    paddingBottom: hp(1.0),
   },
   headerTitle: {
     letterSpacing: 0.2,
   },
   listContent: {
-    paddingBottom: 32,
+    paddingBottom: hp(3.94),
   },
   shippingBanner: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 16,
-    padding: 12,
-    borderRadius: 12,
+    marginHorizontal: wp(4.27),
+    marginTop: hp(1.0),
+    marginBottom: hp(2.0),
+    padding: wp(3.2),
+    borderRadius: wp(3.2),
     borderWidth: 1,
     alignItems: 'center',
   },
   shippingBannerSuccess: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 16,
-    padding: 12,
-    borderRadius: 12,
+    marginHorizontal: wp(4.27),
+    marginTop: hp(1.0),
+    marginBottom: hp(2.0),
+    padding: wp(3.2),
+    borderRadius: wp(3.2),
     borderWidth: 1,
     alignItems: 'center',
   },
   shippingBannerText: {
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   itemRow: {
     flexDirection: 'row',
-    marginHorizontal: 16,
-    marginBottom: 16,
-    borderRadius: 16,
+    marginHorizontal: wp(4.27),
+    marginBottom: hp(2.0),
+    borderRadius: wp(4.27),
     borderWidth: 1,
-    padding: 12,
+    padding: wp(3.2),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.03,
@@ -263,13 +273,13 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   itemImageCard: {
-    width: 90,
-    height: 100,
+    width: wp(24.0),
+    height: hp(12.31),
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    borderRadius: wp(3.2),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 8,
+    padding: wp(2.13),
   },
   itemImage: {
     width: '100%',
@@ -277,7 +287,7 @@ const styles = StyleSheet.create({
   },
   itemInfo: {
     flex: 1,
-    marginLeft: 16,
+    marginLeft: wp(4.27),
     justifyContent: 'space-between',
   },
   itemHeaderRow: {
@@ -286,23 +296,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemCategory: {
-    fontSize: 9,
+    fontSize: fp(2.4),
     letterSpacing: 0.5,
     flex: 1,
   },
   removeBtn: {
-    padding: 4,
-  },
-  removeIcon: {
-    fontSize: 14,
+    padding: wp(1.07),
   },
   itemTitle: {
-    fontSize: 14,
-    marginBottom: 4,
+    fontSize: fp(3.73),
+    marginBottom: hp(0.5),
+  },
+  ecoScoreContainer: {
+    marginVertical: hp(0.5),
   },
   itemPrice: {
-    fontSize: 15,
-    marginBottom: 8,
+    fontSize: fp(4.0),
+    marginBottom: hp(1.0),
   },
   itemBottomRow: {
     flexDirection: 'row',
@@ -313,9 +323,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderRadius: 8,
-    height: 32,
-    width: 100,
+    borderRadius: wp(2.13),
+    height: hp(3.94),
+    width: wp(26.67),
   },
   qtyBtn: {
     flex: 1,
@@ -323,43 +333,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  qtyBtnText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
   qtyText: {
-    width: 32,
+    width: wp(8.53),
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   itemSubtotal: {
-    fontSize: 13,
+    fontSize: fp(3.47),
   },
   footerContainer: {
-    paddingHorizontal: 16,
-    marginTop: 8,
-  },
-  promoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    height: 48,
-    marginBottom: 16,
-  },
-  promoLabel: {
-    fontSize: 13,
-  },
-  promoAction: {
-    fontSize: 13,
+    paddingHorizontal: wp(4.27),
+    marginTop: hp(1.0),
   },
   summaryCard: {
     borderWidth: 1,
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 20,
+    borderRadius: wp(4.27),
+    padding: wp(4.27),
+    marginBottom: hp(2.46),
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.03,
@@ -367,54 +357,58 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   summaryTitle: {
-    fontSize: 16,
-    marginBottom: 16,
+    fontSize: fp(4.27),
+    marginBottom: hp(2.0),
   },
   summaryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: hp(1.5),
   },
   summaryLabel: {
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
   summaryValue: {
-    fontSize: 14,
+    fontSize: fp(3.73),
   },
   divider: {
     height: 1,
     width: '100%',
-    marginVertical: 4,
+    marginVertical: hp(0.5),
+  },
+  summaryTotalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: hp(1.0),
   },
   totalLabel: {
-    fontSize: 16,
+    fontSize: fp(4.27),
   },
   totalValue: {
-    fontSize: 18,
+    fontSize: fp(4.8),
   },
   checkoutBtn: {
-    height: 52,
-    borderRadius: 14,
-    marginBottom: 16,
+    height: hp(6.4),
+    borderRadius: wp(3.73),
+    marginBottom: hp(2.0),
   },
   emptyContainer: {
     alignItems: 'center',
-    paddingHorizontal: 32,
+    paddingHorizontal: wp(8.53),
   },
   emptyIcon: {
-    fontSize: 64,
-    marginBottom: 16,
+    marginBottom: hp(2.0),
   },
   emptyTitle: {
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   emptySubtitle: {
     textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 24,
+    lineHeight: hp(2.46),
+    marginBottom: hp(2.96),
   },
   shopNowBtn: {
-    width: 180,
-    height: 48,
+    width: wp(48.0),
+    height: hp(5.9),
   },
 });
