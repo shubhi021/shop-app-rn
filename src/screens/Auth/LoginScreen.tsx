@@ -20,6 +20,7 @@ import { setLoading, setError } from '../../store/slices/authSlice';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { loginSchema } from '../../utils/validationSchemas';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 export default function LoginScreen({ navigation }: any) {
   const { colors, fonts, fontSizes } = useTheme();
@@ -119,7 +120,7 @@ export default function LoginScreen({ navigation }: any) {
           <Text
             style={[
               styles.logoText,
-              { color: colors.primary, fontSize: 32, fontFamily: fonts.bold },
+              { color: colors.primary, fontSize: fp(8.53), fontFamily: fonts.bold },
             ]}>
             ShopApp
           </Text>
@@ -204,15 +205,15 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: wp(6.4),
     justifyContent: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: hp(4.9),
   },
   logoText: {
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   tagline: {
     textAlign: 'center',
@@ -221,28 +222,28 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   loginBtn: {
-    marginTop: 8,
-    marginBottom: 20,
+    marginTop: hp(1.0),
+    marginBottom: hp(2.46),
   },
   dividerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: hp(2.46),
   },
   dividerLine: {
     flex: 1,
     height: 1,
   },
   dividerText: {
-    marginHorizontal: 16,
+    marginHorizontal: wp(4.27),
   },
   googleBtn: {
-    marginBottom: 24,
+    marginBottom: hp(2.96),
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: hp(1.0),
   },
 });

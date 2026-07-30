@@ -9,6 +9,11 @@ export interface Product {
     rate: number;
     count: number;
   };
+  co2Grams?: number; // CO2 footprint in grams
+  ecoScore?: 'A' | 'B' | 'C' | 'D' | 'E'; // Sustainability score
+  hasPfand?: boolean; // Bottle deposit
+  pfandAmount?: number; // Pfand amount in EUR (e.g. 0.25)
+  vatRate?: number; // 0.19 or 0.07 (German MwSt)
 }
 
 export interface CartItem {
@@ -34,6 +39,8 @@ export type RootStackParamList = {
   ProductDetail: { productId: number };
   Checkout: undefined;
   OrderSuccess: undefined;
+  Impressum: undefined;
+  PrivacySettings: undefined;
 };
 
 export type MainTabParamList = {

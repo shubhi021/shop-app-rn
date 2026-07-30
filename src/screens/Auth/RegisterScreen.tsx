@@ -18,6 +18,7 @@ import { setLoading, setError, setUser } from '../../store/slices/authSlice';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
 import { registerSchema } from '../../utils/validationSchemas';
+import { hp, wp, fp } from '../../theme/dimensions';
 
 export default function RegisterScreen({ navigation }: any) {
   const { colors, fontSizes, fontWeights } = useTheme();
@@ -109,7 +110,7 @@ export default function RegisterScreen({ navigation }: any) {
           <Text
             style={[
               styles.logoText,
-              { color: colors.primary, fontSize: 32, fontWeight: fontWeights.bold },
+              { color: colors.primary, fontSize: fp(8.53), fontWeight: fontWeights.bold },
             ]}>
             Create Account
           </Text>
@@ -189,15 +190,15 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: wp(6.4),
     justifyContent: 'center',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: hp(4.9),
   },
   logoText: {
-    marginBottom: 8,
+    marginBottom: hp(1.0),
   },
   tagline: {
     textAlign: 'center',
@@ -206,13 +207,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   registerBtn: {
-    marginTop: 8,
-    marginBottom: 24,
+    marginTop: hp(1.0),
+    marginBottom: hp(2.96),
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: hp(1.0),
   },
 });
