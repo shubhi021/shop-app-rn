@@ -1,79 +1,122 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🇩🇪 ShopApp DE — Production-Grade React Native E-Commerce (DACH Showcase)
 
-# Getting Started
+[![React Native](https://img.shields.io/badge/React_Native-0.73.6-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Redux Toolkit](https://img.shields.io/badge/State-Redux_Toolkit-764ABC?logo=redux)](https://redux-toolkit.js.org/)
+[![DSGVO / GDPR](https://img.shields.io/badge/DSGVO_Compliance-100%25-green?logo=shield)](https://gdpr.eu/)
+[![Sustainability](https://img.shields.io/badge/Eco--Impact-Grünes_Einkaufen-059669)](https://dhl.de)
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+A feature-rich, highly scalable **React Native** e-commerce application engineered specifically for the **German (DACH) and EU market**. Built to showcase senior-level mobile architecture, regulatory compliance (DSGVO/GDPR), green-tech sustainability metrics, and native localization to tech engineering leads in Germany (e.g. Zalando, N26, Delivery Hero, Trade Republic, Personio).
 
-## Step 1: Start the Metro Server
+---
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## 🌟 Key Standout (Netoff) Features
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### 1. 🌱 Grünes Einkaufen (Green Tech & Carbon Footprint Engine)
+- **Live CO₂ Footprint Calculation**: Automatically calculates estimated carbon emissions (`g CO₂e` / `kg CO₂e`) for items in the shopping cart.
+- **German Pfand Deposit System**: Automatic itemized calculation of mandatory bottle deposits (§ 6 VerpackG: `€0.25` per bottle/can).
+- **Eco-Score Badges (A to E)**: Visual sustainability index badges integrated across product feeds and detail pages.
+- **DHL GoGreen Delivery Offset**: Toggleable 100% climate-neutral transport option during checkout.
 
-```bash
-# using npm
-npm start
+### 2. 🔒 DSGVO / GDPR Compliance Suite
+- **Granular Cookie & Tracking Consent**: Modal manager allowing users to explicitly toggle Essential, Analytics, and Marketing tracking.
+- **Article 15 GDPR Data Export**: On-demand JSON snapshot export of all stored user telemetry and consent data.
+- **Article 17 GDPR Account Deletion**: "Right to be Forgotten" simulation with instant state purge.
+- **German Legal Statutory Notices**: Built-in Impressum (§ 5 DDG), commercial register info (HRB/USt-IdNr), and statutory 14-day cancellation policy (*Widerrufsbelehrung*).
 
-# OR using Yarn
-yarn start
+### 3. 💳 DACH Region Payment Methods
+- **Klarna Pay Later ("Rechnung 30 Tage")**: Interactive Klarna invoice flow preview displaying 30-day payment due dates and buyer protection.
+- **Sofortüberweisung (Direct E-Banking)**: Instant bank transfer integration flow.
+- **SEPA Direct Debit (*SEPA-Lastschrift*)**: Localized IBAN payment option.
+- **Apple Pay & Credit Card**: Native digital wallet checkout options.
+
+### 4. 🇩🇪 Zero-Flicker i18n Localization Engine
+- **Instant DE / EN Switcher**: Reactive language hook allowing live switching between German and English.
+- **German Currency & Date Formatting**: Proper German locale formatting (`1.299,00 €`, `DD.MM.YYYY`).
+- **German Postal Code Validation**: 5-digit PLZ regex validator (e.g. `10115` Berlin).
+- **MwSt (VAT) Itemized Tax Breakdown**: Displays 19% standard and 7% reduced *Mehrwertsteuer* alongside net totals.
+
+### 5. ⚡ Offline-First Resilience & Architecture
+- **Offline Action Queue**: Custom network state listener (`useOfflineSync`) with offline task queueing and automatic sync upon reconnection.
+- **Optimistic UI Updates**: Instant response for Cart and Wishlist operations.
+
+---
+
+## 🏗️ Architecture & Project Structure
+
+```
+src/
+├── components/
+│   ├── CO2FootprintCard.tsx       # Live carbon emission & GoGreen offset card
+│   ├── EcoScoreBadge.tsx          # Sustainability A-E rating badge
+│   ├── KlarnaPaymentModal.tsx     # Authentic Klarna 30-day invoice modal
+│   ├── OfflineBanner.tsx          # Reanimated connectivity status indicator
+│   ├── PrivacyModal.tsx           # DSGVO granular consent manager & data export
+│   └── TaxBreakdownCard.tsx       # 19% & 7% German MwSt tax breakdown
+├── hooks/
+│   ├── useOfflineSync.ts          # Network state & offline task queue
+│   ├── useTheme.ts                # Light / Dark mode theme hook
+│   └── useTranslation.ts          # Reactive DE/EN i18n translation hook
+├── navigation/
+│   ├── AppNavigator.tsx           # Stack navigator & auth hydration
+│   └── MainTabNavigator.tsx       # Bottom tab navigation
+├── screens/
+│   ├── Cart/CartScreen.tsx        # Cart with Eco metrics & MwSt cards
+│   ├── Checkout/CheckoutScreen.tsx# DACH checkout & Klarna payment flow
+│   ├── Profile/
+│   │   ├── ProfileScreen.tsx      # Language switcher, DSGVO trigger, orders
+│   │   └── ImpressumScreen.tsx    # § 5 DDG German legal notice
+│   └── Product/                   # Product feed and detail screens
+├── store/
+│   └── slices/                    # Redux Toolkit (auth, cart with Eco state, wishlist)
+└── utils/
+    └── i18n.ts                    # Type-safe DE/EN dictionaries & DACH formatters
 ```
 
-## Step 2: Start your Application
+---
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## 🚀 Getting Started
 
-### For Android
+### Prerequisites
+- Node.js >= 18
+- CocoaPods (for iOS)
+- Android Studio / Xcode
 
-```bash
-# using npm
-npm run android
+### Installation
 
-# OR using Yarn
-yarn android
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/ShopApp.git
+   cd ShopApp
+   ```
 
-### For iOS
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-```bash
-# using npm
-npm run ios
+3. **Install iOS Pods (macOS only)**
+   ```bash
+   cd ios && pod install && cd ..
+   ```
 
-# OR using Yarn
-yarn ios
-```
+4. **Run the Metro Bundler**
+   ```bash
+   npm start
+   ```
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+5. **Launch App**
+   ```bash
+   # For iOS
+   npm run ios
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+   # For Android
+   npm run android
+   ```
 
-## Step 3: Modifying your App
+---
 
-Now that you have successfully run the app, let's modify it.
+## 📄 License & Compliance
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Designed & Developed as a showcase project for React Native engineering roles in Germany & EU.
+Complies with EU General Data Protection Regulation (GDPR) and German Telecommunications-Telemedia Data Protection Act (TDDDG).
