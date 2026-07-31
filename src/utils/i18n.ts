@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export type Language = 'de' | 'en';
 
 export const translations = {
@@ -71,6 +73,39 @@ export const translations = {
     // Offline & Connection
     offlineMode: 'Offline-Modus aktiv',
     offlineNotice: 'Änderungen werden synchronisiert, sobald Sie wieder online sind.',
+
+    // Notifications Screen
+    notifications: 'Benachrichtigungen',
+    markAllRead: 'Alle lesen',
+    emptyNotificationsTitle: 'Alles ruhig hier!',
+    emptyNotificationsSubtitle: 'Du hast derzeit keine ungelesenen Benachrichtigungen. Wir halten dich auf dem Laufenden!',
+    notifImpactTitle: 'Go Green Meilenstein! 🌱',
+    notifImpactMsg: 'Du hast diese Woche bereits 2,4 kg CO2 durch deine bewusste Produktauswahl eingespart. Weiter so!',
+    notifOrderTitle: 'Bestellung auf dem Weg 📦',
+    notifOrderMsg: 'Deine Bestellung #DE-98721 wurde mit DHL GoGreen klimaneutral versandt. Voraussichtliche Lieferung: Freitag.',
+    notifPromoTitle: 'Exklusiver 15% Rabatt ⚡',
+    notifPromoMsg: 'Sichere dir 15% Extra-Rabatt auf alle A-Score bewerteten Produkte mit dem Code ECO15.',
+    notifPriceTitle: 'Preissenkung auf Merkliste! ⭐',
+    notifPriceMsg: 'Ein Produkt auf deiner Wunschliste ist jetzt 10% günstiger. Schau es dir direkt an!',
+    notifSystemTitle: 'Sicherheits-Update',
+    notifSystemMsg: 'Deine Anmeldung auf einem neuen Gerät wurde erfolgreich verifiziert.',
+    notifTime2h: 'Vor 2 Std.',
+    notifTime5h: 'Vor 5 Std.',
+    notifTime1d: 'Vor 1 Tag',
+    notifTime2d: 'Vor 2 Tagen',
+    notifTime5d: 'Vor 5 Tagen',
+    buyNow: 'Jetzt kaufen',
+    description: 'Beschreibung',
+    quantity: 'Menge',
+    bestSeller: 'Bestseller',
+    reviewsCount: 'Bewertungen',
+    selectDesiredQty: 'Gewünschte Menge auswählen',
+    secureCheckout: 'Sichere Kasse',
+    sslEncrypted: 'SSL-verschlüsselt',
+    easyReturns: 'Einfache Rückgabe',
+    returnWindow: '30 Tage Rückgabe',
+    freeShippingLabel: 'Gratisversand',
+    freeShippingDesc: 'Ab 39 € Bestellwert',
   },
   en: {
     // Navigation & General
@@ -142,16 +177,63 @@ export const translations = {
     // Offline & Connection
     offlineMode: 'Offline Mode Active',
     offlineNotice: 'Changes will sync automatically once connected.',
+
+    // Notifications Screen
+    notifications: 'Notifications',
+    markAllRead: 'Mark all read',
+    emptyNotificationsTitle: 'All quiet here!',
+    emptyNotificationsSubtitle: 'You currently have no unread notifications. We will keep you updated!',
+    notifImpactTitle: 'Go Green Milestone! 🌱',
+    notifImpactMsg: 'You saved 2.4 kg of CO2 this week through your conscious product choices. Keep it up!',
+    notifOrderTitle: 'Order on the way 📦',
+    notifOrderMsg: 'Your order #DE-98721 has been shipped climate-neutrally with DHL GoGreen. Estimated delivery: Friday.',
+    notifPromoTitle: 'Exclusive 15% Discount ⚡',
+    notifPromoMsg: 'Secure a 15% extra discount on all A-score rated products with code ECO15.',
+    notifPriceTitle: 'Price drop on Wishlist! ⭐',
+    notifPriceMsg: 'An item on your wishlist is now 10% cheaper. Check it out directly!',
+    notifSystemTitle: 'Security Update',
+    notifSystemMsg: 'Your login on a new device has been successfully verified.',
+    notifTime2h: '2 hrs ago',
+    notifTime5h: '5 hrs ago',
+    notifTime1d: '1 day ago',
+    notifTime2d: '2 days ago',
+    notifTime5d: '5 days ago',
+    buyNow: 'Buy Now',
+    description: 'Description',
+    quantity: 'Quantity',
+    bestSeller: 'Best Choice',
+    reviewsCount: 'Reviews',
+    selectDesiredQty: 'Select desired amount',
+    secureCheckout: 'Secure Checkout',
+    sslEncrypted: 'SSL Encrypted',
+    easyReturns: 'Easy Returns',
+    returnWindow: '30-Day Window',
+    freeShippingLabel: 'Free Shipping',
+    freeShippingDesc: 'On orders over €39',
   },
 };
 
 let currentLanguage: Language = 'de'; // Default to German for DACH market app!
 const listeners: Set<(lang: Language) => void> = new Set();
 
+// Asynchronously load language preference on startup
+AsyncStorage.getItem('shop_app_language')
+  .then(savedLang => {
+    if (savedLang === 'de' || savedLang === 'en') {
+      setLanguage(savedLang);
+    }
+  })
+  .catch(err => {
+    console.error('Failed to load language from AsyncStorage:', err);
+  });
+
 export const getLanguage = (): Language => currentLanguage;
 
 export const setLanguage = (lang: Language) => {
   currentLanguage = lang;
+  AsyncStorage.setItem('shop_app_language', lang).catch(err => {
+    console.error('Failed to save language to AsyncStorage:', err);
+  });
   listeners.forEach(fn => fn(lang));
 };
 

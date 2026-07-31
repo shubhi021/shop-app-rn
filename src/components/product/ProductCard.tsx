@@ -12,7 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Product } from '../../types';
 import { useTheme } from '../../hooks/useTheme';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { addToCart } from '../../store/slices/cartSlice';
+import { addToCart, updateQuantity } from '../../store/slices/cartSlice';
 import { addToWishlist, removeFromWishlist } from '../../store/slices/wishlistSlice';
 import { useTranslation } from '../../hooks/useTranslation';
 import { EcoScoreBadge } from '../EcoScoreBadge';
@@ -30,8 +30,11 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
   const { formatCurrency } = useTranslation();
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector(state => state.wishlist.items);
+  const cartItems = useAppSelector(state => state.cart.items);
 
   const isWishlisted = wishlistItems.some(item => item.product.id === product.id);
+  const cartItem = cartItems.find(item => item.product.id === product.id);
+  const quantity = cartItem ? cartItem.quantity : 0;
 
   // --- ANIMATIONS & STATE DEFINITIONS ---
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -274,28 +277,56 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
               {formatCurrency(product.price)}
             </Text>
 
-            <TouchableOpacity
-              onPress={handleAddToCart}
-              activeOpacity={0.8}
-            >
-              <Animated.View
-                style={[
-                  styles.addCartBtn,
-                  {
-                    backgroundColor: interpolatedBgColor,
-                    transform: [
-                      { scale: cartScale },
-                    ],
-                  },
-                ]}
+            {quantity > 0 ? (
+              <View style={[styles.qtySelector, { borderColor: colors.primary, backgroundColor: colors.surface }]}>
+                <TouchableOpacity
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    dispatch(updateQuantity({ productId: product.id, quantity: quantity - 1 }));
+                  }}
+                  style={styles.qtyBtn}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="remove" size={14} color={colors.primary} />
+                </TouchableOpacity>
+                <Text style={[styles.qtyText, { color: colors.text, fontFamily: fonts.bold }]}>
+                  {quantity}
+                </Text>
+                <TouchableOpacity
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    dispatch(updateQuantity({ productId: product.id, quantity: quantity + 1 }));
+                  }}
+                  style={styles.qtyBtn}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="add" size={14} color={colors.primary} />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity
+                onPress={handleAddToCart}
+                activeOpacity={0.8}
               >
-                <Ionicons
-                  name={isAddedToCart ? "checkmark" : "add"}
-                  size={18}
-                  color="#FFFFFF"
-                />
-              </Animated.View>
-            </TouchableOpacity>
+                <Animated.View
+                  style={[
+                    styles.addCartBtn,
+                    {
+                      backgroundColor: interpolatedBgColor,
+                      transform: [
+                        { scale: cartScale },
+                      ],
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name={isAddedToCart ? "checkmark" : "add"}
+                    size={18}
+                    color="#FFFFFF"
+                  />
+                </Animated.View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </Animated.View>
@@ -395,5 +426,26 @@ const styles = StyleSheet.create({
     borderRadius: wp(4.27),
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  qtySelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: wp(4.27),
+    height: wp(8.53),
+    width: wp(20.0),
+    justifyContent: 'space-between',
+    paddingHorizontal: wp(1.0),
+  },
+  qtyBtn: {
+    width: wp(6.0),
+    height: wp(6.0),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  qtyText: {
+    fontSize: fp(3.2),
+    textAlign: 'center',
+    minWidth: wp(5.0),
   },
 });

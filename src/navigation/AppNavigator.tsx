@@ -14,6 +14,7 @@ import ProductDetailScreen from '../screens/Product/ProductDetailScreen';
 import CheckoutScreen from '../screens/Checkout/CheckoutScreen';
 import OrderSuccessScreen from '../screens/Checkout/OrderSuccessScreen';
 import { ImpressumScreen } from '../screens/Profile/ImpressumScreen';
+import NotificationScreen from '../screens/Home/NotificationScreen';
 import AuthNavigator from './AuthNavigator';
 import { auth } from '../services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -101,7 +102,7 @@ export default function AppNavigator() {
             <Stack.Screen
               name="ProductDetail"
               component={ProductDetailScreen}
-              options={{ headerShown: true, title: '' }}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Checkout"
@@ -113,9 +114,14 @@ export default function AppNavigator() {
               component={OrderSuccessScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen
+             <Stack.Screen
               name="Impressum"
               component={ImpressumScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Notifications"
+              component={NotificationScreen}
               options={{ headerShown: false }}
             />
           </Stack.Group>

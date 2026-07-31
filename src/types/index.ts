@@ -41,6 +41,7 @@ export type RootStackParamList = {
   OrderSuccess: undefined;
   Impressum: undefined;
   PrivacySettings: undefined;
+  Notifications: undefined;
 };
 
 export type MainTabParamList = {

@@ -289,7 +289,11 @@ export default function HomeScreen({ navigation }: any) {
               ShopApp
             </Text>
           </View>
-          <TouchableOpacity style={[styles.notificationBtn, { borderColor: colors.border }]} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={[styles.notificationBtn, { borderColor: colors.border }]}
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('Notifications')}
+          >
             <Ionicons name="notifications-outline" size={20} color={colors.text} />
             <View style={styles.notificationDot} />
           </TouchableOpacity>
