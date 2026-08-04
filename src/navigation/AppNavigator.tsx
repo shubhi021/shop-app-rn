@@ -15,6 +15,7 @@ import CheckoutScreen from '../screens/Checkout/CheckoutScreen';
 import OrderSuccessScreen from '../screens/Checkout/OrderSuccessScreen';
 import { ImpressumScreen } from '../screens/Profile/ImpressumScreen';
 import NotificationScreen from '../screens/Home/NotificationScreen';
+import OrderHistoryScreen from '../screens/Profile/OrderHistoryScreen';
 import AuthNavigator from './AuthNavigator';
 import { auth } from '../services/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -28,6 +29,8 @@ export default function AppNavigator() {
   const { colors, isDark } = useTheme();
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
     // Hydrate store from AsyncStorage on startup
     const hydrateStore = async () => {
       try {
@@ -63,9 +66,19 @@ export default function AppNavigator() {
       }
 
       setIsLoading(false);
+      clearTimeout(timeoutId);
     });
 
-    return unsubscribe;
+    // Safety timeout to prevent infinite loader if Firebase auth fails to initialize
+    timeoutId = setTimeout(() => {
+      console.warn('Firebase onAuthStateChanged timeout reached. Forcing loader to hide.');
+      setIsLoading(false);
+    }, 3000);
+
+    return () => {
+      unsubscribe();
+      clearTimeout(timeoutId);
+    };
   }, [dispatch]);
 
   if (isLoading) {
@@ -122,6 +135,11 @@ export default function AppNavigator() {
             <Stack.Screen
               name="Notifications"
               component={NotificationScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="OrderHistory"
+              component={OrderHistoryScreen}
               options={{ headerShown: false }}
             />
           </Stack.Group>

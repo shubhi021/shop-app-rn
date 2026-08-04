@@ -185,9 +185,20 @@ export default function ProductDetailScreen({ route, navigation }: any) {
 
   if (loading) {
     return (
-      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={[styles.loadingText, { color: colors.textSecondary, fontFamily: fonts.medium }]}>Loading details...</Text>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
+        <View style={[styles.headerBar, { backgroundColor: colors.background, paddingTop: insets.top, height: hp(7.5) + insets.top, borderBottomColor: colors.border, borderBottomWidth: 1 }]}>
+          <View style={styles.headerBtn}><Ionicons name="arrow-back" size={22} color={colors.border} /></View>
+        </View>
+        <View style={{ width: SCREEN_WIDTH, height: hp(42), backgroundColor: colors.border, opacity: 0.3 }} />
+        <View style={styles.infoSection}>
+          <View style={{ width: wp(30), height: hp(2.5), backgroundColor: colors.border, opacity: 0.3, marginBottom: hp(1.5), borderRadius: wp(1) }} />
+          <View style={{ width: wp(80), height: hp(4), backgroundColor: colors.border, opacity: 0.3, marginBottom: hp(2), borderRadius: wp(1) }} />
+          <View style={{ width: wp(40), height: hp(3), backgroundColor: colors.border, opacity: 0.3, marginBottom: hp(2), borderRadius: wp(1) }} />
+          <View style={[styles.sectionDivider, { backgroundColor: colors.border }]} />
+          <View style={{ width: wp(20), height: hp(2.5), backgroundColor: colors.border, opacity: 0.3, marginBottom: hp(1.5), borderRadius: wp(1) }} />
+          <View style={{ width: '100%', height: hp(10), backgroundColor: colors.border, opacity: 0.3, borderRadius: wp(1) }} />
+        </View>
       </View>
     );
   }

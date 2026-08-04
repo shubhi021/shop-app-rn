@@ -36,9 +36,6 @@ export default function ProfileScreen({ navigation }: any) {
   const [displayName, setDisplayName] = useState(reduxUser?.displayName || '');
   const [isSaving, setIsSaving] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [ordersLoading, setOrdersLoading] = useState(false);
-  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [notifEnabled, setNotifEnabled] = useState(true);
 
   // Animated ring for avatar
@@ -59,29 +56,6 @@ export default function ProfileScreen({ navigation }: any) {
     inputRange: [0, 0.5, 1],
     outputRange: [colors.primary, '#A78BFA', '#F472B6'],
   });
-
-  useEffect(() => {
-    fetchOrders();
-  }, [reduxUser]);
-
-  const fetchOrders = async () => {
-    if (!reduxUser?.uid) return;
-    setOrdersLoading(true);
-    try {
-      const q = query(
-        collection(db, 'orders'),
-        where('userId', '==', reduxUser.uid),
-        orderBy('createdAt', 'desc'),
-      );
-      const querySnapshot = await getDocs(q);
-      const fetched = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setOrders(fetched);
-    } catch (e) {
-      console.log('Firestore orders empty or unconfigured: ', e);
-    } finally {
-      setOrdersLoading(false);
-    }
-  };
 
   const handleSignOut = async () => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -137,15 +111,6 @@ export default function ProfileScreen({ navigation }: any) {
     }
     if (email) return email[0].toUpperCase();
     return 'U';
-  };
-
-  // Stats derived from orders
-  const totalOrders = orders.length;
-  const totalSpent = orders.reduce((sum, o) => sum + (o.total || 0), 0);
-  const avgEcoScore = 'A'; // placeholder
-
-  const toggleOrderExpand = (id: string) => {
-    setExpandedOrderId(prev => (prev === id ? null : id));
   };
 
   return (
@@ -298,133 +263,15 @@ export default function ProfileScreen({ navigation }: any) {
         </TouchableOpacity>
       </View>
 
-      {/* ── Order History ── */}
+      {/* ── Order History Link ── */}
       <View style={[styles.sectionCard, {backgroundColor: colors.card}]}>
-        <View style={styles.sectionHeaderRow}>
-          <Text style={[styles.sectionTitle, {color: colors.text, fontWeight: fontWeights.semiBold}]}>
-            Order History
-          </Text>
-          {orders.length > 0 && (
-            <TouchableOpacity onPress={fetchOrders}>
-              <Ionicons name="refresh-outline" size={18} color={colors.primary} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* Stats Row */}
-        {orders.length > 0 && (
-          <View style={styles.statsRow}>
-            <View style={[styles.statChip, { backgroundColor: colors.primary + '12', borderColor: colors.primary + '30' }]}>
-              <Ionicons name="bag-outline" size={14} color={colors.primary} />
-              <Text style={[styles.statValue, { color: colors.primary, fontFamily: fonts.bold }]}>{totalOrders}</Text>
-              <Text style={[styles.statLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>Orders</Text>
-            </View>
-            <View style={[styles.statChip, { backgroundColor: '#F59E0B12', borderColor: '#F59E0B30' }]}>
-              <Ionicons name="cash-outline" size={14} color="#D97706" />
-              <Text style={[styles.statValue, { color: '#D97706', fontFamily: fonts.bold }]}>{formatCurrency(totalSpent)}</Text>
-              <Text style={[styles.statLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>Spent</Text>
-            </View>
-            <View style={[styles.statChip, { backgroundColor: '#10B98112', borderColor: '#10B98130' }]}>
-              <Ionicons name="leaf-outline" size={14} color="#10B981" />
-              <Text style={[styles.statValue, { color: '#10B981', fontFamily: fonts.bold }]}>{avgEcoScore}</Text>
-              <Text style={[styles.statLabel, { color: colors.textSecondary, fontFamily: fonts.regular }]}>Eco</Text>
-            </View>
+        <TouchableOpacity style={styles.legalRow} onPress={() => navigation.navigate('OrderHistory')}>
+          <View style={styles.legalLabelRow}>
+            <Ionicons name="bag-check-outline" size={18} color={colors.text} />
+            <Text style={[styles.legalText, { color: colors.text }]}>Order History</Text>
           </View>
-        )}
-
-        {ordersLoading ? (
-          <ActivityIndicator size="small" color={colors.primary} style={styles.spinner} />
-        ) : orders.length === 0 ? (
-          <View style={styles.emptyOrders}>
-            <Ionicons name="bag-outline" size={36} color={colors.border} style={{ marginBottom: hp(1.0) }} />
-            <Text style={[styles.emptyOrdersText, {color: colors.textTertiary, fontFamily: fonts.regular}]}>
-              No orders placed yet.
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.ordersList}>
-            {orders.map((order, idx) => {
-              const isExpanded = expandedOrderId === order.id;
-              return (
-                <View
-                  key={order.id || idx}
-                  style={[
-                    styles.orderCard,
-                    {
-                      borderColor: colors.border,
-                      borderBottomWidth: idx === orders.length - 1 ? 0 : 1,
-                    },
-                  ]}
-                >
-                  <TouchableOpacity
-                    style={styles.orderRow}
-                    onPress={() => toggleOrderExpand(order.id)}
-                    activeOpacity={0.8}
-                  >
-                    <View style={[styles.orderStatusDot, { backgroundColor: '#16A34A' }]} />
-                    <View style={{ flex: 1 }}>
-                      <Text style={[styles.orderId, {color: colors.text, fontWeight: fontWeights.medium}]}>
-                        Order #{order.id?.substring(0, 8).toUpperCase() || 'N/A'}
-                      </Text>
-                      <Text style={[styles.orderDate, {color: colors.textSecondary}]}>
-                        {order.createdAt ? new Date(order.createdAt).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' }) : ''}
-                      </Text>
-                    </View>
-                    <View style={styles.orderRightCol}>
-                      <Text style={[styles.orderTotal, {color: colors.text, fontWeight: fontWeights.bold}]}>
-                        {formatCurrency(order.total || 0)}
-                      </Text>
-                      <Ionicons
-                        name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                        size={14}
-                        color={colors.textTertiary}
-                      />
-                    </View>
-                  </TouchableOpacity>
-
-                  {/* Expanded: Item thumbnails */}
-                  {isExpanded && order.items && (
-                    <View style={[styles.orderItemsExpanded, { borderTopColor: colors.border, borderTopWidth: 1 }]}>
-                      <Text style={[styles.orderItemsTitle, { color: colors.textSecondary, fontFamily: fonts.medium }]}>
-                        Items ({order.items.length})
-                      </Text>
-                      <View style={styles.orderItemsRow}>
-                        {order.items.slice(0, 4).map((item: any, i: number) => (
-                          <View key={i} style={[styles.orderItemThumb, { backgroundColor: '#FFF', borderColor: colors.border }]}>
-                            {item.image ? (
-                              <Image source={{ uri: item.image }} style={styles.orderThumbImg} resizeMode="contain" />
-                            ) : (
-                              <Ionicons name="image-outline" size={16} color={colors.border} />
-                            )}
-                          </View>
-                        ))}
-                        {order.items.length > 4 && (
-                          <View style={[styles.orderItemThumb, { backgroundColor: colors.border }]}>
-                            <Text style={[styles.moreItemsText, { color: colors.text, fontFamily: fonts.bold }]}>
-                              +{order.items.length - 4}
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                      <View style={styles.orderStatusRow}>
-                        <View style={[styles.deliveredBadge, { backgroundColor: '#DCFCE7' }]}>
-                          <Ionicons name="checkmark-circle-outline" size={12} color="#16A34A" />
-                          <Text style={[styles.deliveredText, { color: '#16A34A', fontFamily: fonts.semiBold }]}>Delivered</Text>
-                        </View>
-                        {order.isGoGreenShipping && (
-                          <View style={[styles.greenBadge, { backgroundColor: '#D1FAE5' }]}>
-                            <Ionicons name="leaf-outline" size={12} color="#059669" />
-                            <Text style={[styles.greenText, { color: '#059669', fontFamily: fonts.semiBold }]}>GoGreen</Text>
-                          </View>
-                        )}
-                      </View>
-                    </View>
-                  )}
-                </View>
-              );
-            })}
-          </View>
-        )}
+          <Ionicons name="chevron-forward" size={18} color={colors.textSecondary} />
+        </TouchableOpacity>
       </View>
 
       <Button

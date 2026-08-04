@@ -321,11 +321,21 @@ export default function HomeScreen({ navigation }: any) {
           ListHeaderComponent={renderHeader}
           refreshControl={
             <RefreshControl
-              refreshing={loading}
+              refreshing={loading && products.length > 0}
               onRefresh={handleRefresh}
               colors={[colors.primary]}
               tintColor={colors.primary}
             />
+          }
+          ListEmptyComponent={
+            !loading ? (
+              <View style={{ padding: wp(10), alignItems: 'center' }}>
+                <Ionicons name="search-outline" size={48} color={colors.textSecondary} />
+                <Text style={{ marginTop: hp(2), color: colors.textSecondary, fontFamily: fonts.medium, fontSize: fp(3.5) }}>
+                  No products found.
+                </Text>
+              </View>
+            ) : null
           }
           renderItem={({ item }) => (
             <ProductCard
