@@ -26,6 +26,15 @@ export interface WishlistItem {
   addedAt: number;
 }
 
+export interface Order {
+  id: string;
+  userId: string;
+  items: CartItem[];
+  totalAmount: number;
+  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  createdAt: number;
+}
+
 export interface User {
   uid: string;
   email: string | null;
@@ -42,6 +51,7 @@ export type RootStackParamList = {
   Impressum: undefined;
   PrivacySettings: undefined;
   Notifications: undefined;
+  OrderHistory: undefined;
 };
 
 export type MainTabParamList = {
