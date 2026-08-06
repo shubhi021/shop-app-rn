@@ -8,8 +8,8 @@ import {
   ScrollView,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTranslation } from '../hooks/useTranslation';
-import { hp, wp, fp } from '../theme/dimensions';
+import {useTranslation} from '../hooks/useTranslation';
+import {hp, wp, fp} from '../theme/dimensions';
 
 interface KlarnaPaymentModalProps {
   visible: boolean;
@@ -24,10 +24,10 @@ export const KlarnaPaymentModal: React.FC<KlarnaPaymentModalProps> = ({
   onConfirm,
   onCancel,
 }) => {
-  const { t, formatCurrency, formatGermanDate } = useTranslation();
+  const {t, formatCurrency, formatGermanDate} = useTranslation();
 
   const dueDate = formatGermanDate(
-    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   );
 
   return (
@@ -57,7 +57,11 @@ export const KlarnaPaymentModal: React.FC<KlarnaPaymentModalProps> = ({
 
               <View style={styles.row}>
                 <View style={styles.rowLabelContainer}>
-                  <Ionicons name="shield-checkmark-outline" size={14} color="#4B5563" />
+                  <Ionicons
+                    name="shield-checkmark-outline"
+                    size={14}
+                    color="#4B5563"
+                  />
                   <Text style={styles.label}>Klarna Käuferschutz:</Text>
                 </View>
                 <Text style={styles.value}>Inklusive</Text>
@@ -73,7 +77,9 @@ export const KlarnaPaymentModal: React.FC<KlarnaPaymentModalProps> = ({
             </View>
 
             <Text style={styles.termsText}>
-              Mit Bestätigung des Kaufs auf Rechnung gehen Sie eine Zahlungsvereinbarung mit Klarna Bank AB (publ) ein. Es gelten die AGB und Datenschutzbestimmungen von Klarna DE.
+              Mit Bestätigung des Kaufs auf Rechnung gehen Sie eine
+              Zahlungsvereinbarung mit Klarna Bank AB (publ) ein. Es gelten die
+              AGB und Datenschutzbestimmungen von Klarna DE.
             </Text>
           </ScrollView>
 
@@ -82,7 +88,9 @@ export const KlarnaPaymentModal: React.FC<KlarnaPaymentModalProps> = ({
               <Text style={styles.cancelBtnText}>{t('cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.confirmBtn} onPress={onConfirm}>
-              <Text style={styles.confirmBtnText}>Jetzt Kaufen (in 30 Tagen zahlen)</Text>
+              <Text style={styles.confirmBtnText}>
+                Jetzt Kaufen (in 30 Tagen zahlen)
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

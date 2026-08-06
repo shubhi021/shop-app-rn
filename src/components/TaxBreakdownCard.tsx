@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTranslation } from '../hooks/useTranslation';
-import { useAppSelector } from '../store/hooks';
-import { hp, wp, fp } from '../theme/dimensions';
+import {useTranslation} from '../hooks/useTranslation';
+import {useAppSelector} from '../store/hooks';
+import {hp, wp, fp} from '../theme/dimensions';
 
 export const TaxBreakdownCard: React.FC = () => {
-  const { t, formatCurrency } = useTranslation();
-  const { total, totalPfand, vat19Amount, vat7Amount } = useAppSelector(
-    state => state.cart
+  const {t, formatCurrency} = useTranslation();
+  const {total, totalPfand, vat19Amount, vat7Amount} = useAppSelector(
+    state => state.cart,
   );
 
   const totalVat = vat19Amount + vat7Amount;
@@ -50,7 +50,8 @@ export const TaxBreakdownCard: React.FC = () => {
       <View style={styles.divider} />
 
       <Text style={styles.disclaimer}>
-        * Alle Preise verstehen sich inkl. der gesetzlichen Mehrwertsteuer und Verpackungsverordnung (§ 6 VerpackG).
+        * Alle Preise verstehen sich inkl. der gesetzlichen Mehrwertsteuer und
+        Verpackungsverordnung (§ 6 VerpackG).
       </Text>
     </View>
   );

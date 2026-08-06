@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {useTheme} from '../../hooks/useTheme';
 import Button from './Button';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {hp, wp, fp} from '../../theme/dimensions';
 
 interface ErrorMessageProps {
   message: string;

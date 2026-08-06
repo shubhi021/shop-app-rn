@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -12,17 +12,23 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../hooks/useTheme';
-import { useDebounce } from '../../hooks/useDebounce';
-import { ProductService } from '../../services/api';
-import { Product } from '../../types';
+import {useTheme} from '../../hooks/useTheme';
+import {useDebounce} from '../../hooks/useDebounce';
+import {ProductService} from '../../services/api';
+import {Product} from '../../types';
 import ProductCard from '../../components/product/ProductCard';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {hp, wp, fp} from '../../theme/dimensions';
 
-const CATEGORIES = ['All', 'Electronics', 'Jewelery', "Men's Clothing", "Women's Clothing"];
+const CATEGORIES = [
+  'All',
+  'Electronics',
+  'Jewelery',
+  "Men's Clothing",
+  "Women's Clothing",
+];
 
-export default function SearchScreen({ navigation }: any) {
-  const { colors, fonts, fontSizes, fontWeights, isDark } = useTheme();
+export default function SearchScreen({navigation}: any) {
+  const {colors, fonts, fontSizes, fontWeights, isDark} = useTheme();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -38,7 +44,7 @@ export default function SearchScreen({ navigation }: any) {
       setError(null);
       try {
         let items: Product[] = [];
-        
+
         // 1. Fetch based on search term
         if (debouncedQuery.trim()) {
           items = await ProductService.searchProducts(debouncedQuery.trim());
@@ -47,14 +53,17 @@ export default function SearchScreen({ navigation }: any) {
           if (selectedCategory === 'All') {
             items = await ProductService.getAllProducts();
           } else {
-            items = await ProductService.getProductsByCategory(selectedCategory.toLowerCase());
+            items = await ProductService.getProductsByCategory(
+              selectedCategory.toLowerCase(),
+            );
           }
         }
 
         // 2. Filter by category locally if a query was active and category is not 'All'
         if (debouncedQuery.trim() && selectedCategory !== 'All') {
           items = items.filter(
-            (item) => item.category.toLowerCase() === selectedCategory.toLowerCase()
+            item =>
+              item.category.toLowerCase() === selectedCategory.toLowerCase(),
           );
         }
 
@@ -63,17 +72,22 @@ export default function SearchScreen({ navigation }: any) {
         setError(err.message || 'Failed to fetch search results.');
         // Offline Fallback for SearchScreen
         try {
-          const cachedData = await AsyncStorage.getItem('shop_app_cached_products');
+          const cachedData = await AsyncStorage.getItem(
+            'shop_app_cached_products',
+          );
           if (cachedData) {
             let cachedItems: Product[] = JSON.parse(cachedData);
             if (debouncedQuery.trim()) {
               cachedItems = cachedItems.filter(p =>
-                p.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase())
+                p.title
+                  .toLowerCase()
+                  .includes(debouncedQuery.trim().toLowerCase()),
               );
             }
             if (selectedCategory !== 'All') {
               cachedItems = cachedItems.filter(
-                p => p.category.toLowerCase() === selectedCategory.toLowerCase()
+                p =>
+                  p.category.toLowerCase() === selectedCategory.toLowerCase(),
               );
             }
             setResults(cachedItems);
@@ -98,49 +112,98 @@ export default function SearchScreen({ navigation }: any) {
   };
 
   const renderEmptyState = () => {
-    if (loading) return null;
+    if (loading) {
+      return null;
+    }
     return (
       <View style={styles.emptyContainer}>
-        <Ionicons name="search-outline" size={48} color={colors.textTertiary} style={styles.emptyIcon} />
-        <Text style={[styles.emptyTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
+        <Ionicons
+          name="search-outline"
+          size={48}
+          color={colors.textTertiary}
+          style={styles.emptyIcon}
+        />
+        <Text
+          style={[
+            styles.emptyTitle,
+            {
+              color: colors.text,
+              fontFamily: fonts.bold,
+              fontSize: fontSizes.lg,
+            },
+          ]}>
           No results found
         </Text>
-        <Text style={[styles.emptySubtitle, { color: colors.textSecondary, fontFamily: fonts.regular, fontSize: fontSizes.md }]}>
-          We couldn't find any products matching "{searchQuery}" in category "{selectedCategory}".
+        <Text
+          style={[
+            styles.emptySubtitle,
+            {
+              color: colors.textSecondary,
+              fontFamily: fonts.regular,
+              fontSize: fontSizes.md,
+            },
+          ]}>
+          We couldn't find any products matching "{searchQuery}" in category "
+          {selectedCategory}".
         </Text>
         <TouchableOpacity
-          style={[styles.resetBtn, { backgroundColor: colors.primary }]}
+          style={[styles.resetBtn, {backgroundColor: colors.primary}]}
           onPress={() => {
             setSearchQuery('');
             setSelectedCategory('All');
-          }}
-        >
-          <Text style={[styles.resetBtnText, { fontFamily: fonts.bold }]}>Reset Search & Filters</Text>
+          }}>
+          <Text style={[styles.resetBtnText, {fontFamily: fonts.bold}]}>
+            Reset Search & Filters
+          </Text>
         </TouchableOpacity>
       </View>
     );
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: colors.background}]}>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
 
       {/* Header Search Input */}
       <View style={styles.header}>
-        <View style={[styles.searchContainer, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={styles.searchIcon} />
+        <View
+          style={[
+            styles.searchContainer,
+            {backgroundColor: colors.surface, borderColor: colors.border},
+          ]}>
+          <Ionicons
+            name="search-outline"
+            size={18}
+            color={colors.textSecondary}
+            style={styles.searchIcon}
+          />
           <TextInput
             placeholder="Search premium items, styles..."
             placeholderTextColor={colors.textTertiary}
             value={searchQuery}
             onChangeText={setSearchQuery}
-            style={[styles.input, { color: colors.text, fontFamily: fonts.regular, fontSize: fontSizes.md }]}
+            style={[
+              styles.input,
+              {
+                color: colors.text,
+                fontFamily: fonts.regular,
+                fontSize: fontSizes.md,
+              },
+            ]}
             autoCapitalize="none"
             autoCorrect={false}
           />
           {searchQuery ? (
             <TouchableOpacity onPress={clearSearch} style={styles.clearBtn}>
-              <Ionicons name="close-circle" size={18} color={colors.textSecondary} />
+              <Ionicons
+                name="close-circle"
+                size={18}
+                color={colors.textSecondary}
+              />
             </TouchableOpacity>
           ) : null}
         </View>
@@ -150,11 +213,11 @@ export default function SearchScreen({ navigation }: any) {
       <View style={styles.categoriesContainer}>
         <FlatList
           data={CATEGORIES}
-          keyExtractor={(item) => item}
+          keyExtractor={item => item}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categoriesList}
-          renderItem={({ item }) => {
+          renderItem={({item}) => {
             const isSelected = selectedCategory === item;
             return (
               <TouchableOpacity
@@ -162,12 +225,13 @@ export default function SearchScreen({ navigation }: any) {
                 style={[
                   styles.categoryBtn,
                   {
-                    backgroundColor: isSelected ? colors.primary : colors.surface,
+                    backgroundColor: isSelected
+                      ? colors.primary
+                      : colors.surface,
                     borderColor: isSelected ? colors.primary : colors.border,
                   },
                 ]}
-                activeOpacity={0.8}
-              >
+                activeOpacity={0.8}>
                 <Text
                   style={[
                     styles.categoryText,
@@ -176,8 +240,7 @@ export default function SearchScreen({ navigation }: any) {
                       fontFamily: isSelected ? fonts.bold : fonts.medium,
                       fontSize: fontSizes.sm,
                     },
-                  ]}
-                >
+                  ]}>
                   {item}
                 </Text>
               </TouchableOpacity>
@@ -190,23 +253,29 @@ export default function SearchScreen({ navigation }: any) {
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={[styles.loadingText, { color: colors.textSecondary, fontFamily: fonts.medium }]}>
+          <Text
+            style={[
+              styles.loadingText,
+              {color: colors.textSecondary, fontFamily: fonts.medium},
+            ]}>
             Searching for styles...
           </Text>
         </View>
       ) : (
         <FlatList
           data={results}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={item => item.id.toString()}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={renderEmptyState}
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <ProductCard
               product={item}
-              onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
+              onPress={() =>
+                navigation.navigate('ProductDetail', {productId: item.id})
+              }
             />
           )}
         />
@@ -300,7 +369,7 @@ const styles = StyleSheet.create({
     paddingVertical: hp(1.5),
     borderRadius: wp(3.2),
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,

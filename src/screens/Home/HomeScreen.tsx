@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -13,11 +13,11 @@ import {
   StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../hooks/useTheme';
-import { useProducts } from '../../hooks/useProducts';
-import { useAppSelector } from '../../store/hooks';
+import {useTheme} from '../../hooks/useTheme';
+import {useProducts} from '../../hooks/useProducts';
+import {useAppSelector} from '../../store/hooks';
 import ProductCard from '../../components/product/ProductCard';
-import { hp, wp, fp, SCREEN_WIDTH } from '../../theme/dimensions';
+import {hp, wp, fp, SCREEN_WIDTH} from '../../theme/dimensions';
 
 const BANNERS = [
   {
@@ -45,14 +45,21 @@ const BANNERS = [
     tag: 'MEMBER EXCLUSIVE',
     code: 'MEMBERVIP',
     backgroundColor: '#78350F',
-    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&auto=format&fit=crop&q=60',
+    image:
+      'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&auto=format&fit=crop&q=60',
   },
 ];
 
-const CATEGORIES = ['All', 'Electronics', 'Jewelery', "Men's Clothing", "Women's Clothing"];
+const CATEGORIES = [
+  'All',
+  'Electronics',
+  'Jewelery',
+  "Men's Clothing",
+  "Women's Clothing",
+];
 
 const SkeletonProduct = () => {
-  const { colors } = useTheme();
+  const {colors} = useTheme();
   const pulseAnim = useRef(new Animated.Value(0.3)).current;
 
   useEffect(() => {
@@ -68,7 +75,7 @@ const SkeletonProduct = () => {
           duration: 800,
           useNativeDriver: true,
         }),
-      ])
+      ]),
     );
     pulse.start();
     return () => pulse.stop();
@@ -77,25 +84,59 @@ const SkeletonProduct = () => {
   const cardWidth = wp(44.5);
 
   return (
-    <View style={[styles.skeletonCard, { width: cardWidth, backgroundColor: colors.card, borderColor: colors.border }]}>
-      <Animated.View style={[styles.skeletonImage, { backgroundColor: colors.border, opacity: pulseAnim }]} />
+    <View
+      style={[
+        styles.skeletonCard,
+        {
+          width: cardWidth,
+          backgroundColor: colors.card,
+          borderColor: colors.border,
+        },
+      ]}>
+      <Animated.View
+        style={[
+          styles.skeletonImage,
+          {backgroundColor: colors.border, opacity: pulseAnim},
+        ]}
+      />
       <View style={styles.skeletonInfo}>
-        <Animated.View style={[styles.skeletonTextShort, { backgroundColor: colors.border, opacity: pulseAnim }]} />
-        <Animated.View style={[styles.skeletonTextLong, { backgroundColor: colors.border, opacity: pulseAnim }]} />
+        <Animated.View
+          style={[
+            styles.skeletonTextShort,
+            {backgroundColor: colors.border, opacity: pulseAnim},
+          ]}
+        />
+        <Animated.View
+          style={[
+            styles.skeletonTextLong,
+            {backgroundColor: colors.border, opacity: pulseAnim},
+          ]}
+        />
         <View style={styles.skeletonBottom}>
-          <Animated.View style={[styles.skeletonTextPrice, { backgroundColor: colors.border, opacity: pulseAnim }]} />
-          <Animated.View style={[styles.skeletonBtn, { backgroundColor: colors.border, opacity: pulseAnim }]} />
+          <Animated.View
+            style={[
+              styles.skeletonTextPrice,
+              {backgroundColor: colors.border, opacity: pulseAnim},
+            ]}
+          />
+          <Animated.View
+            style={[
+              styles.skeletonBtn,
+              {backgroundColor: colors.border, opacity: pulseAnim},
+            ]}
+          />
         </View>
       </View>
     </View>
   );
 };
 
-export default function HomeScreen({ navigation }: any) {
-  const { colors, fonts, fontSizes, fontWeights, isDark } = useTheme();
-  const reduxUser = useAppSelector((state) => state.auth.user);
+export default function HomeScreen({navigation}: any) {
+  const {colors, fonts, fontSizes, fontWeights, isDark} = useTheme();
+  const reduxUser = useAppSelector(state => state.auth.user);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const { products, loading, refreshProducts, refetchWithCategory } = useProducts(selectedCategory);
+  const {products, loading, refreshProducts, refetchWithCategory} =
+    useProducts(selectedCategory);
 
   const bannerScrollX = useRef(new Animated.Value(0)).current;
 
@@ -129,21 +170,47 @@ export default function HomeScreen({ navigation }: any) {
     return (
       <View>
         {/* GoGreen Impact Tracker Banner */}
-        <View style={[styles.ecoTrackerCard, { backgroundColor: colors.primary + '08', borderColor: colors.primary + '20' }]}>
+        <View
+          style={[
+            styles.ecoTrackerCard,
+            {
+              backgroundColor: colors.primary + '08',
+              borderColor: colors.primary + '20',
+            },
+          ]}>
           <Ionicons name="leaf-outline" size={18} color={colors.primary} />
-          <Text style={[styles.ecoTrackerText, { color: colors.text, fontFamily: fonts.semiBold }]}>
-            Dein GoGreen Impact: <Text style={{ color: colors.primary, fontFamily: fonts.bold }}>2.4 kg CO2</Text> gespart 🌱
+          <Text
+            style={[
+              styles.ecoTrackerText,
+              {color: colors.text, fontFamily: fonts.semiBold},
+            ]}>
+            Dein GoGreen Impact:{' '}
+            <Text style={{color: colors.primary, fontFamily: fonts.bold}}>
+              2.4 kg CO2
+            </Text>{' '}
+            gespart 🌱
           </Text>
         </View>
 
         {/* Mock Search Input Header */}
         <TouchableOpacity
-          style={[styles.searchBarMock, { backgroundColor: colors.surface, borderColor: colors.border }]}
+          style={[
+            styles.searchBarMock,
+            {backgroundColor: colors.surface, borderColor: colors.border},
+          ]}
           onPress={() => navigation.navigate('Search')}
-          activeOpacity={0.9}
-        >
-          <Ionicons name="search-outline" size={18} color={colors.textSecondary} style={styles.searchIcon} />
-          <Text style={[styles.searchTextMock, { color: colors.textTertiary, fontFamily: fonts.regular }]}>
+          activeOpacity={0.9}>
+          <Ionicons
+            name="search-outline"
+            size={18}
+            color={colors.textSecondary}
+            style={styles.searchIcon}
+          />
+          <Text
+            style={[
+              styles.searchTextMock,
+              {color: colors.textTertiary, fontFamily: fonts.regular},
+            ]}>
             Search premium items, styles...
           </Text>
         </TouchableOpacity>
@@ -152,31 +219,42 @@ export default function HomeScreen({ navigation }: any) {
         <View style={styles.carouselContainer}>
           <FlatList
             data={BANNERS}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={item => item.id.toString()}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: bannerScrollX } } }],
-              { useNativeDriver: false }
+              [{nativeEvent: {contentOffset: {x: bannerScrollX}}}],
+              {useNativeDriver: false},
             )}
-            renderItem={({ item }) => (
-              <View style={[styles.bannerCard, { backgroundColor: item.backgroundColor }]}>
+            renderItem={({item}) => (
+              <View
+                style={[
+                  styles.bannerCard,
+                  {backgroundColor: item.backgroundColor},
+                ]}>
                 <View style={styles.bannerInfo}>
                   <View style={styles.tagBadge}>
-                    <Text style={[styles.tagText, { fontFamily: fonts.bold }]}>{item.tag}</Text>
+                    <Text style={[styles.tagText, {fontFamily: fonts.bold}]}>
+                      {item.tag}
+                    </Text>
                   </View>
-                  <Text style={[styles.bannerTitle, { fontFamily: fonts.bold }]}>
+                  <Text style={[styles.bannerTitle, {fontFamily: fonts.bold}]}>
                     {item.title}
                   </Text>
-                  <Text style={[styles.bannerSubtitle, { fontFamily: fonts.medium }]}>
+                  <Text
+                    style={[styles.bannerSubtitle, {fontFamily: fonts.medium}]}>
                     {item.subtitle}
                   </Text>
-                  <Text style={[styles.bannerPromoCode, { fontFamily: fonts.semiBold }]}>
+                  <Text
+                    style={[
+                      styles.bannerPromoCode,
+                      {fontFamily: fonts.semiBold},
+                    ]}>
                     Code: {item.code}
                   </Text>
                 </View>
-                <Image source={{ uri: item.image }} style={styles.bannerImage} />
+                <Image source={{uri: item.image}} style={styles.bannerImage} />
               </View>
             )}
           />
@@ -217,16 +295,23 @@ export default function HomeScreen({ navigation }: any) {
 
         {/* Categories Section */}
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                color: colors.text,
+                fontFamily: fonts.bold,
+                fontSize: fontSizes.lg,
+              },
+            ]}>
             Categories
           </Text>
         </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesScroll}
-        >
-          {CATEGORIES.map((category) => {
+          contentContainerStyle={styles.categoriesScroll}>
+          {CATEGORIES.map(category => {
             const isSelected = selectedCategory === category;
             return (
               <TouchableOpacity
@@ -234,18 +319,19 @@ export default function HomeScreen({ navigation }: any) {
                 style={[
                   styles.categoryBtn,
                   {
-                    backgroundColor: isSelected ? colors.primary : colors.surface,
+                    backgroundColor: isSelected
+                      ? colors.primary
+                      : colors.surface,
                     borderColor: isSelected ? colors.primary : colors.border,
                   },
                 ]}
                 onPress={() => handleCategorySelect(category)}
-                activeOpacity={0.8}
-              >
+                activeOpacity={0.8}>
                 <Ionicons
                   name={getCategoryIcon(category)}
                   size={14}
                   color={isSelected ? '#FFFFFF' : colors.textSecondary}
-                  style={{ marginRight: wp(1.6) }}
+                  style={{marginRight: wp(1.6)}}
                 />
                 <Text
                   style={[
@@ -255,8 +341,7 @@ export default function HomeScreen({ navigation }: any) {
                       fontFamily: isSelected ? fonts.bold : fonts.medium,
                       fontSize: fontSizes.sm,
                     },
-                  ]}
-                >
+                  ]}>
                   {category}
                 </Text>
               </TouchableOpacity>
@@ -266,7 +351,15 @@ export default function HomeScreen({ navigation }: any) {
 
         {/* Products Title */}
         <View style={styles.sectionHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.lg }]}>
+          <Text
+            style={[
+              styles.sectionTitle,
+              {
+                color: colors.text,
+                fontFamily: fonts.bold,
+                fontSize: fontSizes.lg,
+              },
+            ]}>
             Trending Now
           </Text>
         </View>
@@ -275,26 +368,43 @@ export default function HomeScreen({ navigation }: any) {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: colors.background}]}>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
 
       {/* App Logo & Greeting Header */}
       <View style={styles.header}>
         <View style={styles.headerTopRow}>
           <View>
-            <Text style={[styles.greeting, { color: colors.textSecondary, fontFamily: fonts.medium }]}>
-              {reduxUser?.displayName ? `Hallo, ${reduxUser.displayName.split(' ')[0]}` : 'Hallo, Guten Tag'}
+            <Text
+              style={[
+                styles.greeting,
+                {color: colors.textSecondary, fontFamily: fonts.medium},
+              ]}>
+              {reduxUser?.displayName
+                ? `Hallo, ${reduxUser.displayName.split(' ')[0]}`
+                : 'Hallo, Guten Tag'}
             </Text>
-            <Text style={[styles.logo, { color: colors.primary, fontFamily: fonts.bold }]}>
+            <Text
+              style={[
+                styles.logo,
+                {color: colors.primary, fontFamily: fonts.bold},
+              ]}>
               ShopApp
             </Text>
           </View>
           <TouchableOpacity
-            style={[styles.notificationBtn, { borderColor: colors.border }]}
+            style={[styles.notificationBtn, {borderColor: colors.border}]}
             activeOpacity={0.8}
-            onPress={() => navigation.navigate('Notifications')}
-          >
-            <Ionicons name="notifications-outline" size={20} color={colors.text} />
+            onPress={() => navigation.navigate('Notifications')}>
+            <Ionicons
+              name="notifications-outline"
+              size={20}
+              color={colors.text}
+            />
             <View style={styles.notificationDot} />
           </TouchableOpacity>
         </View>
@@ -313,7 +423,7 @@ export default function HomeScreen({ navigation }: any) {
       ) : (
         <FlatList
           data={products}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={item => item.id.toString()}
           numColumns={2}
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.listContent}
@@ -329,18 +439,30 @@ export default function HomeScreen({ navigation }: any) {
           }
           ListEmptyComponent={
             !loading ? (
-              <View style={{ padding: wp(10), alignItems: 'center' }}>
-                <Ionicons name="search-outline" size={48} color={colors.textSecondary} />
-                <Text style={{ marginTop: hp(2), color: colors.textSecondary, fontFamily: fonts.medium, fontSize: fp(3.5) }}>
+              <View style={{padding: wp(10), alignItems: 'center'}}>
+                <Ionicons
+                  name="search-outline"
+                  size={48}
+                  color={colors.textSecondary}
+                />
+                <Text
+                  style={{
+                    marginTop: hp(2),
+                    color: colors.textSecondary,
+                    fontFamily: fonts.medium,
+                    fontSize: fp(3.5),
+                  }}>
                   No products found.
                 </Text>
               </View>
             ) : null
           }
-          renderItem={({ item }) => (
+          renderItem={({item}) => (
             <ProductCard
               product={item}
-              onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
+              onPress={() =>
+                navigation.navigate('ProductDetail', {productId: item.id})
+              }
             />
           )}
         />
@@ -414,7 +536,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(3.73),
     paddingHorizontal: wp(4.27),
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.03,
     shadowRadius: 6,
     elevation: 1,
@@ -440,7 +562,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
@@ -524,7 +646,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: wp(1.07),
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.02,
     shadowRadius: 4,
     elevation: 1,

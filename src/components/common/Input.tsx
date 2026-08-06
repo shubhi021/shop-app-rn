@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 import {
   View,
   Text,
@@ -8,92 +8,86 @@ import {
   ViewStyle,
   TextStyle,
   KeyboardTypeOptions,
+  TextInputProps,
 } from 'react-native';
 import {useTheme} from '../../hooks/useTheme';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {hp, wp, fp} from '../../theme/dimensions';
 
-interface InputProps {
+interface InputProps extends TextInputProps {
   label?: string;
-  value: string;
-  onChangeText: (text: string) => void;
-  onBlur?: (e: any) => void;
-  placeholder?: string;
   error?: string | null;
-  secureTextEntry?: boolean;
-  keyboardType?: KeyboardTypeOptions;
-  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   style?: StyleProp<ViewStyle>;
   inputStyle?: StyleProp<TextStyle>;
 }
 
-export default function Input({
-  label,
-  value,
-  onChangeText,
-  onBlur,
-  placeholder,
-  error,
-  secureTextEntry,
-  keyboardType = 'default',
-  autoCapitalize = 'none',
-  style,
-  inputStyle,
-}: InputProps) {
-  const {colors, fonts, fontSizes} = useTheme();
+const Input = React.forwardRef<TextInput, InputProps>(
+  ({label, error, style, inputStyle, ...restProps}, ref) => {
+    const {colors, fonts, fontSizes} = useTheme();
 
-  const combinedInputStyle = useMemo(
-    () => [
-      styles.input,
-      {
-        color: colors.text,
-        borderColor: error ? colors.error : colors.border,
-        backgroundColor: colors.surface,
-        fontSize: fontSizes.md,
-        fontFamily: fonts.regular,
-      },
-      inputStyle,
-    ],
-    [colors.text, colors.error, colors.border, colors.surface, error, fontSizes.md, fonts.regular, inputStyle]
-  );
+    const combinedInputStyle = useMemo(
+      () => [
+        styles.input,
+        {
+          color: colors.text,
+          borderColor: error ? colors.error : colors.border,
+          backgroundColor: colors.surface,
+          fontSize: fontSizes.md,
+          fontFamily: fonts.regular,
+        },
+        inputStyle,
+      ],
+      [
+        colors.text,
+        colors.error,
+        colors.border,
+        colors.surface,
+        error,
+        fontSizes.md,
+        fonts.regular,
+        inputStyle,
+      ],
+    );
 
-  return (
-    <View style={[styles.container, style]}>
-      {label ? (
-        <Text
-          style={[
-            styles.label,
-            {
-              color: colors.textSecondary,
-              fontSize: fontSizes.sm,
-              fontFamily: fonts.medium,
-            },
-          ]}>
-          {label}
-        </Text>
-      ) : null}
-      <TextInput
-        value={value}
-        onChangeText={onChangeText}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        placeholderTextColor={colors.textTertiary}
-        secureTextEntry={secureTextEntry}
-        keyboardType={keyboardType}
-        autoCapitalize={autoCapitalize}
-        style={combinedInputStyle}
-      />
-      {error ? (
-        <Text
-          style={[
-            styles.errorText,
-            {color: colors.error, fontSize: fontSizes.sm, fontFamily: fonts.regular},
-          ]}>
-          {error}
-        </Text>
-      ) : null}
-    </View>
-  );
-}
+    return (
+      <View style={[styles.container, style]}>
+        {label ? (
+          <Text
+            style={[
+              styles.label,
+              {
+                color: colors.textSecondary,
+                fontSize: fontSizes.sm,
+                fontFamily: fonts.medium,
+              },
+            ]}>
+            {label}
+          </Text>
+        ) : null}
+        <TextInput
+          ref={ref}
+          placeholderTextColor={colors.textTertiary}
+          style={combinedInputStyle}
+          {...restProps}
+        />
+        {error ? (
+          <Text
+            style={[
+              styles.errorText,
+              {
+                color: colors.error,
+                fontSize: fontSizes.sm,
+                fontFamily: fonts.regular,
+              },
+            ]}>
+            {error}
+          </Text>
+        ) : null}
+      </View>
+    );
+  },
+);
+
+export default Input;
 
 const styles = StyleSheet.create({
   container: {

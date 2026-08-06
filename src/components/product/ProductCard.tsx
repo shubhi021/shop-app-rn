@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,14 +9,17 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Product } from '../../types';
-import { useTheme } from '../../hooks/useTheme';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { addToCart, updateQuantity } from '../../store/slices/cartSlice';
-import { addToWishlist, removeFromWishlist } from '../../store/slices/wishlistSlice';
-import { useTranslation } from '../../hooks/useTranslation';
-import { EcoScoreBadge } from '../EcoScoreBadge';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {Product} from '../../types';
+import {useTheme} from '../../hooks/useTheme';
+import {useAppDispatch, useAppSelector} from '../../store/hooks';
+import {addToCart, updateQuantity} from '../../store/slices/cartSlice';
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from '../../store/slices/wishlistSlice';
+import {useTranslation} from '../../hooks/useTranslation';
+import {EcoScoreBadge} from '../EcoScoreBadge';
+import {hp, wp, fp} from '../../theme/dimensions';
 
 interface ProductCardProps {
   product: Product;
@@ -25,14 +28,16 @@ interface ProductCardProps {
 
 const COLUMN_WIDTH = wp(44.5); // (100% width - margins) / 2 responsive columns
 
-export default function ProductCard({ product, onPress }: ProductCardProps) {
-  const { colors, fonts } = useTheme();
-  const { formatCurrency } = useTranslation();
+export default function ProductCard({product, onPress}: ProductCardProps) {
+  const {colors, fonts} = useTheme();
+  const {formatCurrency} = useTranslation();
   const dispatch = useAppDispatch();
   const wishlistItems = useAppSelector(state => state.wishlist.items);
   const cartItems = useAppSelector(state => state.cart.items);
 
-  const isWishlisted = wishlistItems.some(item => item.product.id === product.id);
+  const isWishlisted = wishlistItems.some(
+    item => item.product.id === product.id,
+  );
   const cartItem = cartItems.find(item => item.product.id === product.id);
   const quantity = cartItem ? cartItem.quantity : 0;
 
@@ -63,7 +68,6 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
   const cartScale = useRef(new Animated.Value(1)).current;
   const colorAnim = useRef(new Animated.Value(0)).current;
 
-
   // Mount Effect: Triggers the entry slide-up and fade-in animations simultaneously on load.
   useEffect(() => {
     Animated.parallel([
@@ -79,7 +83,6 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
       }),
     ]).start();
   }, []);
-
 
   // Card Press Handlers: Springs pressScale down to 0.96 when pressed down, springs back on release.
   const handlePressIn = () => {
@@ -140,7 +143,9 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
   const handleAddToCart = (e: any) => {
     e.stopPropagation(); // Prevent card tap navigation
 
-    if (isAddedToCart) return; // Prevent double taps during active transition
+    if (isAddedToCart) {
+      return;
+    } // Prevent double taps during active transition
 
     setIsAddedToCart(true);
 
@@ -196,8 +201,7 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      activeOpacity={0.95}
-    >
+      activeOpacity={0.95}>
       <Animated.View
         style={[
           styles.card,
@@ -205,26 +209,21 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
             backgroundColor: colors.card,
             borderColor: colors.border,
             opacity: fadeAnim,
-            transform: [
-              { translateY: slideAnim },
-              { scale: pressScale },
-            ],
+            transform: [{translateY: slideAnim}, {scale: pressScale}],
           },
-        ]}
-      >
+        ]}>
         {/* Image Container with Wishlist Heart */}
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: product.image }}
+            source={{uri: product.image}}
             style={styles.image}
             resizeMode="contain"
           />
           <TouchableOpacity
-            style={[styles.wishlistBtn, { backgroundColor: colors.card }]}
+            style={[styles.wishlistBtn, {backgroundColor: colors.card}]}
             onPress={handleWishlistToggle}
-            activeOpacity={0.8}
-          >
-            <Animated.View style={{ transform: [{ scale: heartScale }] }}>
+            activeOpacity={0.8}>
+            <Animated.View style={{transform: [{scale: heartScale}]}}>
               <Ionicons
                 name={isWishlisted ? 'heart' : 'heart-outline'}
                 size={18}
@@ -237,16 +236,20 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
         {/* Info Section */}
         <View style={styles.infoContainer}>
           <Text
-            style={[styles.category, { color: colors.textSecondary, fontFamily: fonts.medium }]}
-            numberOfLines={1}
-          >
+            style={[
+              styles.category,
+              {color: colors.textSecondary, fontFamily: fonts.medium},
+            ]}
+            numberOfLines={1}>
             {product.category.toUpperCase()}
           </Text>
 
           <Text
-            style={[styles.title, { color: colors.text, fontFamily: fonts.semiBold }]}
-            numberOfLines={2}
-          >
+            style={[
+              styles.title,
+              {color: colors.text, fontFamily: fonts.semiBold},
+            ]}
+            numberOfLines={2}>
             {product.title}
           </Text>
 
@@ -255,72 +258,104 @@ export default function ProductCard({ product, onPress }: ProductCardProps) {
             <EcoScoreBadge
               score={product.ecoScore || (product.id % 2 === 0 ? 'A' : 'B')}
               co2Grams={product.co2Grams || Math.round(product.price * 25)}
-              hasPfand={product.hasPfand || product.category?.includes('beverage')}
+              hasPfand={
+                product.hasPfand || product.category?.includes('beverage')
+              }
               size="small"
             />
           </View>
 
           {/* Rating Row */}
           <View style={styles.ratingRow}>
-            <Ionicons name="star" size={13} color="#F59E0B" style={styles.ratingStar} />
-            <Text style={[styles.ratingText, { color: colors.text, fontFamily: fonts.medium }]}>
+            <Ionicons
+              name="star"
+              size={13}
+              color="#F59E0B"
+              style={styles.ratingStar}
+            />
+            <Text
+              style={[
+                styles.ratingText,
+                {color: colors.text, fontFamily: fonts.medium},
+              ]}>
               {product.rating.rate.toFixed(1)}
             </Text>
-            <Text style={[styles.ratingCount, { color: colors.textTertiary, fontFamily: fonts.regular }]}>
+            <Text
+              style={[
+                styles.ratingCount,
+                {color: colors.textTertiary, fontFamily: fonts.regular},
+              ]}>
               ({product.rating.count})
             </Text>
           </View>
 
           {/* Price & Action Row */}
           <View style={styles.bottomRow}>
-            <Text style={[styles.price, { color: colors.primary, fontFamily: fonts.bold }]}>
+            <Text
+              style={[
+                styles.price,
+                {color: colors.primary, fontFamily: fonts.bold},
+              ]}>
               {formatCurrency(product.price)}
             </Text>
 
             {quantity > 0 ? (
-              <View style={[styles.qtySelector, { borderColor: colors.primary, backgroundColor: colors.surface }]}>
+              <View
+                style={[
+                  styles.qtySelector,
+                  {
+                    borderColor: colors.primary,
+                    backgroundColor: colors.surface,
+                  },
+                ]}>
                 <TouchableOpacity
-                  onPress={(e) => {
+                  onPress={e => {
                     e.stopPropagation();
-                    dispatch(updateQuantity({ productId: product.id, quantity: quantity - 1 }));
+                    dispatch(
+                      updateQuantity({
+                        productId: product.id,
+                        quantity: quantity - 1,
+                      }),
+                    );
                   }}
                   style={styles.qtyBtn}
-                  activeOpacity={0.7}
-                >
+                  activeOpacity={0.7}>
                   <Ionicons name="remove" size={14} color={colors.primary} />
                 </TouchableOpacity>
-                <Text style={[styles.qtyText, { color: colors.text, fontFamily: fonts.bold }]}>
+                <Text
+                  style={[
+                    styles.qtyText,
+                    {color: colors.text, fontFamily: fonts.bold},
+                  ]}>
                   {quantity}
                 </Text>
                 <TouchableOpacity
-                  onPress={(e) => {
+                  onPress={e => {
                     e.stopPropagation();
-                    dispatch(updateQuantity({ productId: product.id, quantity: quantity + 1 }));
+                    dispatch(
+                      updateQuantity({
+                        productId: product.id,
+                        quantity: quantity + 1,
+                      }),
+                    );
                   }}
                   style={styles.qtyBtn}
-                  activeOpacity={0.7}
-                >
+                  activeOpacity={0.7}>
                   <Ionicons name="add" size={14} color={colors.primary} />
                 </TouchableOpacity>
               </View>
             ) : (
-              <TouchableOpacity
-                onPress={handleAddToCart}
-                activeOpacity={0.8}
-              >
+              <TouchableOpacity onPress={handleAddToCart} activeOpacity={0.8}>
                 <Animated.View
                   style={[
                     styles.addCartBtn,
                     {
                       backgroundColor: interpolatedBgColor,
-                      transform: [
-                        { scale: cartScale },
-                      ],
+                      transform: [{scale: cartScale}],
                     },
-                  ]}
-                >
+                  ]}>
                   <Ionicons
-                    name={isAddedToCart ? "checkmark" : "add"}
+                    name={isAddedToCart ? 'checkmark' : 'add'}
                     size={18}
                     color="#FFFFFF"
                   />
@@ -345,7 +380,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: {width: 0, height: 4},
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 2,
@@ -372,7 +407,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,

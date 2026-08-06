@@ -15,7 +15,7 @@ export const translations = {
     cancel: 'Abbrechen',
     close: 'Schließen',
     confirm: 'Bestätigen',
-    
+
     // Eco / Sustainability
     ecoScore: 'Umweltbewertung',
     co2Emissions: 'CO₂-Fußabdruck',
@@ -42,6 +42,7 @@ export const translations = {
     impressum: 'Impressum & Rechtliches',
     legalNotice: 'Anbieterkennzeichnung gemäß § 5 DDG',
     widerruf: '14-Tage Widerrufsbelehrung',
+    price: 'Preis',
     vatIncluded: 'Inkl. MwSt.',
     standardVat: '19% MwSt. (Regelsatz)',
     reducedVat: '7% MwSt. (Ermäßigt)',
@@ -72,23 +73,30 @@ export const translations = {
 
     // Offline & Connection
     offlineMode: 'Offline-Modus aktiv',
-    offlineNotice: 'Änderungen werden synchronisiert, sobald Sie wieder online sind.',
+    offlineNotice:
+      'Änderungen werden synchronisiert, sobald Sie wieder online sind.',
 
     // Notifications Screen
     notifications: 'Benachrichtigungen',
     markAllRead: 'Alle lesen',
     emptyNotificationsTitle: 'Alles ruhig hier!',
-    emptyNotificationsSubtitle: 'Du hast derzeit keine ungelesenen Benachrichtigungen. Wir halten dich auf dem Laufenden!',
+    emptyNotificationsSubtitle:
+      'Du hast derzeit keine ungelesenen Benachrichtigungen. Wir halten dich auf dem Laufenden!',
     notifImpactTitle: 'Go Green Meilenstein! 🌱',
-    notifImpactMsg: 'Du hast diese Woche bereits 2,4 kg CO2 durch deine bewusste Produktauswahl eingespart. Weiter so!',
+    notifImpactMsg:
+      'Du hast diese Woche bereits 2,4 kg CO2 durch deine bewusste Produktauswahl eingespart. Weiter so!',
     notifOrderTitle: 'Bestellung auf dem Weg 📦',
-    notifOrderMsg: 'Deine Bestellung #DE-98721 wurde mit DHL GoGreen klimaneutral versandt. Voraussichtliche Lieferung: Freitag.',
+    notifOrderMsg:
+      'Deine Bestellung #DE-98721 wurde mit DHL GoGreen klimaneutral versandt. Voraussichtliche Lieferung: Freitag.',
     notifPromoTitle: 'Exklusiver 15% Rabatt ⚡',
-    notifPromoMsg: 'Sichere dir 15% Extra-Rabatt auf alle A-Score bewerteten Produkte mit dem Code ECO15.',
+    notifPromoMsg:
+      'Sichere dir 15% Extra-Rabatt auf alle A-Score bewerteten Produkte mit dem Code ECO15.',
     notifPriceTitle: 'Preissenkung auf Merkliste! ⭐',
-    notifPriceMsg: 'Ein Produkt auf deiner Wunschliste ist jetzt 10% günstiger. Schau es dir direkt an!',
+    notifPriceMsg:
+      'Ein Produkt auf deiner Wunschliste ist jetzt 10% günstiger. Schau es dir direkt an!',
     notifSystemTitle: 'Sicherheits-Update',
-    notifSystemMsg: 'Deine Anmeldung auf einem neuen Gerät wurde erfolgreich verifiziert.',
+    notifSystemMsg:
+      'Deine Anmeldung auf einem neuen Gerät wurde erfolgreich verifiziert.',
     notifTime2h: 'Vor 2 Std.',
     notifTime5h: 'Vor 5 Std.',
     notifTime1d: 'Vor 1 Tag',
@@ -145,7 +153,8 @@ export const translations = {
     deleteAccount: 'Delete Account (Right to be forgotten)',
     impressum: 'Legal Notice & Terms',
     legalNotice: 'Company Details (§ 5 German Digital Act)',
-    widerruf: '14-Day Right of Withdrawal',
+    widerruf: '14-Day Cancellation Policy',
+    price: 'Price',
     vatIncluded: 'Incl. VAT',
     standardVat: '19% VAT (Standard rate)',
     reducedVat: '7% VAT (Reduced rate)',
@@ -182,17 +191,23 @@ export const translations = {
     notifications: 'Notifications',
     markAllRead: 'Mark all read',
     emptyNotificationsTitle: 'All quiet here!',
-    emptyNotificationsSubtitle: 'You currently have no unread notifications. We will keep you updated!',
+    emptyNotificationsSubtitle:
+      'You currently have no unread notifications. We will keep you updated!',
     notifImpactTitle: 'Go Green Milestone! 🌱',
-    notifImpactMsg: 'You saved 2.4 kg of CO2 this week through your conscious product choices. Keep it up!',
+    notifImpactMsg:
+      'You saved 2.4 kg of CO2 this week through your conscious product choices. Keep it up!',
     notifOrderTitle: 'Order on the way 📦',
-    notifOrderMsg: 'Your order #DE-98721 has been shipped climate-neutrally with DHL GoGreen. Estimated delivery: Friday.',
+    notifOrderMsg:
+      'Your order #DE-98721 has been shipped climate-neutrally with DHL GoGreen. Estimated delivery: Friday.',
     notifPromoTitle: 'Exclusive 15% Discount ⚡',
-    notifPromoMsg: 'Secure a 15% extra discount on all A-score rated products with code ECO15.',
+    notifPromoMsg:
+      'Secure a 15% extra discount on all A-score rated products with code ECO15.',
     notifPriceTitle: 'Price drop on Wishlist! ⭐',
-    notifPriceMsg: 'An item on your wishlist is now 10% cheaper. Check it out directly!',
+    notifPriceMsg:
+      'An item on your wishlist is now 10% cheaper. Check it out directly!',
     notifSystemTitle: 'Security Update',
-    notifSystemMsg: 'Your login on a new device has been successfully verified.',
+    notifSystemMsg:
+      'Your login on a new device has been successfully verified.',
     notifTime2h: '2 hrs ago',
     notifTime5h: '5 hrs ago',
     notifTime1d: '1 day ago',
@@ -242,16 +257,22 @@ export const subscribeLanguageChange = (fn: (lang: Language) => void) => {
   return () => listeners.delete(fn);
 };
 
-export const translate = (key: keyof typeof translations['de']): string => {
-  return translations[currentLanguage][key] || translations['en'][key] || key;
+export const translate = (key: keyof (typeof translations)['de']): string => {
+  return translations[currentLanguage][key] || translations.en[key] || key;
 };
 
 /**
  * Formats currency according to German locale standards (e.g. 1.299,00 €) or EN standard (€1,299.00)
  */
-export const formatCurrency = (amount: number, lang: Language = currentLanguage): string => {
+export const formatCurrency = (
+  amount: number,
+  lang: Language = currentLanguage,
+): string => {
   if (lang === 'de') {
-    const formatted = amount.toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const formatted = amount
+      .toFixed(2)
+      .replace('.', ',')
+      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     return `${formatted} €`;
   }
   return `€${amount.toFixed(2)}`;

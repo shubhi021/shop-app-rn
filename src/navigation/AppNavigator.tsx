@@ -1,24 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ActivityIndicator, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {ActivityIndicator, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setUser } from '../store/slices/authSlice';
-import { setCart } from '../store/slices/cartSlice';
-import { setWishlist } from '../store/slices/wishlistSlice';
-import { useAppDispatch } from '../store/hooks';
-import { RootStackParamList } from '../types';
-import { useTheme } from '../hooks/useTheme';
+import {setUser} from '../store/slices/authSlice';
+import {setCart} from '../store/slices/cartSlice';
+import {setWishlist} from '../store/slices/wishlistSlice';
+import {useAppDispatch} from '../store/hooks';
+import {RootStackParamList} from '../types';
+import {useTheme} from '../hooks/useTheme';
 import MainTabNavigator from './MainTabNavigator';
 import ProductDetailScreen from '../screens/Product/ProductDetailScreen';
 import CheckoutScreen from '../screens/Checkout/CheckoutScreen';
 import OrderSuccessScreen from '../screens/Checkout/OrderSuccessScreen';
-import { ImpressumScreen } from '../screens/Profile/ImpressumScreen';
+import {ImpressumScreen} from '../screens/Profile/ImpressumScreen';
 import NotificationScreen from '../screens/Home/NotificationScreen';
 import OrderHistoryScreen from '../screens/Profile/OrderHistoryScreen';
 import AuthNavigator from './AuthNavigator';
-import { auth } from '../services/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import {auth} from '../services/firebase';
+import {onAuthStateChanged} from 'firebase/auth';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -26,7 +30,7 @@ export default function AppNavigator() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const dispatch = useAppDispatch();
-  const { colors, isDark } = useTheme();
+  const {colors, isDark} = useTheme();
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -71,7 +75,9 @@ export default function AppNavigator() {
 
     // Safety timeout to prevent infinite loader if Firebase auth fails to initialize
     timeoutId = setTimeout(() => {
-      console.warn('Firebase onAuthStateChanged timeout reached. Forcing loader to hide.');
+      console.warn(
+        'Firebase onAuthStateChanged timeout reached. Forcing loader to hide.',
+      );
       setIsLoading(false);
     }, 3000);
 
@@ -108,39 +114,39 @@ export default function AppNavigator() {
 
   return (
     <NavigationContainer theme={navTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         {isAuthenticated ? (
           <Stack.Group>
             <Stack.Screen name="Main" component={MainTabNavigator} />
             <Stack.Screen
               name="ProductDetail"
               component={ProductDetailScreen}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Checkout"
               component={CheckoutScreen}
-              options={{ headerShown: true, title: 'Checkout' }}
+              options={{headerShown: true, title: 'Checkout'}}
             />
             <Stack.Screen
               name="OrderSuccess"
               component={OrderSuccessScreen}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
-             <Stack.Screen
+            <Stack.Screen
               name="Impressum"
               component={ImpressumScreen}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="Notifications"
               component={NotificationScreen}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
             <Stack.Screen
               name="OrderHistory"
               component={OrderHistoryScreen}
-              options={{ headerShown: false }}
+              options={{headerShown: false}}
             />
           </Stack.Group>
         ) : (

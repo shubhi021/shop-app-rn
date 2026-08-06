@@ -8,8 +8,8 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
-import { useTheme } from '../../hooks/useTheme';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {useTheme} from '../../hooks/useTheme';
+import {hp, wp, fp} from '../../theme/dimensions';
 
 interface ButtonProps {
   title: string;
@@ -30,7 +30,7 @@ export default function Button({
   style,
   textStyle,
 }: ButtonProps) {
-  const { colors, fonts, fontSizes, fontWeights } = useTheme();
+  const {colors, fonts, fontSizes, fontWeights} = useTheme();
 
   const getButtonStyle = (): ViewStyle => {
     const base: ViewStyle = {

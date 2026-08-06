@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTranslation } from '../hooks/useTranslation';
-import { hp, wp, fp } from '../theme/dimensions';
+import {useTranslation} from '../hooks/useTranslation';
+import {hp, wp, fp} from '../theme/dimensions';
 
 interface EcoScoreBadgeProps {
   score?: 'A' | 'B' | 'C' | 'D' | 'E';
@@ -25,7 +25,7 @@ export const EcoScoreBadge: React.FC<EcoScoreBadgeProps> = ({
   hasPfand,
   size = 'medium',
 }) => {
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const color = SCORE_COLORS[score] || SCORE_COLORS.B;
 
   const isSmall = size === 'small';
@@ -34,10 +34,21 @@ export const EcoScoreBadge: React.FC<EcoScoreBadgeProps> = ({
 
   return (
     <View style={styles.container}>
-      <View style={[styles.badge, { backgroundColor: color }, isSmall && styles.badgeSmall, isLarge && styles.badgeLarge]}>
+      <View
+        style={[
+          styles.badge,
+          {backgroundColor: color},
+          isSmall && styles.badgeSmall,
+          isLarge && styles.badgeLarge,
+        ]}>
         <View style={styles.row3}>
           <Ionicons name="leaf" size={iconSize} color="#FFFFFF" />
-          <Text style={[styles.badgeText, isSmall && styles.textSmall, isLarge && styles.textLarge]}>
+          <Text
+            style={[
+              styles.badgeText,
+              isSmall && styles.textSmall,
+              isLarge && styles.textLarge,
+            ]}>
             {score}
           </Text>
         </View>

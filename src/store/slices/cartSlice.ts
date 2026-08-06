@@ -31,14 +31,16 @@ const calculateTotal = (items: CartItem[]): number => {
 
 const calculateCo2 = (items: CartItem[]): number => {
   return items.reduce((sum, item) => {
-    const co2PerUnit = item.product.co2Grams || Math.round(item.product.price * 25);
+    const co2PerUnit =
+      item.product.co2Grams || Math.round(item.product.price * 25);
     return sum + co2PerUnit * item.quantity;
   }, 0);
 };
 
 const calculatePfand = (items: CartItem[]): number => {
   return items.reduce((sum, item) => {
-    const pfand = item.product.pfandAmount || (item.product.hasPfand ? 0.25 : 0);
+    const pfand =
+      item.product.pfandAmount || (item.product.hasPfand ? 0.25 : 0);
     return sum + pfand * item.quantity;
   }, 0);
 };
@@ -57,7 +59,7 @@ const calculateVat = (items: CartItem[]) => {
       vat19 += tax;
     }
   });
-  return { vat19Amount: vat19, vat7Amount: vat7 };
+  return {vat19Amount: vat19, vat7Amount: vat7};
 };
 
 const saveCartToStorage = async (items: CartItem[]) => {
@@ -72,7 +74,7 @@ const updateStateTotals = (state: CartState) => {
   state.total = calculateTotal(state.items);
   state.totalCo2Grams = calculateCo2(state.items);
   state.totalPfand = calculatePfand(state.items);
-  const { vat19Amount, vat7Amount } = calculateVat(state.items);
+  const {vat19Amount, vat7Amount} = calculateVat(state.items);
   state.vat19Amount = vat19Amount;
   state.vat7Amount = vat7Amount;
 };
@@ -126,8 +128,14 @@ const cartSlice = createSlice({
       saveCartToStorage(state.items);
     },
 
-    toggleGoGreenShipping: (state, action: PayloadAction<boolean | undefined>) => {
-      state.isGoGreenShipping = action.payload !== undefined ? action.payload : !state.isGoGreenShipping;
+    toggleGoGreenShipping: (
+      state,
+      action: PayloadAction<boolean | undefined>,
+    ) => {
+      state.isGoGreenShipping =
+        action.payload !== undefined
+          ? action.payload
+          : !state.isGoGreenShipping;
     },
 
     clearCart: state => {
@@ -142,6 +150,12 @@ const cartSlice = createSlice({
   },
 });
 
-export const {setCart, addToCart, removeFromCart, updateQuantity, toggleGoGreenShipping, clearCart} =
-  cartSlice.actions;
+export const {
+  setCart,
+  addToCart,
+  removeFromCart,
+  updateQuantity,
+  toggleGoGreenShipping,
+  clearCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;

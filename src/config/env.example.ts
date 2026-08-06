@@ -1,10 +1,10 @@
 export const ENV = {
-  FIREBASE_API_KEY: "your_api_key_here",
-  FIREBASE_AUTH_DOMAIN: "your_project.firebaseapp.com",
-  FIREBASE_PROJECT_ID: "your_project_id",
-  FIREBASE_STORAGE_BUCKET: "your_project.firebasestorage.app",
-  FIREBASE_MESSAGING_SENDER_ID: "your_sender_id",
-  FIREBASE_APP_ID: "your_app_id",
-  FIREBASE_MEASUREMENT_ID: "your_measurement_id",
-  GOOGLE_WEB_CLIENT_ID: "your_google_web_client_id_here",
+  FIREBASE_API_KEY: 'your_api_key_here',
+  FIREBASE_AUTH_DOMAIN: 'your_project.firebaseapp.com',
+  FIREBASE_PROJECT_ID: 'your_project_id',
+  FIREBASE_STORAGE_BUCKET: 'your_project.firebasestorage.app',
+  FIREBASE_MESSAGING_SENDER_ID: 'your_sender_id',
+  FIREBASE_APP_ID: 'your_app_id',
+  FIREBASE_MEASUREMENT_ID: 'your_measurement_id',
+  GOOGLE_WEB_CLIENT_ID: 'your_google_web_client_id_here',
 };

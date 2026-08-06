@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   Text,
@@ -8,20 +8,20 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { useFormik } from 'formik';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import {useFormik} from 'formik';
+import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import Toast from 'react-native-toast-message';
-import { auth } from '../../services/firebase';
-import { useTheme } from '../../hooks/useTheme';
-import { useAppDispatch } from '../../store/hooks';
-import { setLoading, setError, setUser } from '../../store/slices/authSlice';
+import {auth} from '../../services/firebase';
+import {useTheme} from '../../hooks/useTheme';
+import {useAppDispatch} from '../../store/hooks';
+import {setLoading, setError, setUser} from '../../store/slices/authSlice';
 import Input from '../../components/common/Input';
 import Button from '../../components/common/Button';
-import { registerSchema } from '../../utils/validationSchemas';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {registerSchema} from '../../utils/validationSchemas';
+import {hp, wp, fp} from '../../theme/dimensions';
 
-export default function RegisterScreen({ navigation }: any) {
-  const { colors, fontSizes, fontWeights } = useTheme();
+export default function RegisterScreen({navigation}: any) {
+  const {colors, fontSizes, fontWeights} = useTheme();
   const dispatch = useAppDispatch();
   const isMounted = useRef(true);
   const [isLoadingState, setIsLoadingState] = useState(false);
@@ -48,10 +48,12 @@ export default function RegisterScreen({ navigation }: any) {
   };
 
   const formik = useFormik({
-    initialValues: { name: '', email: '', password: '' },
+    initialValues: {name: '', email: '', password: ''},
     validationSchema: registerSchema,
-    onSubmit: async (values) => {
-      if (isMounted.current) setIsLoadingState(true);
+    onSubmit: async values => {
+      if (isMounted.current) {
+        setIsLoadingState(true);
+      }
       dispatch(setLoading(true));
 
       try {
@@ -101,7 +103,7 @@ export default function RegisterScreen({ navigation }: any) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={[styles.container, { backgroundColor: colors.background }]}>
+      style={[styles.container, {backgroundColor: colors.background}]}>
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
@@ -110,14 +112,18 @@ export default function RegisterScreen({ navigation }: any) {
           <Text
             style={[
               styles.logoText,
-              { color: colors.primary, fontSize: fp(8.53), fontWeight: fontWeights.bold },
+              {
+                color: colors.primary,
+                fontSize: fp(8.53),
+                fontWeight: fontWeights.bold,
+              },
             ]}>
             Create Account
           </Text>
           <Text
             style={[
               styles.tagline,
-              { color: colors.textSecondary, fontSize: fontSizes.md },
+              {color: colors.textSecondary, fontSize: fontSizes.md},
             ]}>
             Sign up to start shopping on ShopApp DE
           </Text>
@@ -130,7 +136,11 @@ export default function RegisterScreen({ navigation }: any) {
             value={formik.values.name}
             onChangeText={formik.handleChange('name')}
             onBlur={formik.handleBlur('name')}
-            error={formik.touched.name && formik.errors.name ? formik.errors.name : null}
+            error={
+              formik.touched.name && formik.errors.name
+                ? formik.errors.name
+                : null
+            }
             autoCapitalize="words"
           />
 
@@ -140,7 +150,11 @@ export default function RegisterScreen({ navigation }: any) {
             value={formik.values.email}
             onChangeText={formik.handleChange('email')}
             onBlur={formik.handleBlur('email')}
-            error={formik.touched.email && formik.errors.email ? formik.errors.email : null}
+            error={
+              formik.touched.email && formik.errors.email
+                ? formik.errors.email
+                : null
+            }
             keyboardType="email-address"
             autoCapitalize="none"
           />
@@ -151,7 +165,11 @@ export default function RegisterScreen({ navigation }: any) {
             value={formik.values.password}
             onChangeText={formik.handleChange('password')}
             onBlur={formik.handleBlur('password')}
-            error={formik.touched.password && formik.errors.password ? formik.errors.password : null}
+            error={
+              formik.touched.password && formik.errors.password
+                ? formik.errors.password
+                : null
+            }
             secureTextEntry
             autoCapitalize="none"
           />
@@ -164,7 +182,7 @@ export default function RegisterScreen({ navigation }: any) {
           />
 
           <View style={styles.footer}>
-            <Text style={{ color: colors.textSecondary, fontSize: fontSizes.md }}>
+            <Text style={{color: colors.textSecondary, fontSize: fontSizes.md}}>
               Already have an account?{' '}
             </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>

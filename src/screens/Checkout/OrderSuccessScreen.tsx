@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import {
   Animated,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../hooks/useTheme';
+import {useTheme} from '../../hooks/useTheme';
 import Button from '../../components/common/Button';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {hp, wp, fp} from '../../theme/dimensions';
 
 // Generate a random order ID
 function generateOrderId(): string {
@@ -26,14 +26,34 @@ function generateOrderId(): string {
 }
 
 const DELIVERY_STEPS = [
-  { icon: 'checkmark-circle', label: 'Order Confirmed', desc: 'Just now', done: true },
-  { icon: 'construct-outline', label: 'Processing', desc: 'Est. 1–2 hours', done: true },
-  { icon: 'airplane-outline', label: 'Shipped', desc: 'Est. 1–2 days', done: false },
-  { icon: 'home-outline', label: 'Delivered', desc: 'Est. 3–5 days', done: false },
+  {
+    icon: 'checkmark-circle',
+    label: 'Order Confirmed',
+    desc: 'Just now',
+    done: true,
+  },
+  {
+    icon: 'construct-outline',
+    label: 'Processing',
+    desc: 'Est. 1–2 hours',
+    done: true,
+  },
+  {
+    icon: 'airplane-outline',
+    label: 'Shipped',
+    desc: 'Est. 1–2 days',
+    done: false,
+  },
+  {
+    icon: 'home-outline',
+    label: 'Delivered',
+    desc: 'Est. 3–5 days',
+    done: false,
+  },
 ];
 
-export default function OrderSuccessScreen({ navigation, route }: any) {
-  const { colors, fonts, fontSizes, isDark } = useTheme();
+export default function OrderSuccessScreen({navigation, route}: any) {
+  const {colors, fonts, fontSizes, isDark} = useTheme();
 
   const [orderId] = useState(() => generateOrderId());
 
@@ -56,50 +76,77 @@ export default function OrderSuccessScreen({ navigation, route }: any) {
     // Pulsing ring
     const ring = Animated.loop(
       Animated.sequence([
-        Animated.timing(ringAnim, { toValue: 1, duration: 900, useNativeDriver: true }),
-        Animated.timing(ringAnim, { toValue: 0, duration: 900, useNativeDriver: true }),
-      ])
+        Animated.timing(ringAnim, {
+          toValue: 1,
+          duration: 900,
+          useNativeDriver: true,
+        }),
+        Animated.timing(ringAnim, {
+          toValue: 0,
+          duration: 900,
+          useNativeDriver: true,
+        }),
+      ]),
     );
     ring.start();
 
     // Fade in content
     Animated.parallel([
-      Animated.timing(contentAnim, { toValue: 1, duration: 500, delay: 300, useNativeDriver: true }),
-      Animated.timing(contentSlide, { toValue: 0, duration: 500, delay: 300, useNativeDriver: true }),
+      Animated.timing(contentAnim, {
+        toValue: 1,
+        duration: 500,
+        delay: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(contentSlide, {
+        toValue: 0,
+        duration: 500,
+        delay: 300,
+        useNativeDriver: true,
+      }),
     ]).start();
 
     return () => ring.stop();
   }, []);
 
-  const ringScale = ringAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 1.18] });
-  const ringOpacity = ringAnim.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0] });
+  const ringScale = ringAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.18],
+  });
+  const ringOpacity = ringAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.5, 0],
+  });
 
   const handleShare = async () => {
     try {
       await Share.share({
         message: `I just placed an order on ShopApp! 🛍️ Order ${orderId} is on its way! #ShopApp`,
       });
-    } catch { }
+    } catch {}
   };
 
   const handleContinueShopping = () => {
-    navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+    navigation.reset({index: 0, routes: [{name: 'Main'}]});
   };
 
   const handleTrackOrder = () => {
-    navigation.reset({ index: 0, routes: [{ name: 'Main' }] });
+    navigation.reset({index: 0, routes: [{name: 'Main'}]});
     // Small delay then navigate to notifications which simulates tracking
     setTimeout(() => navigation.navigate('Notifications'), 100);
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-      <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} backgroundColor={colors.background} />
+    <SafeAreaView
+      style={[styles.container, {backgroundColor: colors.background}]}>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
 
       <ScrollView
         contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         {/* ── Animated Success Icon ── */}
         <View style={styles.iconArea}>
           {/* Pulsing ring */}
@@ -108,7 +155,7 @@ export default function OrderSuccessScreen({ navigation, route }: any) {
               styles.pulseRing,
               {
                 borderColor: colors.success + '80',
-                transform: [{ scale: ringScale }],
+                transform: [{scale: ringScale}],
                 opacity: ringOpacity,
               },
             ]}
@@ -117,39 +164,101 @@ export default function OrderSuccessScreen({ navigation, route }: any) {
           <Animated.View
             style={[
               styles.successIconBadge,
-              { backgroundColor: colors.success + '15', transform: [{ scale: scaleAnim }] },
-            ]}
-          >
-            <Ionicons name="checkmark-circle" size={64} color={colors.success} />
+              {
+                backgroundColor: colors.success + '15',
+                transform: [{scale: scaleAnim}],
+              },
+            ]}>
+            <Ionicons
+              name="checkmark-circle"
+              size={64}
+              color={colors.success}
+            />
           </Animated.View>
         </View>
 
-        <Animated.View style={{ opacity: contentAnim, transform: [{ translateY: contentSlide }] }}>
+        <Animated.View
+          style={{
+            opacity: contentAnim,
+            transform: [{translateY: contentSlide}],
+          }}>
           {/* ── Title ── */}
-          <Text style={[styles.title, { color: colors.text, fontFamily: fonts.bold, fontSize: fontSizes.xxl }]}>
+          <Text
+            style={[
+              styles.title,
+              {
+                color: colors.text,
+                fontFamily: fonts.bold,
+                fontSize: fontSizes.xxl,
+              },
+            ]}>
             Order Placed! 🎉
           </Text>
-          <Text style={[styles.subtitle, { color: colors.textSecondary, fontFamily: fonts.regular, fontSize: fontSizes.md }]}>
-            Thank you for your purchase. Your order is confirmed and being processed.
+          <Text
+            style={[
+              styles.subtitle,
+              {
+                color: colors.textSecondary,
+                fontFamily: fonts.regular,
+                fontSize: fontSizes.md,
+              },
+            ]}>
+            Thank you for your purchase. Your order is confirmed and being
+            processed.
           </Text>
 
           {/* ── Order ID Card ── */}
-          <View style={[styles.orderIdCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <View
+            style={[
+              styles.orderIdCard,
+              {backgroundColor: colors.card, borderColor: colors.border},
+            ]}>
             <View style={styles.orderIdRow}>
-              <Text style={[styles.orderIdLabel, { color: colors.textSecondary, fontFamily: fonts.medium }]}>
+              <Text
+                style={[
+                  styles.orderIdLabel,
+                  {color: colors.textSecondary, fontFamily: fonts.medium},
+                ]}>
                 Order Number
               </Text>
-              <TouchableOpacity onPress={handleShare} style={styles.shareBtn} activeOpacity={0.7}>
-                <Ionicons name="share-social-outline" size={16} color={colors.primary} />
-                <Text style={[styles.shareText, { color: colors.primary, fontFamily: fonts.medium }]}>Share</Text>
+              <TouchableOpacity
+                onPress={handleShare}
+                style={styles.shareBtn}
+                activeOpacity={0.7}>
+                <Ionicons
+                  name="share-social-outline"
+                  size={16}
+                  color={colors.primary}
+                />
+                <Text
+                  style={[
+                    styles.shareText,
+                    {color: colors.primary, fontFamily: fonts.medium},
+                  ]}>
+                  Share
+                </Text>
               </TouchableOpacity>
             </View>
-            <Text style={[styles.orderId, { color: colors.text, fontFamily: fonts.bold }]}>{orderId}</Text>
+            <Text
+              style={[
+                styles.orderId,
+                {color: colors.text, fontFamily: fonts.bold},
+              ]}>
+              {orderId}
+            </Text>
           </View>
 
           {/* ── Delivery Timeline ── */}
-          <View style={[styles.timelineCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.timelineTitle, { color: colors.text, fontFamily: fonts.bold }]}>
+          <View
+            style={[
+              styles.timelineCard,
+              {backgroundColor: colors.card, borderColor: colors.border},
+            ]}>
+            <Text
+              style={[
+                styles.timelineTitle,
+                {color: colors.text, fontFamily: fonts.bold},
+              ]}>
               Delivery Status
             </Text>
             {DELIVERY_STEPS.map((step, idx) => (
@@ -160,22 +269,32 @@ export default function OrderSuccessScreen({ navigation, route }: any) {
                     style={[
                       styles.stepDot,
                       {
-                        backgroundColor: step.done ? colors.success : colors.border,
+                        backgroundColor: step.done
+                          ? colors.success
+                          : colors.border,
                         borderColor: step.done ? colors.success : colors.border,
                       },
-                    ]}
-                  >
+                    ]}>
                     {step.done ? (
                       <Ionicons name="checkmark" size={10} color="#FFF" />
                     ) : (
-                      <View style={[styles.stepDotInner, { backgroundColor: colors.background }]} />
+                      <View
+                        style={[
+                          styles.stepDotInner,
+                          {backgroundColor: colors.background},
+                        ]}
+                      />
                     )}
                   </View>
                   {idx < DELIVERY_STEPS.length - 1 && (
                     <View
                       style={[
                         styles.stepLine,
-                        { backgroundColor: step.done ? colors.success + '50' : colors.border },
+                        {
+                          backgroundColor: step.done
+                            ? colors.success + '50'
+                            : colors.border,
+                        },
                       ]}
                     />
                   )}
@@ -193,14 +312,19 @@ export default function OrderSuccessScreen({ navigation, route }: any) {
                         styles.stepLabel,
                         {
                           color: step.done ? colors.text : colors.textSecondary,
-                          fontFamily: step.done ? fonts.semiBold : fonts.regular,
+                          fontFamily: step.done
+                            ? fonts.semiBold
+                            : fonts.regular,
                         },
-                      ]}
-                    >
+                      ]}>
                       {step.label}
                     </Text>
                   </View>
-                  <Text style={[styles.stepDesc, { color: colors.textTertiary, fontFamily: fonts.regular }]}>
+                  <Text
+                    style={[
+                      styles.stepDesc,
+                      {color: colors.textTertiary, fontFamily: fonts.regular},
+                    ]}>
                     {step.desc}
                   </Text>
                 </View>
@@ -209,47 +333,80 @@ export default function OrderSuccessScreen({ navigation, route }: any) {
           </View>
 
           {/* ── Eco Impact Card ── */}
-          <View style={[styles.ecoCard, { backgroundColor: '#064E3B', borderColor: '#059669' }]}>
+          <View
+            style={[
+              styles.ecoCard,
+              {backgroundColor: '#064E3B', borderColor: '#059669'},
+            ]}>
             <Ionicons name="leaf" size={20} color="#34D399" />
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.ecoTitle, { fontFamily: fonts.bold }]}>
+            <View style={{flex: 1}}>
+              <Text style={[styles.ecoTitle, {fontFamily: fonts.bold}]}>
                 You're helping the planet! 🌱
               </Text>
-              <Text style={[styles.ecoDesc, { fontFamily: fonts.regular }]}>
-                Your order contributes to our DHL GoGreen CO₂ offset program. Together, we've offset 847 kg this month.
+              <Text style={[styles.ecoDesc, {fontFamily: fonts.regular}]}>
+                Your order contributes to our DHL GoGreen CO₂ offset program.
+                Together, we've offset 847 kg this month.
               </Text>
             </View>
           </View>
 
           {/* ── Info Row (Delivery estimate) ── */}
-          <View style={[styles.infoCard, { backgroundColor: colors.surface || colors.card, borderColor: colors.border }]}>
+          <View
+            style={[
+              styles.infoCard,
+              {
+                backgroundColor: colors.surface || colors.card,
+                borderColor: colors.border,
+              },
+            ]}>
             <View style={styles.infoRow}>
-              <Text style={[styles.infoLabel, { color: colors.textSecondary, fontFamily: fonts.medium }]}>
+              <Text
+                style={[
+                  styles.infoLabel,
+                  {color: colors.textSecondary, fontFamily: fonts.medium},
+                ]}>
                 Estimated Delivery
               </Text>
-              <Text style={[styles.infoValue, { color: colors.text, fontFamily: fonts.bold }]}>
+              <Text
+                style={[
+                  styles.infoValue,
+                  {color: colors.text, fontFamily: fonts.bold},
+                ]}>
                 3–5 Business Days
               </Text>
             </View>
-            <View style={[styles.divider, { backgroundColor: colors.border }]} />
-            <Text style={[styles.infoSubText, { color: colors.textTertiary, fontFamily: fonts.regular }]}>
-              Track your order anytime from the Notifications tab in your profile.
+            <View style={[styles.divider, {backgroundColor: colors.border}]} />
+            <Text
+              style={[
+                styles.infoSubText,
+                {color: colors.textTertiary, fontFamily: fonts.regular},
+              ]}>
+              Track your order anytime from the Notifications tab in your
+              profile.
             </Text>
           </View>
         </Animated.View>
       </ScrollView>
 
       {/* ── Action Buttons ── */}
-      <Animated.View
-        style={[styles.footer, { opacity: contentAnim }]}
-      >
+      <Animated.View style={[styles.footer, {opacity: contentAnim}]}>
         <TouchableOpacity
           onPress={handleTrackOrder}
-          style={[styles.trackBtn, { borderColor: colors.primary, borderWidth: 1.5, backgroundColor: colors.primary + '10' }]}
-          activeOpacity={0.8}
-        >
+          style={[
+            styles.trackBtn,
+            {
+              borderColor: colors.primary,
+              borderWidth: 1.5,
+              backgroundColor: colors.primary + '10',
+            },
+          ]}
+          activeOpacity={0.8}>
           <Ionicons name="navigate-outline" size={18} color={colors.primary} />
-          <Text style={[styles.trackBtnText, { color: colors.primary, fontFamily: fonts.semiBold }]}>
+          <Text
+            style={[
+              styles.trackBtnText,
+              {color: colors.primary, fontFamily: fonts.semiBold},
+            ]}>
             Track Order
           </Text>
         </TouchableOpacity>
@@ -264,7 +421,7 @@ export default function OrderSuccessScreen({ navigation, route }: any) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {flex: 1},
   scrollContent: {
     paddingHorizontal: wp(6.4),
     paddingTop: hp(3.0),
@@ -314,10 +471,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: hp(0.8),
   },
-  orderIdLabel: { fontSize: fp(3.2) },
-  shareBtn: { flexDirection: 'row', alignItems: 'center', gap: wp(1.0) },
-  shareText: { fontSize: fp(3.2) },
-  orderId: { fontSize: fp(5.0), letterSpacing: 1.5 },
+  orderIdLabel: {fontSize: fp(3.2)},
+  shareBtn: {flexDirection: 'row', alignItems: 'center', gap: wp(1.0)},
+  shareText: {fontSize: fp(3.2)},
+  orderId: {fontSize: fp(5.0), letterSpacing: 1.5},
   timelineCard: {
     width: '100%',
     padding: wp(4.27),
@@ -325,9 +482,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: hp(2.0),
   },
-  timelineTitle: { fontSize: fp(4.27), marginBottom: hp(2.0) },
-  stepRow: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: hp(0.5) },
-  stepLeft: { alignItems: 'center', width: wp(6.0), marginRight: wp(3.5) },
+  timelineTitle: {fontSize: fp(4.27), marginBottom: hp(2.0)},
+  stepRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: hp(0.5),
+  },
+  stepLeft: {alignItems: 'center', width: wp(6.0), marginRight: wp(3.5)},
   stepDot: {
     width: wp(5.5),
     height: wp(5.5),
@@ -353,9 +514,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: hp(2.0),
   },
-  stepLabelRow: { flexDirection: 'row', alignItems: 'center', gap: wp(2.0), marginBottom: hp(0.3) },
-  stepLabel: { fontSize: fp(3.73) },
-  stepDesc: { fontSize: fp(3.0), paddingLeft: wp(5.5) },
+  stepLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: wp(2.0),
+    marginBottom: hp(0.3),
+  },
+  stepLabel: {fontSize: fp(3.73)},
+  stepDesc: {fontSize: fp(3.0), paddingLeft: wp(5.5)},
   ecoCard: {
     width: '100%',
     flexDirection: 'row',
@@ -366,8 +532,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: hp(2.0),
   },
-  ecoTitle: { color: '#34D399', fontSize: fp(3.73), marginBottom: hp(0.4) },
-  ecoDesc: { color: '#86EFAC', fontSize: fp(3.2), lineHeight: hp(2.3) },
+  ecoTitle: {color: '#34D399', fontSize: fp(3.73), marginBottom: hp(0.4)},
+  ecoDesc: {color: '#86EFAC', fontSize: fp(3.2), lineHeight: hp(2.3)},
   infoCard: {
     width: '100%',
     padding: wp(4.27),
@@ -375,11 +541,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: hp(2.0),
   },
-  infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  infoLabel: { fontSize: fp(3.73) },
-  infoValue: { fontSize: fp(3.73) },
-  divider: { height: 1, marginVertical: hp(1.5) },
-  infoSubText: { fontSize: fp(3.2), lineHeight: hp(1.97) },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  infoLabel: {fontSize: fp(3.73)},
+  infoValue: {fontSize: fp(3.73)},
+  divider: {height: 1, marginVertical: hp(1.5)},
+  infoSubText: {fontSize: fp(3.2), lineHeight: hp(1.97)},
   footer: {
     padding: wp(6.4),
     paddingTop: hp(1.0),
@@ -393,6 +563,6 @@ const styles = StyleSheet.create({
     height: hp(6.4),
     borderRadius: wp(3.73),
   },
-  trackBtnText: { fontSize: fp(4.0) },
-  continueBtn: { height: hp(6.4) },
+  trackBtnText: {fontSize: fp(4.0)},
+  continueBtn: {height: hp(6.4)},
 });

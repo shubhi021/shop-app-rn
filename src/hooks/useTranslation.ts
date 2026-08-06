@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import {
   Language,
   getLanguage,
@@ -14,10 +14,12 @@ export const useTranslation = () => {
   const [lang, setLangState] = useState<Language>(getLanguage());
 
   useEffect(() => {
-    const unsubscribe = subscribeLanguageChange((newLang) => {
+    const unsubscribe = subscribeLanguageChange(newLang => {
       setLangState(newLang);
     });
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const changeLanguage = useCallback((newLang: Language) => {
@@ -25,17 +27,17 @@ export const useTranslation = () => {
   }, []);
 
   const t = useCallback(
-    (key: keyof typeof translations['de']): string => {
-      return translations[lang][key] || translations['en'][key] || key;
+    (key: keyof (typeof translations)['de']): string => {
+      return translations[lang][key] || translations.en[key] || key;
     },
-    [lang]
+    [lang],
   );
 
   const formatPrice = useCallback(
     (amount: number): string => {
       return formatCurrency(amount, lang);
     },
-    [lang]
+    [lang],
   );
 
   return {

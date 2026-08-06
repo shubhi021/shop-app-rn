@@ -1,17 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { createBottomTabNavigator, BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  createBottomTabNavigator,
+  BottomTabBarProps,
+} from '@react-navigation/bottom-tabs';
+import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { MainTabParamList } from '../types';
-import { useTheme } from '../hooks/useTheme';
-import { useTranslation } from '../hooks/useTranslation';
-import { useAppSelector } from '../store/hooks';
+import {MainTabParamList} from '../types';
+import {useTheme} from '../hooks/useTheme';
+import {useTranslation} from '../hooks/useTranslation';
+import {useAppSelector} from '../store/hooks';
 import HomeScreen from '../screens/Home/HomeScreen';
 import SearchScreen from '../screens/Home/SearchScreen';
 import CartScreen from '../screens/Cart/CartScreen';
 import WishlistScreen from '../screens/Wishlist/WishlistScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
-import { hp, wp, fp, SCREEN_WIDTH } from '../theme/dimensions';
+import {hp, wp, fp, SCREEN_WIDTH} from '../theme/dimensions';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -55,27 +58,30 @@ const TabButton: React.FC<TabButtonProps> = ({
   return (
     <TouchableOpacity
       accessibilityRole="button"
-      accessibilityState={isFocused ? { selected: true } : {}}
+      accessibilityState={isFocused ? {selected: true} : {}}
       onPress={onPress}
       onLongPress={onLongPress}
       style={styles.tabButton}
-      activeOpacity={0.8}
-    >
-      <Animated.View style={[styles.iconWrapper, { transform: [{ scale: scaleAnim }] }]}>
+      activeOpacity={0.8}>
+      <Animated.View
+        style={[styles.iconWrapper, {transform: [{scale: scaleAnim}]}]}>
         {!hasFontError ? (
           <Ionicons
             name={isFocused ? focusedIconName : iconName}
             size={22}
             color={isFocused ? colors.primary : colors.textTertiary}
-            onError={() => setHasFontError(true)}
           />
         ) : (
-          <Text style={[styles.fallbackText, { color: isFocused ? colors.primary : colors.textTertiary }]}>
+          <Text
+            style={[
+              styles.fallbackText,
+              {color: isFocused ? colors.primary : colors.textTertiary},
+            ]}>
             {fallbackGlyph}
           </Text>
         )}
         {badge && badge > 0 ? (
-          <View style={[styles.badge, { backgroundColor: '#EF4444' }]}>
+          <View style={[styles.badge, {backgroundColor: '#EF4444'}]}>
             <Text style={styles.badgeText}>{badge > 99 ? '99+' : badge}</Text>
           </View>
         ) : null}
@@ -87,20 +93,26 @@ const TabButton: React.FC<TabButtonProps> = ({
           {
             color: isFocused ? colors.primary : colors.textTertiary,
             fontFamily: isFocused ? fonts.bold : fonts.medium,
-            transform: [{ scale: scaleAnim }],
+            transform: [{scale: scaleAnim}],
           },
-        ]}
-      >
+        ]}>
         {label}
       </Animated.Text>
     </TouchableOpacity>
   );
 };
 
-const CustomTabBar = ({ state, descriptors, navigation, colors, fonts }: BottomTabBarProps & { colors: any; fonts: any }) => {
+const CustomTabBar = ({
+  state,
+  descriptors,
+  navigation,
+  colors,
+  fonts,
+}: BottomTabBarProps & {colors: any; fonts: any}) => {
   const paddingHorizontal = wp(2.0);
   const marginHorizontal = wp(4.27);
-  const availableWidth = SCREEN_WIDTH - marginHorizontal * 2 - paddingHorizontal * 2;
+  const availableWidth =
+    SCREEN_WIDTH - marginHorizontal * 2 - paddingHorizontal * 2;
   const tabWidth = availableWidth / state.routes.length;
 
   const slideAnim = useRef(new Animated.Value(0)).current;
@@ -117,46 +129,58 @@ const CustomTabBar = ({ state, descriptors, navigation, colors, fonts }: BottomT
   const getTabConfig = (routeName: string) => {
     switch (routeName) {
       case 'Home':
-        return { icon: 'home-outline', focusedIcon: 'home', glyph: '🏠' };
+        return {icon: 'home-outline', focusedIcon: 'home', glyph: '🏠'};
       case 'Search':
-        return { icon: 'search-outline', focusedIcon: 'search', glyph: '🔍' };
+        return {icon: 'search-outline', focusedIcon: 'search', glyph: '🔍'};
       case 'Cart':
-        return { icon: 'bag-handle-outline', focusedIcon: 'bag-handle', glyph: '🛍️' };
+        return {
+          icon: 'bag-handle-outline',
+          focusedIcon: 'bag-handle',
+          glyph: '🛍️',
+        };
       case 'Wishlist':
-        return { icon: 'heart-outline', focusedIcon: 'heart', glyph: '❤️' };
+        return {icon: 'heart-outline', focusedIcon: 'heart', glyph: '❤️'};
       case 'Profile':
-        return { icon: 'person-outline', focusedIcon: 'person', glyph: '👤' };
+        return {icon: 'person-outline', focusedIcon: 'person', glyph: '👤'};
       default:
-        return { icon: 'cube-outline', focusedIcon: 'cube', glyph: '📦' };
+        return {icon: 'cube-outline', focusedIcon: 'cube', glyph: '📦'};
     }
   };
 
-  const cartItems = useAppSelector((state) => state.cart.items);
-  const wishlistItems = useAppSelector((state) => state.wishlist.items);
+  const cartItems = useAppSelector(state => state.cart.items);
+  const wishlistItems = useAppSelector(state => state.wishlist.items);
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const getBadgeCount = (routeName: string) => {
-    if (routeName === 'Cart') return cartCount;
-    if (routeName === 'Wishlist') return wishlistItems.length;
+    if (routeName === 'Cart') {
+      return cartCount;
+    }
+    if (routeName === 'Wishlist') {
+      return wishlistItems.length;
+    }
     return undefined;
   };
 
   return (
-    <View style={[styles.tabBarContainer, { backgroundColor: colors.card, borderColor: colors.border }]}>
+    <View
+      style={[
+        styles.tabBarContainer,
+        {backgroundColor: colors.card, borderColor: colors.border},
+      ]}>
       <Animated.View
         style={[
           styles.slidingIndicator,
           {
             width: tabWidth,
             left: paddingHorizontal,
-            transform: [{ translateX: slideAnim }],
+            transform: [{translateX: slideAnim}],
             backgroundColor: colors.primary + '12',
           },
         ]}
       />
 
       {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
+        const {options} = descriptors[route.key];
         const isFocused = state.index === index;
         const config = getTabConfig(route.name);
         const badge = getBadgeCount(route.name);
@@ -208,16 +232,17 @@ const CustomTabBar = ({ state, descriptors, navigation, colors, fonts }: BottomT
 };
 
 export default function MainTabNavigator() {
-  const { colors, fonts } = useTheme();
-  const { t } = useTranslation();
+  const {colors, fonts} = useTheme();
+  const {t} = useTranslation();
 
   return (
     <Tab.Navigator
-      tabBar={(props) => <CustomTabBar {...props} colors={colors} fonts={fonts} />}
+      tabBar={props => (
+        <CustomTabBar {...props} colors={colors} fonts={fonts} />
+      )}
       screenOptions={{
         headerShown: false,
-      }}
-    >
+      }}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
@@ -271,7 +296,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     position: 'relative',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
+    shadowOffset: {width: 0, height: 6},
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,

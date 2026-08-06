@@ -1,22 +1,28 @@
 import React from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
+import {View, Text, StyleSheet, StatusBar} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTranslation } from '../hooks/useTranslation';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { hp, wp, fp } from '../theme/dimensions';
+import {useTranslation} from '../hooks/useTranslation';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {hp, wp, fp} from '../theme/dimensions';
 
 interface OfflineBannerProps {
   isOffline: boolean;
 }
 
-export const OfflineBanner: React.FC<OfflineBannerProps> = ({ isOffline }) => {
-  const { t } = useTranslation();
+export const OfflineBanner: React.FC<OfflineBannerProps> = ({isOffline}) => {
+  const {t} = useTranslation();
 
-  if (!isOffline) return null;
+  if (!isOffline) {
+    return null;
+  }
 
   return (
     <SafeAreaView edges={['top']} style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor="#D97706" animated={true} />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="#D97706"
+        animated={true}
+      />
       <View style={styles.banner}>
         <Ionicons name="wifi-outline" size={14} color="#FFFFFF" />
         <Text style={styles.text}>

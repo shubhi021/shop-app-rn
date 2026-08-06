@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -11,8 +11,8 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTranslation } from '../hooks/useTranslation';
-import { hp, wp, fp } from '../theme/dimensions';
+import {useTranslation} from '../hooks/useTranslation';
+import {hp, wp, fp} from '../theme/dimensions';
 
 interface PrivacyModalProps {
   visible: boolean;
@@ -21,8 +21,11 @@ interface PrivacyModalProps {
 
 const STORAGE_KEY = 'dsgvo_cookie_consent_v1';
 
-export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) => {
-  const { t, formatGermanDate } = useTranslation();
+export const PrivacyModal: React.FC<PrivacyModalProps> = ({
+  visible,
+  onClose,
+}) => {
+  const {t, formatGermanDate} = useTranslation();
 
   const [essential] = useState(true); // Always true & disabled
   const [analytics, setAnalytics] = useState(false);
@@ -69,7 +72,7 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) 
     Alert.alert(
       'DSGVO Data Export (Art. 15)',
       JSON.stringify(userData, null, 2),
-      [{ text: 'OK' }]
+      [{text: 'OK'}],
     );
   };
 
@@ -78,13 +81,17 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) 
       'Recht auf Vergessenwerden (Art. 17 DSGVO)',
       'Möchten Sie Ihr Benutzerkonto und alle personenbezogenen Daten wirklich unwiderruflich löschen?',
       [
-        { text: t('cancel'), style: 'cancel' },
+        {text: t('cancel'), style: 'cancel'},
         {
           text: t('confirm'),
           style: 'destructive',
-          onPress: () => Alert.alert('Konto Gelöscht', 'Alle Daten wurden gemäß DSGVO gelöscht.'),
+          onPress: () =>
+            Alert.alert(
+              'Konto Gelöscht',
+              'Alle Daten wurden gemäß DSGVO gelöscht.',
+            ),
         },
-      ]
+      ],
     );
   };
 
@@ -106,7 +113,11 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) 
                   Erforderlich für Grundfunktionen wie Anmeldung & Warenkorb.
                 </Text>
               </View>
-              <Switch value={essential} disabled trackColor={{ true: '#9CA3AF' }} />
+              <Switch
+                value={essential}
+                disabled
+                trackColor={{true: '#9CA3AF'}}
+              />
             </View>
 
             <View style={styles.optionRow}>
@@ -119,7 +130,7 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) 
               <Switch
                 value={analytics}
                 onValueChange={setAnalytics}
-                trackColor={{ false: '#D1D5DB', true: '#2563EB' }}
+                trackColor={{false: '#D1D5DB', true: '#2563EB'}}
               />
             </View>
 
@@ -133,23 +144,31 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({ visible, onClose }) 
               <Switch
                 value={marketing}
                 onValueChange={setMarketing}
-                trackColor={{ false: '#D1D5DB', true: '#2563EB' }}
+                trackColor={{false: '#D1D5DB', true: '#2563EB'}}
               />
             </View>
 
             <View style={styles.divider} />
 
-            <TouchableOpacity style={styles.actionBtnSecondary} onPress={handleExportData}>
+            <TouchableOpacity
+              style={styles.actionBtnSecondary}
+              onPress={handleExportData}>
               <View style={styles.buttonRow}>
                 <Ionicons name="download-outline" size={16} color="#374151" />
-                <Text style={styles.actionBtnSecondaryText}>{t('exportData')}</Text>
+                <Text style={styles.actionBtnSecondaryText}>
+                  {t('exportData')}
+                </Text>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionBtnDanger} onPress={handleDeleteAccount}>
+            <TouchableOpacity
+              style={styles.actionBtnDanger}
+              onPress={handleDeleteAccount}>
               <View style={styles.buttonRow}>
                 <Ionicons name="trash-outline" size={16} color="#991B1B" />
-                <Text style={styles.actionBtnDangerText}>{t('deleteAccount')}</Text>
+                <Text style={styles.actionBtnDangerText}>
+                  {t('deleteAccount')}
+                </Text>
               </View>
             </TouchableOpacity>
           </ScrollView>

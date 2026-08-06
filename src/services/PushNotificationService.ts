@@ -1,5 +1,5 @@
 import messaging from '@react-native-firebase/messaging';
-import { Alert, Platform } from 'react-native';
+import {Alert, Platform} from 'react-native';
 import Toast from 'react-native-toast-message';
 
 export const requestUserPermission = async () => {
@@ -24,7 +24,10 @@ export const requestUserPermission = async () => {
 
 export const getFCMToken = async () => {
   try {
-    if (Platform.OS === 'ios' && !messaging().isDeviceRegisteredForRemoteMessages) {
+    if (
+      Platform.OS === 'ios' &&
+      !messaging().isDeviceRegisteredForRemoteMessages
+    ) {
       await messaging().registerDeviceForRemoteMessages();
     }
     const token = await messaging().getToken();
@@ -45,7 +48,7 @@ export const setupPushNotifications = () => {
   // Foreground message handler
   const unsubscribe = messaging().onMessage(async remoteMessage => {
     console.log('A new FCM message arrived in the foreground!', remoteMessage);
-    
+
     Toast.show({
       type: 'info',
       text1: remoteMessage.notification?.title || 'New Notification',
@@ -57,17 +60,25 @@ export const setupPushNotifications = () => {
 
   // Handle notification tap when app is in background
   messaging().onNotificationOpenedApp(remoteMessage => {
-    console.log('Notification caused app to open from background state:', remoteMessage.notification);
+    console.log(
+      'Notification caused app to open from background state:',
+      remoteMessage.notification,
+    );
     // TODO: Navigation logic here
   });
 
   // Handle notification tap when app was completely killed
-  messaging().getInitialNotification().then(remoteMessage => {
-    if (remoteMessage) {
-      console.log('Notification caused app to open from quit state:', remoteMessage.notification);
-      // TODO: Navigation logic here
-    }
-  });
+  messaging()
+    .getInitialNotification()
+    .then(remoteMessage => {
+      if (remoteMessage) {
+        console.log(
+          'Notification caused app to open from quit state:',
+          remoteMessage.notification,
+        );
+        // TODO: Navigation logic here
+      }
+    });
 
   return unsubscribe;
 };

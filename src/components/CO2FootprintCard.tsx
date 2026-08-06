@@ -1,17 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, Switch } from 'react-native';
+import {View, Text, StyleSheet, Switch} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTranslation } from '../hooks/useTranslation';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { toggleGoGreenShipping } from '../store/slices/cartSlice';
-import { hp, wp, fp } from '../theme/dimensions';
+import {useTranslation} from '../hooks/useTranslation';
+import {useAppDispatch, useAppSelector} from '../store/hooks';
+import {toggleGoGreenShipping} from '../store/slices/cartSlice';
+import {hp, wp, fp} from '../theme/dimensions';
 
 export const CO2FootprintCard: React.FC = () => {
-  const { t, formatCurrency } = useTranslation();
+  const {t, formatCurrency} = useTranslation();
   const dispatch = useAppDispatch();
 
-  const { totalCo2Grams, totalPfand, isGoGreenShipping } = useAppSelector(
-    state => state.cart
+  const {totalCo2Grams, totalPfand, isGoGreenShipping} = useAppSelector(
+    state => state.cart,
   );
 
   const co2Display =
@@ -22,7 +22,12 @@ export const CO2FootprintCard: React.FC = () => {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Ionicons name="leaf-outline" size={18} color="#065F46" style={styles.headerIcon} />
+        <Ionicons
+          name="leaf-outline"
+          size={18}
+          color="#065F46"
+          style={styles.headerIcon}
+        />
         <Text style={styles.title}>{t('sustainabilityScore')}</Text>
       </View>
 
@@ -53,8 +58,10 @@ export const CO2FootprintCard: React.FC = () => {
         </View>
         <Switch
           value={isGoGreenShipping}
-          onValueChange={val => dispatch(toggleGoGreenShipping(val))}
-          trackColor={{ false: '#D1D5DB', true: '#10B981' }}
+          onValueChange={val => {
+            dispatch(toggleGoGreenShipping(val));
+          }}
+          trackColor={{false: '#D1D5DB', true: '#10B981'}}
           thumbColor={isGoGreenShipping ? '#FFFFFF' : '#F3F4F6'}
         />
       </View>

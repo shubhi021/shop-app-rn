@@ -45,7 +45,7 @@ export interface User {
 export type RootStackParamList = {
   Auth: undefined;
   Main: undefined;
-  ProductDetail: { productId: number };
+  ProductDetail: {productId: number};
   Checkout: undefined;
   OrderSuccess: undefined;
   Impressum: undefined;

@@ -1,22 +1,30 @@
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTranslation } from '../../hooks/useTranslation';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../types';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { hp, wp, fp } from '../../theme/dimensions';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useTranslation} from '../../hooks/useTranslation';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../types';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {hp, wp, fp} from '../../theme/dimensions';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Impressum'>;
 
-export const ImpressumScreen: React.FC<Props> = ({ navigation }) => {
+export const ImpressumScreen: React.FC<Props> = ({navigation}) => {
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const {t} = useTranslation();
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, {paddingTop: insets.top}]}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          style={styles.backBtn}
+          onPress={() => navigation.goBack()}>
           <Ionicons name="arrow-back" size={20} color="#2563EB" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{t('impressum')}</Text>
@@ -30,20 +38,28 @@ export const ImpressumScreen: React.FC<Props> = ({ navigation }) => {
           <Text style={styles.companyName}>ShopApp DE Technologies GmbH</Text>
           <Text style={styles.text}>Friedrichstraße 123</Text>
           <Text style={styles.text}>10117 Berlin, Deutschland</Text>
-          <Text style={styles.text}>Vertreten durch die Geschäftsführung: Jane Doe, John Smith</Text>
+          <Text style={styles.text}>
+            Vertreten durch die Geschäftsführung: Jane Doe, John Smith
+          </Text>
         </View>
 
         <Text style={styles.sectionTitle}>Handelsregister & USt-ID</Text>
         <View style={styles.box}>
-          <Text style={styles.text}>Registergericht: Amtsgericht Berlin-Charlottenburg</Text>
+          <Text style={styles.text}>
+            Registergericht: Amtsgericht Berlin-Charlottenburg
+          </Text>
           <Text style={styles.text}>Registernummer: HRB 987654 B</Text>
-          <Text style={styles.text}>Umsatzsteuer-Identifikationsnummer (USt-IdNr.): DE 123 456 789</Text>
+          <Text style={styles.text}>
+            Umsatzsteuer-Identifikationsnummer (USt-IdNr.): DE 123 456 789
+          </Text>
           <Text style={styles.text}>Wirtschafts-ID: DE-WID-999888777</Text>
         </View>
 
         <Text style={styles.sectionTitle}>Kontakt</Text>
         <View style={styles.box}>
-          <Text style={styles.text}>E-Mail: impressum@shopapp-de.example.com</Text>
+          <Text style={styles.text}>
+            E-Mail: impressum@shopapp-de.example.com
+          </Text>
           <Text style={styles.text}>Telefon: +49 (0) 30 12345678</Text>
         </View>
 
@@ -51,14 +67,21 @@ export const ImpressumScreen: React.FC<Props> = ({ navigation }) => {
         <View style={styles.box}>
           <Text style={styles.boldText}>Widerrufsrecht für Verbraucher</Text>
           <Text style={styles.text}>
-            Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag, an dem Sie oder ein von Ihnen benannter Dritter die Waren in Besitz genommen haben.
+            Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen
+            diesen Vertrag zu widerrufen. Die Widerrufsfrist beträgt vierzehn
+            Tage ab dem Tag, an dem Sie oder ein von Ihnen benannter Dritter die
+            Waren in Besitz genommen haben.
           </Text>
         </View>
 
         <Text style={styles.sectionTitle}>Streitbeilegung (OS-Plattform)</Text>
         <View style={styles.box}>
           <Text style={styles.text}>
-            Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: https://ec.europa.eu/consumers/odr. Wir sind nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
+            Die Europäische Kommission stellt eine Plattform zur
+            Online-Streitbeilegung (OS) bereit:
+            https://ec.europa.eu/consumers/odr. Wir sind nicht verpflichtet, an
+            Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+            teilzunehmen.
           </Text>
         </View>
       </ScrollView>

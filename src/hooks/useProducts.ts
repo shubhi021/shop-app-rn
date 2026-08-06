@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Product } from '../types';
-import { ProductService } from '../services/api';
+import {Product} from '../types';
+import {ProductService} from '../services/api';
 
 const CACHE_KEY = 'shop_app_cached_products';
 
@@ -29,7 +29,10 @@ export const useProducts = (initialCategory: string = 'All') => {
         await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(data));
       }
     } catch (err: any) {
-      console.log('Network fetch failed, loading offline cached products...', err);
+      console.log(
+        'Network fetch failed, loading offline cached products...',
+        err,
+      );
       setError(err.message || 'Failed to fetch products');
 
       // Offline Fallback: Load cached products from AsyncStorage
@@ -39,7 +42,7 @@ export const useProducts = (initialCategory: string = 'All') => {
           const parsed: Product[] = JSON.parse(cachedData);
           if (category && category !== 'All') {
             const filtered = parsed.filter(
-              p => p.category.toLowerCase() === category.toLowerCase()
+              p => p.category.toLowerCase() === category.toLowerCase(),
             );
             setProducts(filtered);
           } else {
