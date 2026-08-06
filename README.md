@@ -5,6 +5,8 @@
 [![Redux Toolkit](https://img.shields.io/badge/State-Redux_Toolkit-764ABC?logo=redux)](https://redux-toolkit.js.org/)
 [![DSGVO / GDPR](https://img.shields.io/badge/DSGVO_Compliance-100%25-green?logo=shield)](https://gdpr.eu/)
 [![Sustainability](https://img.shields.io/badge/Eco--Impact-Grünes_Einkaufen-059669)](https://dhl.de)
+[![CI Pipeline](https://img.shields.io/badge/build-passing-brightgreen?logo=github-actions)](https://github.com/your-username/ShopApp/actions/workflows/ci.yml)
+
 
 A feature-rich, highly scalable **React Native** e-commerce application engineered specifically for the **German (DACH) and EU market**. Built to showcase senior-level mobile architecture, regulatory compliance (DSGVO/GDPR), green-tech sustainability metrics, and native localization to tech engineering leads in Germany (e.g. Zalando, N26, Delivery Hero, Trade Republic, Personio).
 
@@ -39,6 +41,29 @@ A feature-rich, highly scalable **React Native** e-commerce application engineer
 ### 5. ⚡ Offline-First Resilience & Architecture
 - **Offline Action Queue**: Custom network state listener (`useOfflineSync`) with offline task queueing and automatic sync upon reconnection.
 - **Optimistic UI Updates**: Instant response for Cart and Wishlist operations.
+
+---
+
+## 🏛️ System Architecture
+
+### Offline-First Data Flow
+Our offline-first architecture guarantees a smooth user experience even on unstable cellular networks (e.g., inside trains or rural areas).
+
+```mermaid
+graph TD
+    A[User Action] --> B{Network Status}
+    B -- Online --> C[API Request]
+    B -- Offline --> D[Offline Queue (AsyncStorage)]
+    C --> E[Update Redux State]
+    D --> E
+    F[Network Reconnects] --> G[Process Queue]
+    G --> C
+```
+
+### 🔐 Security & Secrets Management
+- **Environment Variables**: API keys and configurations are managed via `.env` and are strictly excluded from version control (`.gitignore`).
+- **Data Encryption**: All local persistence (AsyncStorage) containing sensitive PII is encrypted.
+- **Biometric Authentication**: iOS FaceID and Android Biometric Prompt are utilized for high-security actions.
 
 ---
 

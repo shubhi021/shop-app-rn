@@ -1,0 +1,37 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_and_test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        # Using npm install instead of npm ci just in case package-lock is out of sync in development
+        run: npm install
+
+      - name: TypeScript Type Check
+        run: npx tsc --noEmit
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Jest Tests
+        run: npm test -- --coverage
