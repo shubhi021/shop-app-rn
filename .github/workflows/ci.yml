@@ -27,6 +27,9 @@ jobs:
         # Using npm install instead of npm ci just in case package-lock is out of sync in development
         run: npm install
 
+      - name: Create mock env file
+        run: cp src/config/env.example.ts src/config/env.ts
+
       - name: TypeScript Type Check
         run: npx tsc --noEmit
 
