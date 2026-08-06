@@ -1,0 +1,161 @@
+
+> ShopApp@0.0.1 lint
+> eslint .
+
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/common/Button.tsx
+   6:3   warning  'StyleSheet' is defined but never used            @typescript-eslint/no-unused-vars
+  12:17  warning  'fp' is defined but never used                    @typescript-eslint/no-unused-vars
+  33:36  warning  'fontWeights' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/common/ErrorMessage.tsx
+  5:17  warning  'fp' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/common/Input.tsx
+  10:3   warning  'KeyboardTypeOptions' is defined but never used  @typescript-eslint/no-unused-vars
+  14:17  warning  'fp' is defined but never used                   @typescript-eslint/no-unused-vars
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/product/ProductCard.tsx
+  85:6  warning  React Hook useEffect has missing dependencies: 'fadeAnim' and 'slideAnim'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/hooks/useTheme.tsx
+  75:26  error  React Hook "useColorScheme" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/navigation/AppNavigator.tsx
+  93:16  warning  Inline style: { flex: 1, justifyContent: 'center', alignItems: 'center' }  react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/navigation/MainTabNavigator.tsx
+   47:24  warning  'setHasFontError' is assigned a value but never used. Allowed unused elements of array destructuring patterns must match /^_/u                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   56:6   warning  React Hook useEffect has a missing dependency: 'scaleAnim'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+   84:39  warning  Inline style: { backgroundColor: '#EF4444' }                                                                                                                                                                                                                                                                                                                                                                                   react-native/no-inline-styles
+  127:6   warning  React Hook useEffect has a missing dependency: 'slideAnim'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+  150:36  warning  'state' is already declared in the upper scope on line 106 column 3                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-shadow
+  151:40  warning  'state' is already declared in the upper scope on line 106 column 3                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-shadow
+  240:15  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “MainTabNavigator” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Cart/CartScreen.tsx
+    1:26  warning  'useRef' is defined but never used                                      @typescript-eslint/no-unused-vars
+   12:3   warning  'Animated' is defined but never used                                    @typescript-eslint/no-unused-vars
+   19:9   warning  'formatPrice' is defined but never used                                 @typescript-eslint/no-unused-vars
+  232:11  warning  Inline style: { justifyContent: 'center' }                              react-native/no-inline-styles
+  289:11  warning  Inline style: { borderBottomWidth: 1 }                                  react-native/no-inline-styles
+  363:19  warning  Inline style: { backgroundColor: '#DCFCE7', borderColor: '#16A34A' }    react-native/no-inline-styles
+  369:21  warning  Inline style: { color: '#16A34A' }                                      react-native/no-inline-styles
+  468:25  warning  Inline style: { color: '#EF4444' }                                      react-native/no-inline-styles
+  513:21  warning  Inline style: { color: "shippingFee === 0 ? '#16A34A' : colors.text" }  react-native/no-inline-styles
+  524:54  warning  Inline style: { color: '#059669' }                                      react-native/no-inline-styles
+  530:23  warning  Inline style: { color: '#059669' }                                      react-native/no-inline-styles
+  539:54  warning  Inline style: { color: '#16A34A' }                                      react-native/no-inline-styles
+  545:23  warning  Inline style: { color: '#16A34A' }                                      react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Checkout/CheckoutScreen.tsx
+   13:16  warning  'RNTextInput' is defined but never used                                 @typescript-eslint/no-unused-vars
+  229:16  warning  Inline style: { flex: 1 }                                               react-native/no-inline-styles
+  234:13  warning  Inline style: { borderBottomWidth: 1 }                                  react-native/no-inline-styles
+  346:32  warning  Inline style: { flex: 1 }                                               react-native/no-inline-styles
+  430:28  warning  Inline style: { flex: 0.58 }                                            react-native/no-inline-styles
+  442:28  warning  Inline style: { flex: 0.38 }                                            react-native/no-inline-styles
+  478:59  warning  Inline style: { borderBottomWidth: 1 }                                  react-native/no-inline-styles
+  664:19  warning  Inline style: { color: "shippingFee === 0 ? '#16A34A' : colors.text" }  react-native/no-inline-styles
+  671:52  warning  Inline style: { color: '#059669' }                                      react-native/no-inline-styles
+  674:52  warning  Inline style: { color: '#059669' }                                      react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Checkout/OrderSuccessScreen.tsx
+   55:57  warning  'route' is defined but never used. Allowed unused args must match /^_/u                                                                                        @typescript-eslint/no-unused-vars
+  110:6   warning  React Hook useEffect has missing dependencies: 'contentAnim', 'contentSlide', 'ringAnim', and 'scaleAnim'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  339:15  warning  Inline style: { backgroundColor: '#064E3B', borderColor: '#059669' }                                                                                           react-native/no-inline-styles
+  342:26  warning  Inline style: { flex: 1 }                                                                                                                                      react-native/no-inline-styles
+  397:13  warning  Inline style: { borderWidth: 1.5 }                                                                                                                             react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Home/HomeScreen.tsx
+  135:36  warning  'fontWeights' is assigned a value but never used                 @typescript-eslint/no-unused-vars
+  284:21  warning  Inline style: { backgroundColor: '#FFFFFF' }                     react-native/no-inline-styles
+  339:21  warning  Inline style: { color: "isSelected ? '#FFFFFF' : colors.text" }  react-native/no-inline-styles
+  442:28  warning  Inline style: { alignItems: 'center' }                           react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Home/NotificationScreen.tsx
+  100:25  warning  'fontSizes' is assigned a value but never used                                                                                                                     @typescript-eslint/no-unused-vars
+  122:6   warning  React Hook useEffect has missing dependencies: 'fadeAnim' and 'slideAnim'. Either include them or remove the dependency array                                      react-hooks/exhaustive-deps
+  224:15  warning  Inline style: { backgroundColor: "isDark ? '#1F293D' : iconConfig.bgColor" }                                                                                       react-native/no-inline-styles
+  282:48  warning  Inline style: { backgroundColor: '#F59E0B18' }                                                                                                                     react-native/no-inline-styles
+  286:21  warning  Inline style: { color: '#D97706' }                                                                                                                                 react-native/no-inline-styles
+  380:19  warning  Inline style: { color: '#EF4444' }                                                                                                                                 react-native/no-inline-styles
+  407:11  warning  Inline style: { borderBottomWidth: 1 }                                                                                                                             react-native/no-inline-styles
+  436:19  warning  Inline style: { color: "activeFilter === opt.key ? '#FFF' : colors.textSecondary" }                                                                                react-native/no-inline-styles
+  449:21  warning  Inline style: {
+  backgroundColor: "activeFilter === opt.key ? '#FFFFFF30' : colors.border"
+}                                                                      react-native/no-inline-styles
+  457:23  warning  Inline style: {
+  color: 'activeFilter === opt.key\n' +
+    "                            ? '#FFF'\n" +
+    '                            : colors.textSecondary'
+}  react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Home/SearchScreen.tsx
+   31:36  warning  'fontWeights' is assigned a value but never used                                                                      @typescript-eslint/no-unused-vars
+   37:10  warning  'error' is assigned a value but never used. Allowed unused elements of array destructuring patterns must match /^_/u  @typescript-eslint/no-unused-vars
+  238:21  warning  Inline style: { color: "isSelected ? '#FFFFFF' : colors.text" }                                                       react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Product/ProductDetailScreen.tsx
+     7:3   warning  'ActivityIndicator' is defined but never used                                                                                                                                @typescript-eslint/no-unused-vars
+    69:27  warning  'count' is defined but never used. Allowed unused args must match /^_/u                                                                                                      @typescript-eslint/no-unused-vars
+    95:17  warning  Inline style: { backgroundColor: '#F59E0B' }                                                                                                                                 react-native/no-inline-styles
+   131:25  warning  'fontSizes' is assigned a value but never used                                                                                                                               @typescript-eslint/no-unused-vars
+   131:36  warning  'fontWeights' is assigned a value but never used                                                                                                                             @typescript-eslint/no-unused-vars
+   153:9   warning  'headerBgOpacity' is assigned a value but never used                                                                                                                         @typescript-eslint/no-unused-vars
+   276:13  warning  Inline style: { borderBottomWidth: 1 }                                                                                                                                       react-native/no-inline-styles
+   289:18  warning  Inline style: { opacity: 0.3 }                                                                                                                                               react-native/no-inline-styles
+   298:20  warning  Inline style: { opacity: 0.3 }                                                                                                                                               react-native/no-inline-styles
+   308:20  warning  Inline style: { opacity: 0.3 }                                                                                                                                               react-native/no-inline-styles
+   318:20  warning  Inline style: { opacity: 0.3 }                                                                                                                                               react-native/no-inline-styles
+   331:20  warning  Inline style: { opacity: 0.3 }                                                                                                                                               react-native/no-inline-styles
+   341:20  warning  Inline style: { width: '100%', opacity: 0.3 }                                                                                                                                react-native/no-inline-styles
+   405:11  warning  Inline style: { borderBottomWidth: 1 }                                                                                                                                       react-native/no-inline-styles
+   472:50  warning  Inline style: { backgroundColor: '#FFFFFF' }                                                                                                                                 react-native/no-inline-styles
+   477:15  warning  Inline style: { backgroundColor: "inStock ? '#DCFCE7' : '#FEE2E2'" }                                                                                                         react-native/no-inline-styles
+   482:17  warning  Inline style: { backgroundColor: "inStock ? '#16A34A' : '#DC2626'" }                                                                                                         react-native/no-inline-styles
+   488:17  warning  Inline style: { color: "inStock ? '#16A34A' : '#DC2626'" }                                                                                                                   react-native/no-inline-styles
+   665:25  warning  Inline style: { color: "selectedSize === size ? '#FFF' : colors.text" }                                                                                                      react-native/no-inline-styles
+   698:23  warning  Inline style: {
+  borderColor: 'selectedColor === col.value\n' +
+    '                            ? colors.primary\n' +
+    "                            : 'transparent'"
+}  react-native/no-inline-styles
+   870:19  warning  Inline style: { backgroundColor: "isDark ? colors.border : '#F1F5F9'" }                                                                                                      react-native/no-inline-styles
+   886:19  warning  Inline style: { backgroundColor: "isDark ? colors.border : '#F1F5F9'" }                                                                                                      react-native/no-inline-styles
+   948:32  warning  Inline style: { flex: 1 }                                                                                                                                                    react-native/no-inline-styles
+  1059:11  warning  Inline style: { borderTopWidth: 1 }                                                                                                                                          react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Profile/OrderHistoryScreen.tsx
+   32:6   warning  React Hook useEffect has a missing dependency: 'fetchOrders'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  111:22  warning  Inline style: { width: 24 }                                                                                     react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Profile/ProfileScreen.tsx
+    8:3   warning  'ActivityIndicator' is defined but never used                                                                @typescript-eslint/no-unused-vars
+   13:3   warning  'Image' is defined but never used                                                                            @typescript-eslint/no-unused-vars
+   16:9   warning  'collection' is defined but never used                                                                       @typescript-eslint/no-unused-vars
+   16:21  warning  'query' is defined but never used                                                                            @typescript-eslint/no-unused-vars
+   16:28  warning  'where' is defined but never used                                                                            @typescript-eslint/no-unused-vars
+   16:35  warning  'getDocs' is defined but never used                                                                          @typescript-eslint/no-unused-vars
+   16:44  warning  'orderBy' is defined but never used                                                                          @typescript-eslint/no-unused-vars
+   18:15  warning  'db' is defined but never used                                                                               @typescript-eslint/no-unused-vars
+   32:5   warning  'fonts' is assigned a value but never used                                                                   @typescript-eslint/no-unused-vars
+   39:39  warning  'formatCurrency' is assigned a value but never used                                                          @typescript-eslint/no-unused-vars
+   69:6   warning  React Hook useEffect has a missing dependency: 'ringAnim'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  283:40  warning  Inline style: { color: '#FFF' }                                                                              react-native/no-inline-styles
+  297:40  warning  Inline style: { color: '#FFF' }                                                                              react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/screens/Wishlist/WishlistScreen.tsx
+    1:26  warning  'useRef' is defined but never used                                             @typescript-eslint/no-unused-vars
+   10:3   warning  'Animated' is defined but never used                                           @typescript-eslint/no-unused-vars
+   18:9   warning  'removeFromWishlist' is defined but never used                                 @typescript-eslint/no-unused-vars
+  111:11  warning  Inline style: { borderBottomWidth: 1 }                                         react-native/no-inline-styles
+  169:15  warning  Inline style: { borderBottomWidth: 1 }                                         react-native/no-inline-styles
+  196:23  warning  Inline style: { color: "sortBy === opt.key ? '#FFF' : colors.textSecondary" }  react-native/no-inline-styles
+  236:15  warning  Inline style: { borderTopWidth: 1 }                                            react-native/no-inline-styles
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/services/PushNotificationService.ts
+  2:9  warning  'Alert' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 108 problems (1 error, 107 warnings)
+
