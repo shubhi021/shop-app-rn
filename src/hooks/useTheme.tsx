@@ -71,7 +71,7 @@ export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   const systemScheme = useColorScheme();
-  
+
   if (!context) {
     // Fallback if not wrapped in ThemeProvider
     const isDark = systemScheme === 'dark';
