@@ -23,11 +23,10 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({isOffline}) => {
         backgroundColor="#D97706"
         animated={true}
       />
-      <View 
+      <View
         style={styles.banner}
         accessibilityRole="alert"
-        accessibilityLiveRegion="assertive"
-      >
+        accessibilityLiveRegion="assertive">
         <Ionicons name="wifi-outline" size={14} color="#FFFFFF" />
         <Text style={styles.text}>
           {t('offlineMode')} — {t('offlineNotice')}

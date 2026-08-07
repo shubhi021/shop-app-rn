@@ -33,12 +33,13 @@ export const EcoScoreBadge: React.FC<EcoScoreBadgeProps> = ({
   const iconSize = isSmall ? 10 : isLarge ? 14 : 12;
 
   return (
-    <View 
+    <View
       style={styles.container}
       accessible={true}
       accessibilityRole="text"
-      accessibilityLabel={`Eco Score: ${score}${co2Grams ? `, ${co2Grams} ${t('gCO2e')}` : ''}${hasPfand ? `, ${t('pfandIncluded')}` : ''}`}
-    >
+      accessibilityLabel={`Eco Score: ${score}${
+        co2Grams ? `, ${co2Grams} ${t('gCO2e')}` : ''
+      }${hasPfand ? `, ${t('pfandIncluded')}` : ''}`}>
       <View
         style={[
           styles.badge,

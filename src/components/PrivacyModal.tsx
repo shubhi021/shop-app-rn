@@ -116,7 +116,7 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
               <Switch
                 accessibilityRole="switch"
                 accessibilityLabel={t('essentialCookies')}
-                accessibilityState={{ checked: essential, disabled: true }}
+                accessibilityState={{checked: essential, disabled: true}}
                 value={essential}
                 disabled
                 trackColor={{true: '#9CA3AF'}}
@@ -133,7 +133,7 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
               <Switch
                 accessibilityRole="switch"
                 accessibilityLabel={t('analyticsCookies')}
-                accessibilityState={{ checked: analytics }}
+                accessibilityState={{checked: analytics}}
                 value={analytics}
                 onValueChange={setAnalytics}
                 trackColor={{false: '#D1D5DB', true: '#2563EB'}}
@@ -150,7 +150,7 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
               <Switch
                 accessibilityRole="switch"
                 accessibilityLabel={t('marketingCookies')}
-                accessibilityState={{ checked: marketing }}
+                accessibilityState={{checked: marketing}}
                 value={marketing}
                 onValueChange={setMarketing}
                 trackColor={{false: '#D1D5DB', true: '#2563EB'}}

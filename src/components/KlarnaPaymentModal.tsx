@@ -41,23 +41,23 @@ export const KlarnaPaymentModal: React.FC<KlarnaPaymentModalProps> = ({
           </View>
 
           <ScrollView style={styles.scroll}>
-            <View 
+            <View
               style={styles.amountBox}
               accessible={true}
               accessibilityRole="text"
-              accessibilityLabel={`${t('orderTotal')} ${formatCurrency(amount)}`}
-            >
+              accessibilityLabel={`${t('orderTotal')} ${formatCurrency(
+                amount,
+              )}`}>
               <Text style={styles.amountLabel}>{t('orderTotal')}</Text>
               <Text style={styles.amountValue}>{formatCurrency(amount)}</Text>
             </View>
 
             <View style={styles.detailCard}>
-              <View 
+              <View
                 style={styles.row}
                 accessible={true}
                 accessibilityRole="text"
-                accessibilityLabel={`Fälligkeitsdatum: ${dueDate} in 30 Tagen`}
-              >
+                accessibilityLabel={`Fälligkeitsdatum: ${dueDate} in 30 Tagen`}>
                 <View style={styles.rowLabelContainer}>
                   <Ionicons name="calendar-outline" size={14} color="#4B5563" />
                   <Text style={styles.label}>Fälligkeitsdatum:</Text>
@@ -94,20 +94,18 @@ export const KlarnaPaymentModal: React.FC<KlarnaPaymentModalProps> = ({
           </ScrollView>
 
           <View style={styles.footer}>
-            <TouchableOpacity 
-              style={styles.cancelBtn} 
+            <TouchableOpacity
+              style={styles.cancelBtn}
               onPress={onCancel}
               accessibilityRole="button"
-              accessibilityLabel={t('cancel')}
-            >
+              accessibilityLabel={t('cancel')}>
               <Text style={styles.cancelBtnText}>{t('cancel')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.confirmBtn} 
+            <TouchableOpacity
+              style={styles.confirmBtn}
               onPress={onConfirm}
               accessibilityRole="button"
-              accessibilityLabel="Jetzt Kaufen in 30 Tagen zahlen"
-            >
+              accessibilityLabel="Jetzt Kaufen in 30 Tagen zahlen">
               <Text style={styles.confirmBtnText}>
                 Jetzt Kaufen (in 30 Tagen zahlen)
               </Text>

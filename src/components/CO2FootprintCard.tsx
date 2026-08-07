@@ -21,12 +21,11 @@ export const CO2FootprintCard: React.FC = () => {
 
   return (
     <View style={styles.card}>
-      <View 
+      <View
         style={styles.header}
         accessible={true}
         accessibilityRole="header"
-        accessibilityLabel={t('sustainabilityScore')}
-      >
+        accessibilityLabel={t('sustainabilityScore')}>
         <Ionicons
           name="leaf-outline"
           size={18}
@@ -36,23 +35,23 @@ export const CO2FootprintCard: React.FC = () => {
         <Text style={styles.title}>{t('sustainabilityScore')}</Text>
       </View>
 
-      <View 
+      <View
         style={styles.row}
         accessible={true}
         accessibilityRole="text"
-        accessibilityLabel={`${t('co2Emissions')}: ${co2Display}`}
-      >
+        accessibilityLabel={`${t('co2Emissions')}: ${co2Display}`}>
         <Text style={styles.label}>{t('co2Emissions')}:</Text>
         <Text style={styles.co2Value}>{co2Display}</Text>
       </View>
 
       {totalPfand > 0 ? (
-        <View 
+        <View
           style={styles.row}
           accessible={true}
           accessibilityRole="text"
-          accessibilityLabel={`${t('pfandDeposit')}: ${formatCurrency(totalPfand)}`}
-        >
+          accessibilityLabel={`${t('pfandDeposit')}: ${formatCurrency(
+            totalPfand,
+          )}`}>
           <View style={styles.rowLabelContainer}>
             <Ionicons name="refresh-circle-outline" size={16} color="#047857" />
             <Text style={styles.label}>{t('pfandDeposit')}:</Text>

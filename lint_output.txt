@@ -1,6 +1,6 @@
 
 > ShopApp@0.0.1 lint
-> eslint . --fix
+> eslint .
 
 
 /Users/shubhisrivastava/Desktop/ShopApp/coverage/lcov-report/block-navigation.js
@@ -11,6 +11,72 @@
 
 /Users/shubhisrivastava/Desktop/ShopApp/coverage/lcov-report/sorter.js
   1:0  warning  Unexpected unlimited 'eslint-disable' comment. Specify some rule names to disable  eslint-comments/no-unlimited-disable
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/CO2FootprintCard.tsx
+  24:12  warning  Trailing spaces not allowed                               no-trailing-spaces
+  24:12  error    Delete `·`                                                prettier/prettier
+  28:54  error    Delete `⏎······`                                          prettier/prettier
+  39:12  warning  Trailing spaces not allowed                               no-trailing-spaces
+  39:12  error    Delete `·`                                                prettier/prettier
+  43:67  error    Delete `⏎······`                                          prettier/prettier
+  50:14  warning  Trailing spaces not allowed                               no-trailing-spaces
+  50:14  error    Delete `·`                                                prettier/prettier
+  54:71  error    Replace `totalPfand)}`}` with `⏎············totalPfand,`  prettier/prettier
+  55:9   error    Insert `··)}`}`                                           prettier/prettier
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/EcoScoreBadge.tsx
+  36:10  warning  Trailing spaces not allowed                                                                                                                                                                                                      no-trailing-spaces
+  36:10  error    Delete `·`                                                                                                                                                                                                                       prettier/prettier
+  40:49  error    Replace `co2Grams·?·`,·${co2Grams}·${t('gCO2e')}`·:·''}${hasPfand·?·`,·${t('pfandIncluded')}`·:·''}`}⏎····` with `⏎········co2Grams·?·`,·${co2Grams}·${t('gCO2e')}`·:·''⏎······}${hasPfand·?·`,·${t('pfandIncluded')}`·:·''}`}`  prettier/prettier
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/KlarnaPaymentModal.tsx
+   44:18  warning  Trailing spaces not allowed                           no-trailing-spaces
+   44:18  error    Delete `·`                                            prettier/prettier
+   48:72  error    Replace `amount)}`}` with `⏎················amount,`  prettier/prettier
+   49:13  error    Insert `··)}`}`                                       prettier/prettier
+   55:20  warning  Trailing spaces not allowed                           no-trailing-spaces
+   55:20  error    Delete `·`                                            prettier/prettier
+   59:80  error    Delete `⏎··············`                              prettier/prettier
+   97:30  warning  Trailing spaces not allowed                           no-trailing-spaces
+   97:30  error    Delete `·`                                            prettier/prettier
+   98:39  warning  Trailing spaces not allowed                           no-trailing-spaces
+   98:39  error    Delete `·`                                            prettier/prettier
+  101:47  error    Delete `⏎············`                                prettier/prettier
+  105:30  warning  Trailing spaces not allowed                           no-trailing-spaces
+  105:30  error    Delete `·`                                            prettier/prettier
+  106:40  warning  Trailing spaces not allowed                           no-trailing-spaces
+  106:40  error    Delete `·`                                            prettier/prettier
+  109:67  error    Delete `⏎············`                                prettier/prettier
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/OfflineBanner.tsx
+  26:12  warning  Trailing spaces not allowed  no-trailing-spaces
+  26:12  error    Delete `·`                   prettier/prettier
+  29:44  error    Delete `⏎······`             prettier/prettier
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/PrivacyModal.tsx
+  119:38  error  Replace `·checked:·essential,·disabled:·true·` with `checked:·essential,·disabled:·true`  prettier/prettier
+  136:38  error  Replace `·checked:·analytics·` with `checked:·analytics`                                  prettier/prettier
+  153:38  error  Replace `·checked:·marketing·` with `checked:·marketing`                                  prettier/prettier
+
+/Users/shubhisrivastava/Desktop/ShopApp/src/components/TaxBreakdownCard.tsx
+  19:12  warning  Trailing spaces not allowed                                 no-trailing-spaces
+  19:12  error    Delete `·`                                                  prettier/prettier
+  23:46  error    Delete `⏎······`                                            prettier/prettier
+  29:12  warning  Trailing spaces not allowed                                 no-trailing-spaces
+  29:12  error    Delete `·`                                                  prettier/prettier
+  33:77  error    Delete `⏎······`                                            prettier/prettier
+  40:14  warning  Trailing spaces not allowed                                 no-trailing-spaces
+  40:14  error    Delete `·`                                                  prettier/prettier
+  44:70  error    Replace `vat19Amount)}`}` with `⏎············vat19Amount,`  prettier/prettier
+  45:9   error    Insert `··)}`}`                                             prettier/prettier
+  52:14  warning  Trailing spaces not allowed                                 no-trailing-spaces
+  52:14  error    Delete `·`                                                  prettier/prettier
+  56:69  error    Replace `vat7Amount)}`}` with `⏎············vat7Amount,`    prettier/prettier
+  57:9   error    Insert `··)}`}`                                             prettier/prettier
+  64:14  warning  Trailing spaces not allowed                                 no-trailing-spaces
+  64:14  error    Delete `·`                                                  prettier/prettier
+  68:71  error    Replace `totalPfand)}`}` with `⏎············totalPfand,`    prettier/prettier
+  69:9   error    Insert `··)}`}`                                             prettier/prettier
 
 /Users/shubhisrivastava/Desktop/ShopApp/src/components/common/Button.tsx
    6:3   warning  'StyleSheet' is defined but never used            @typescript-eslint/no-unused-vars
@@ -89,5 +155,6 @@
 /Users/shubhisrivastava/Desktop/ShopApp/src/services/PushNotificationService.ts
   2:9  warning  'Alert' is defined but never used  @typescript-eslint/no-unused-vars
 
-✖ 48 problems (0 errors, 48 warnings)
+✖ 102 problems (38 errors, 64 warnings)
+  38 errors and 16 warnings potentially fixable with the `--fix` option.
 
