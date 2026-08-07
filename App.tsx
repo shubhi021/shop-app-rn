@@ -8,7 +8,9 @@ import {useOfflineSync} from './src/hooks/useOfflineSync';
 import {OfflineBanner} from './src/components/OfflineBanner';
 import {setupPushNotifications} from './src/services/PushNotificationService';
 
-export default function App() {
+const SHOW_STORYBOOK = false;
+
+let AppEntryPoint = function App() {
   const {isOffline} = useOfflineSync();
 
   useEffect(() => {
@@ -29,4 +31,11 @@ export default function App() {
       </ThemeProvider>
     </Provider>
   );
+};
+
+if (SHOW_STORYBOOK) {
+  // @ts-ignore
+  AppEntryPoint = require('./.storybook').default;
 }
+
+export default AppEntryPoint;

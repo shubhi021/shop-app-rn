@@ -16,32 +16,57 @@ export const TaxBreakdownCard: React.FC = () => {
 
   return (
     <View style={styles.card}>
-      <View style={styles.header}>
+      <View 
+        style={styles.header}
+        accessible={true}
+        accessibilityRole="header"
+        accessibilityLabel={t('vatIncluded')}
+      >
         <Ionicons name="receipt-outline" size={16} color="#374151" />
         <Text style={styles.title}>{t('vatIncluded')}</Text>
       </View>
 
-      <View style={styles.row}>
+      <View 
+        style={styles.row}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel={`${t('netTotal')}: ${formatCurrency(netTotal)}`}
+      >
         <Text style={styles.label}>{t('netTotal')}:</Text>
         <Text style={styles.value}>{formatCurrency(netTotal)}</Text>
       </View>
 
       {vat19Amount > 0 ? (
-        <View style={styles.row}>
+        <View 
+          style={styles.row}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`${t('standardVat')}: ${formatCurrency(vat19Amount)}`}
+        >
           <Text style={styles.sublabel}>• {t('standardVat')}:</Text>
           <Text style={styles.subvalue}>{formatCurrency(vat19Amount)}</Text>
         </View>
       ) : null}
 
       {vat7Amount > 0 ? (
-        <View style={styles.row}>
+        <View 
+          style={styles.row}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`${t('reducedVat')}: ${formatCurrency(vat7Amount)}`}
+        >
           <Text style={styles.sublabel}>• {t('reducedVat')}:</Text>
           <Text style={styles.subvalue}>{formatCurrency(vat7Amount)}</Text>
         </View>
       ) : null}
 
       {totalPfand > 0 ? (
-        <View style={styles.row}>
+        <View 
+          style={styles.row}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`${t('pfandDeposit')}: ${formatCurrency(totalPfand)}`}
+        >
           <Text style={styles.sublabel}>• {t('pfandDeposit')}:</Text>
           <Text style={styles.subvalue}>{formatCurrency(totalPfand)}</Text>
         </View>

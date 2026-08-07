@@ -114,6 +114,9 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                 </Text>
               </View>
               <Switch
+                accessibilityRole="switch"
+                accessibilityLabel={t('essentialCookies')}
+                accessibilityState={{ checked: essential, disabled: true }}
                 value={essential}
                 disabled
                 trackColor={{true: '#9CA3AF'}}
@@ -128,6 +131,9 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                 </Text>
               </View>
               <Switch
+                accessibilityRole="switch"
+                accessibilityLabel={t('analyticsCookies')}
+                accessibilityState={{ checked: analytics }}
                 value={analytics}
                 onValueChange={setAnalytics}
                 trackColor={{false: '#D1D5DB', true: '#2563EB'}}
@@ -142,6 +148,9 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                 </Text>
               </View>
               <Switch
+                accessibilityRole="switch"
+                accessibilityLabel={t('marketingCookies')}
+                accessibilityState={{ checked: marketing }}
                 value={marketing}
                 onValueChange={setMarketing}
                 trackColor={{false: '#D1D5DB', true: '#2563EB'}}
@@ -152,7 +161,9 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
 
             <TouchableOpacity
               style={styles.actionBtnSecondary}
-              onPress={handleExportData}>
+              onPress={handleExportData}
+              accessibilityRole="button"
+              accessibilityLabel={t('exportData')}>
               <View style={styles.buttonRow}>
                 <Ionicons name="download-outline" size={16} color="#374151" />
                 <Text style={styles.actionBtnSecondaryText}>
@@ -163,7 +174,9 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
 
             <TouchableOpacity
               style={styles.actionBtnDanger}
-              onPress={handleDeleteAccount}>
+              onPress={handleDeleteAccount}
+              accessibilityRole="button"
+              accessibilityLabel={t('deleteAccount')}>
               <View style={styles.buttonRow}>
                 <Ionicons name="trash-outline" size={16} color="#991B1B" />
                 <Text style={styles.actionBtnDangerText}>
@@ -176,12 +189,16 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
           <View style={styles.footer}>
             <TouchableOpacity
               style={styles.saveBtn}
-              onPress={() => handleSave(false)}>
+              onPress={() => handleSave(false)}
+              accessibilityRole="button"
+              accessibilityLabel={t('savePreferences')}>
               <Text style={styles.saveBtnText}>{t('savePreferences')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.acceptAllBtn}
-              onPress={() => handleSave(true)}>
+              onPress={() => handleSave(true)}
+              accessibilityRole="button"
+              accessibilityLabel={t('acceptAll')}>
               <Text style={styles.acceptAllBtnText}>{t('acceptAll')}</Text>
             </TouchableOpacity>
           </View>
