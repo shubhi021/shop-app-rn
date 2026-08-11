@@ -28,18 +28,19 @@ interface ProductCardProps {
 
 const COLUMN_WIDTH = wp(44.5); // (100% width - margins) / 2 responsive columns
 
-export default function ProductCard({product, onPress}: ProductCardProps) {
+function ProductCard({product, onPress}: ProductCardProps) {
   const {colors, fonts} = useTheme();
   const {formatCurrency} = useTranslation();
   const dispatch = useAppDispatch();
-  const wishlistItems = useAppSelector(state => state.wishlist.items);
-  const cartItems = useAppSelector(state => state.cart.items);
 
-  const isWishlisted = wishlistItems.some(
-    item => item.product.id === product.id,
+  const isWishlisted = useAppSelector(state =>
+    state.wishlist.items.some(item => item.product.id === product.id),
   );
-  const cartItem = cartItems.find(item => item.product.id === product.id);
-  const quantity = cartItem ? cartItem.quantity : 0;
+
+  const quantity = useAppSelector(state => {
+    const item = state.cart.items.find(i => i.product.id === product.id);
+    return item ? item.quantity : 0;
+  });
 
   // --- ANIMATIONS & STATE DEFINITIONS ---
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -484,3 +485,5 @@ const styles = StyleSheet.create({
     minWidth: wp(5.0),
   },
 });
+
+export default React.memo(ProductCard);
