@@ -156,4 +156,55 @@ describe('cartSlice reducer', () => {
     expect(clearedState.total).toBe(0);
     expect(clearedState.totalCo2Grams).toBe(0);
   });
+
+  it('should handle AsyncStorage error when saving cart', async () => {
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const AsyncStorage = require('@react-native-async-storage/async-storage');
+    AsyncStorage.setItem.mockRejectedValueOnce(new Error('AsyncStorage Error'));
+
+    cartReducer(initialState, addToCart(mockProduct));
+
+    await new Promise(process.nextTick);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Error saving cart to storage:',
+      expect.any(Error),
+    );
+    consoleSpy.mockRestore();
+  });
+
+  it('should handle product missing optional fields for calculations', () => {
+    const productMissingFields = {
+      id: 3,
+      title: 'Missing Fields',
+      price: 10,
+      description: 'Desc',
+      category: 'Cat',
+      image: 'img.jpg',
+      rating: {rate: 5, count: 1},
+      hasPfand: true,
+      // no co2Grams, no pfandAmount, no vatRate
+    };
+
+    const nextState = cartReducer(
+      initialState,
+      addToCart(productMissingFields as any),
+    );
+    expect(nextState.total).toBe(10);
+    expect(nextState.totalCo2Grams).toBe(250); // 10 * 25
+    expect(nextState.totalPfand).toBe(0.25); // falls back to 0.25 since hasPfand is true but no pfandAmount
+    expect(nextState.vat19Amount).toBeCloseTo(1.5966, 3); // falls back to 19%
+  });
+
+  it('should safely ignore updateQuantity for non-existent item', () => {
+    const stateWithItem = cartReducer(initialState, addToCart(mockProduct));
+    const nextState = cartReducer(
+      stateWithItem,
+      updateQuantity({productId: 999, quantity: 5}),
+    );
+    expect(nextState.items[0].quantity).toBe(1);
+    expect(nextState.total).toBe(10);
+  });
 });

@@ -71,7 +71,27 @@ describe('wishlistSlice reducer', () => {
       initialState,
       addToWishlist(mockProduct),
     );
+    expect(stateWithItem.items.length).toBe(1);
+
     const nextState = wishlistReducer(stateWithItem, clearWishlist());
     expect(nextState.items.length).toBe(0);
+  });
+
+  it('should handle AsyncStorage error when saving wishlist', async () => {
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+    const AsyncStorage = require('@react-native-async-storage/async-storage');
+    AsyncStorage.setItem.mockRejectedValueOnce(new Error('AsyncStorage Error'));
+
+    wishlistReducer(initialState, addToWishlist(mockProduct));
+
+    await new Promise(process.nextTick);
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      'Error saving wishlist to storage:',
+      expect.any(Error),
+    );
+    consoleSpy.mockRestore();
   });
 });
