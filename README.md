@@ -7,8 +7,24 @@
 [![Sustainability](https://img.shields.io/badge/Eco--Impact-Grünes_Einkaufen-059669)](https://dhl.de)
 [![CI Pipeline](https://img.shields.io/badge/build-passing-brightgreen?logo=github-actions)](https://github.com/your-username/ShopApp/actions/workflows/ci.yml)
 
+<div align="center">
+  <!-- TODO: Add a GIF or 2-3 screenshots of the app here! -->
+  <img src="https://via.placeholder.com/250x500.png?text=App+Screenshot+1" width="250" />
+  <img src="https://via.placeholder.com/250x500.png?text=App+Screenshot+2" width="250" />
+  <img src="https://via.placeholder.com/250x500.png?text=App+Screenshot+3" width="250" />
+</div>
 
-A feature-rich, highly scalable **React Native** e-commerce application engineered specifically for the **German (DACH) and EU market**. Built to showcase senior-level mobile architecture, regulatory compliance (DSGVO/GDPR), green-tech sustainability metrics, and native localization to tech engineering leads in Germany (e.g. Zalando, N26, Delivery Hero, Trade Republic, Personio).
+A feature-rich, highly scalable **React Native** e-commerce application engineered specifically for the **German (DACH) and EU market**. 
+
+**Why this project?**
+Built as a showcase for Senior React Native roles in the DACH region. It demonstrates senior-level mobile architecture, regulatory compliance (DSGVO/GDPR), green-tech sustainability metrics, and native localization to engineering leads.
+
+### 🛠️ Tech Stack
+| Core | Architecture | Native & Testing |
+| :--- | :--- | :--- |
+| **React Native** (0.73) | **Redux Toolkit** | **Maestro** (E2E) |
+| **TypeScript** (Strict) | **Offline-First** (AsyncStorage) | **Jest** / Testing Lib |
+| **React Navigation** v7 | **Clean Architecture** | **CocoaPods / Gradle** |
 
 ---
 
@@ -48,62 +64,13 @@ A feature-rich, highly scalable **React Native** e-commerce application engineer
 
 ---
 
-## 🏛️ System Architecture
+## 🏛️ System Architecture & Structure
 
-### Offline-First Data Flow
-Our offline-first architecture guarantees a smooth user experience even on unstable cellular networks (e.g., inside trains or rural areas).
+To keep this README concise, the detailed architecture documentation—including our **Offline-First Data Flow**, **Security & Secrets Management**, and **Folder Structure**—has been moved to its own document.
 
-```mermaid
-graph TD
-    A[User Action] --> B{Network Status}
-    B -- Online --> C[API Request]
-    B -- Offline --> D[Offline Queue (AsyncStorage)]
-    C --> E[Update Redux State]
-    D --> E
-    F[Network Reconnects] --> G[Process Queue]
-    G --> C
-```
-
-### 🔐 Security & Secrets Management
-- **Environment Variables**: API keys and configurations are managed via `.env` and are strictly excluded from version control (`.gitignore`).
-- **Data Encryption**: All local persistence (AsyncStorage) containing sensitive PII is encrypted.
-- **Biometric Authentication**: iOS FaceID and Android Biometric Prompt are utilized for high-security actions.
+👉 **[Read the Architecture Documentation here](docs/ARCHITECTURE.md)**
 
 ---
-
-## 🏗️ Architecture & Project Structure
-
-```
-src/
-├── components/
-│   ├── CO2FootprintCard.tsx       # Live carbon emission & GoGreen offset card
-│   ├── EcoScoreBadge.tsx          # Sustainability A-E rating badge
-│   ├── KlarnaPaymentModal.tsx     # Authentic Klarna 30-day invoice modal
-│   ├── OfflineBanner.tsx          # Reanimated connectivity status indicator
-│   ├── PrivacyModal.tsx           # DSGVO granular consent manager & data export
-│   └── TaxBreakdownCard.tsx       # 19% & 7% German MwSt tax breakdown
-├── hooks/
-│   ├── useOfflineSync.ts          # Network state & offline task queue
-│   ├── useTheme.ts                # Light / Dark mode theme hook
-│   └── useTranslation.ts          # Reactive DE/EN i18n translation hook
-├── navigation/
-│   ├── AppNavigator.tsx           # Stack navigator & auth hydration
-│   └── MainTabNavigator.tsx       # Bottom tab navigation
-├── screens/
-│   ├── Cart/CartScreen.tsx        # Cart with Eco metrics & MwSt cards
-│   ├── Checkout/CheckoutScreen.tsx# DACH checkout & Klarna payment flow
-│   ├── Profile/
-│   │   ├── ProfileScreen.tsx      # Language switcher, DSGVO trigger, orders
-│   │   └── ImpressumScreen.tsx    # § 5 DDG German legal notice
-│   └── Product/                   # Product feed and detail screens
-├── store/
-│   └── slices/                    # Redux Toolkit (auth, cart with Eco state, wishlist)
-└── utils/
-    └── i18n.ts                    # Type-safe DE/EN dictionaries & DACH formatters
-```
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
