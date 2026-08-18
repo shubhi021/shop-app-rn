@@ -14,9 +14,7 @@
   <br />
   <br />
   <h3>🎥 Video Walkthrough</h3>
-  <a href="https://github.com/shubhi021/shop-app-rn/blob/main/docs/walkthrough.mov">
-    <img src="https://img.shields.io/badge/Watch-Video_Walkthrough-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Video" />
-  </a>
+  <video src="docs/walkthrough.mp4" width="250" controls></video>
 </div>
 
 A feature-rich, highly scalable **React Native** e-commerce application engineered specifically for the **German (DACH) and EU market**.
