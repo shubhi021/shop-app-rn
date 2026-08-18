@@ -2,9 +2,9 @@ appId: com.shopapp
 ---
 - launchApp:
     clearState: true
-- tapOn: "Login" # Assuming there's a login button or bypass
-- tapOn: "View Details" # Click on the first product
-- tapOn: "Add to Cart"
-- tapOn: "Cart" # Navigate to cart tab
-- tapOn: "Checkout" # Proceed to checkout
-- assertVisible: "Checkout Successful" # Or whatever the success screen says
+- tapOn: 'Login' # Assuming there's a login button or bypass
+- tapOn: 'View Details' # Click on the first product
+- tapOn: 'Add to Cart'
+- tapOn: 'Cart' # Navigate to cart tab
+- tapOn: 'Checkout' # Proceed to checkout
+- assertVisible: 'Checkout Successful' # Or whatever the success screen says

@@ -18,11 +18,12 @@ graph TD
 ```
 
 ### Action Queue
+
 When the device is offline, mutations (like adding to cart or wishlist) are serialized and pushed to a persistent `Offline Queue` in `AsyncStorage`. The UI updates optimistically. Once the `@react-native-community/netinfo` listener detects a restored connection, the queue is processed sequentially.
 
 ## 2. High-Performance React Architecture
 
-We prioritize 60FPS scrolling and minimal re-renders. 
+We prioritize 60FPS scrolling and minimal re-renders.
 
 - **Granular Subscriptions**: We use `useAppSelector` to subscribe to exact nested values rather than the entire state slice.
 - **Memoization**: `React.memo` is used exclusively on heavy list items (like `ProductCard` and `CartItemCard`), combined with `useCallback` for event handlers passed down as props.

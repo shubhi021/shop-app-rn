@@ -21,6 +21,7 @@ Please review `docs/ARCHITECTURE.md` before making sweeping changes to the state
 ## Commit Message Convention
 
 We use [Conventional Commits](https://www.conventionalcommits.org/):
+
 - `feat:` for new features
 - `fix:` for bug fixes
 - `docs:` for documentation changes
@@ -29,5 +30,6 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 ## German DACH Market Focus
 
 When adding new UI features, please remember:
+
 1. Ensure strings are properly internationalized (`i18n`) for both `en` and `de`.
 2. Do not introduce tracking without checking the `PrivacyModal` consent hooks.

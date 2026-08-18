@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import {View} from 'react-native';
 
 const preview = {
   parameters: {
@@ -12,14 +12,14 @@ const preview = {
     backgrounds: {
       default: 'light',
       values: [
-        { name: 'light', value: '#ffffff' },
-        { name: 'dark', value: '#333333' },
+        {name: 'light', value: '#ffffff'},
+        {name: 'dark', value: '#333333'},
       ],
     },
   },
   decorators: [
     (Story: any) => (
-      <View style={{ flex: 1, padding: 20 }}>
+      <View style={{flex: 1, padding: 20}}>
         <Story />
       </View>
     ),

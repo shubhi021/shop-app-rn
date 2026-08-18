@@ -1,6 +1,13 @@
 {
   "name": "ShopApp",
   "version": "0.0.1",
+  "description": "Production-Grade React Native E-Commerce App (DACH Showcase)",
+  "author": "Shubhi Srivastava",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shubhi021/shop-app-rn.git"
+  },
   "private": true,
   "scripts": {
     "android": "react-native run-android",

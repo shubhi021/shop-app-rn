@@ -1,11 +1,4 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
-  "exclude": [
-    "node_modules",
-    "vendor",
-    "android",
-    "ios",
-    ".bundle",
-    "coverage"
-  ]
+  "exclude": ["node_modules", "vendor", "android", "ios", ".bundle", "coverage"]
 }
