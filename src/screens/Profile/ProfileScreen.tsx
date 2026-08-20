@@ -25,6 +25,7 @@ import Button from '../../components/common/Button';
 import {useTranslation} from '../../hooks/useTranslation';
 import {PrivacyModal} from '../../components/PrivacyModal';
 import {hp, wp, fp} from '../../theme/dimensions';
+import {IconManager} from '../../utils/iconManager';
 
 export default function ProfileScreen({navigation}: any) {
   const {
@@ -45,6 +46,13 @@ export default function ProfileScreen({navigation}: any) {
   const [isSaving, setIsSaving] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [notifEnabled, setNotifEnabled] = useState(true);
+  const [isDarkIcon, setIsDarkIcon] = useState(false);
+
+  useEffect(() => {
+    IconManager.getActiveIcon().then(icon => {
+      setIsDarkIcon(icon === 'DarkIcon');
+    });
+  }, []);
 
   // Animated ring for avatar
   const ringAnim = useRef(new Animated.Value(0)).current;
@@ -322,7 +330,42 @@ export default function ProfileScreen({navigation}: any) {
           </View>
           <Switch
             value={isDark}
-            onValueChange={value => setThemeMode(value ? 'dark' : 'light')}
+            onValueChange={async (value) => {
+              setThemeMode(value ? 'dark' : 'light');
+              
+              // Automatically sync the app icon
+              const newIcon = value ? 'DarkIcon' : 'Default';
+              const success = await IconManager.setIcon(newIcon);
+              if (success) setIsDarkIcon(value);
+            }}
+            trackColor={{false: colors.border, true: colors.primary}}
+            thumbColor={Platform.OS === 'android' ? colors.background : ''}
+          />
+        </View>
+
+        <View style={[styles.divider, {backgroundColor: colors.border}]} />
+
+        {/* App Icon */}
+        <View style={styles.settingRow}>
+          <View>
+            <Text
+              style={[
+                styles.settingLabel,
+                {color: colors.text, fontWeight: fontWeights.medium},
+              ]}>
+              Dark App Icon
+            </Text>
+            <Text style={[styles.settingSub, {color: colors.textSecondary}]}>
+              {isDarkIcon ? 'Using dark variant' : 'Using default green'}
+            </Text>
+          </View>
+          <Switch
+            value={isDarkIcon}
+            onValueChange={async (value) => {
+              const newIcon = value ? 'DarkIcon' : 'Default';
+              const success = await IconManager.setIcon(newIcon);
+              if (success) setIsDarkIcon(value);
+            }}
             trackColor={{false: colors.border, true: colors.primary}}
             thumbColor={Platform.OS === 'android' ? colors.background : ''}
           />
