@@ -330,13 +330,15 @@ export default function ProfileScreen({navigation}: any) {
           </View>
           <Switch
             value={isDark}
-            onValueChange={async (value) => {
+            onValueChange={async value => {
               setThemeMode(value ? 'dark' : 'light');
-              
+
               // Automatically sync the app icon
               const newIcon = value ? 'DarkIcon' : 'Default';
               const success = await IconManager.setIcon(newIcon);
-              if (success) setIsDarkIcon(value);
+              if (success) {
+                setIsDarkIcon(value);
+              }
             }}
             trackColor={{false: colors.border, true: colors.primary}}
             thumbColor={Platform.OS === 'android' ? colors.background : ''}
@@ -361,10 +363,12 @@ export default function ProfileScreen({navigation}: any) {
           </View>
           <Switch
             value={isDarkIcon}
-            onValueChange={async (value) => {
+            onValueChange={async value => {
               const newIcon = value ? 'DarkIcon' : 'Default';
               const success = await IconManager.setIcon(newIcon);
-              if (success) setIsDarkIcon(value);
+              if (success) {
+                setIsDarkIcon(value);
+              }
             }}
             trackColor={{false: colors.border, true: colors.primary}}
             thumbColor={Platform.OS === 'android' ? colors.background : ''}
