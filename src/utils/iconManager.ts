@@ -1,10 +1,9 @@
-import { changeIcon, getIcon } from 'react-native-change-icon';
-import { Platform } from 'react-native';
+import {changeIcon, getIcon} from 'react-native-change-icon';
+import {Platform} from 'react-native';
 
 export type AppIconName = 'Default' | 'DarkIcon';
 
 export const IconManager = {
-
   getActiveIcon: async (): Promise<string> => {
     try {
       const icon = await getIcon();
@@ -21,7 +20,12 @@ export const IconManager = {
    */
   setIcon: async (iconName: AppIconName): Promise<boolean> => {
     try {
-      const name = iconName === 'Default' ? (Platform.OS === 'android' ? 'MainActivityDefault' : 'Default') : iconName;
+      const name =
+        iconName === 'Default'
+          ? Platform.OS === 'android'
+            ? 'MainActivityDefault'
+            : 'Default'
+          : iconName;
       await changeIcon(name);
       return true;
     } catch (error) {
