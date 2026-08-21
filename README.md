@@ -1,9 +1,5 @@
 <div align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="DarkAppIcons/appstore.png">
-    <source media="(prefers-color-scheme: light)" srcset="ios/ShopApp/Images.xcassets/DefaultIcon.appiconset/1024.png">
-    <img alt="ShopApp Icon" src="ios/ShopApp/Images.xcassets/DefaultIcon.appiconset/1024.png" width="150">
-  </picture>
+  <img alt="ShopApp Logo" src="ios/ShopApp/Images.xcassets/DefaultIcon.appiconset/1024.png" width="120" />
 </div>
 
 # 🇩🇪 ShopApp DE — Production-Grade React Native E-Commerce (DACH Showcase)
@@ -79,6 +75,22 @@ Built as a showcase for Senior React Native roles in the DACH region. It demonst
 
 - **Zero Unnecessary Re-renders**: Strategic implementation of `React.memo`, `useCallback`, and granular Redux `useAppSelector` subscriptions ensure that item cards (e.g., `ProductCard`, `CartItemCard`) only re-render when their specific data changes.
 - **Flashlight Profiling Audit**: Maintained 60fps on list scrolling (simulated JS thread frame times drop from ~20ms to <2ms for list items).
+
+### 7. 🌗 Dynamic Native App Icon Switching
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><img src="ios/ShopApp/Images.xcassets/DefaultIcon.appiconset/1024.png" width="100" alt="Light App Icon" /><br />☀️ Light Mode</td>
+      <td align="center"><img src="DarkAppIcons/appstore.png" width="100" alt="Dark App Icon" /><br />🌙 Dark Mode</td>
+    </tr>
+  </table>
+</div>
+
+
+- **Runtime Native Icon Swapping**: Leverages `react-native-change-icon` to dynamically update the iOS Alternate Icon and Android `activity-alias` at runtime without requiring an app restart.
+- **Theme-Synchronized Branding**: Deep integration with native OS capabilities allowing the app icon to seamlessly transition between Light and Dark variants based on user preferences.
+- **Native Configuration Mastery**: Fully customized `Info.plist` (iOS) and `AndroidManifest.xml` (Android) to register alternative app icons, showcasing platform-specific native engineering skills to recruiters.
 
 ---
 
