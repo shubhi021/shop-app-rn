@@ -1,6 +1,3 @@
-<div align="center">
-  <img alt="ShopApp Logo" src="ios/ShopApp/Images.xcassets/DefaultIcon.appiconset/1024.png" width="120" />
-</div>
 
 # 🇩🇪 ShopApp DE — Production-Grade React Native E-Commerce (DACH Showcase)
 
