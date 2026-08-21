@@ -1,3 +1,11 @@
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="DarkAppIcons/appstore.png">
+    <source media="(prefers-color-scheme: light)" srcset="ios/ShopApp/Images.xcassets/DefaultIcon.appiconset/1024.png">
+    <img alt="ShopApp Icon" src="ios/ShopApp/Images.xcassets/DefaultIcon.appiconset/1024.png" width="150">
+  </picture>
+</div>
+
 # 🇩🇪 ShopApp DE — Production-Grade React Native E-Commerce (DACH Showcase)
 
 [![React Native](https://img.shields.io/badge/React_Native-0.73.6-61DAFB?logo=react&logoColor=black)](https://reactnative.dev)
