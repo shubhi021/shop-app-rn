@@ -20,8 +20,8 @@
 
 A feature-rich, highly scalable **React Native** e-commerce application engineered specifically for the **German (DACH) and EU market**.
 
-**Why this project?**
-Built as a showcase for Senior React Native roles in the DACH region. It demonstrates senior-level mobile architecture, regulatory compliance (DSGVO/GDPR), green-tech sustainability metrics, and native localization to engineering leads.
+**Project Overview**
+This project serves as a comprehensive showcase of production-ready mobile architecture. It demonstrates advanced React Native capabilities, strict regulatory compliance (DSGVO/GDPR), green-tech sustainability metrics, and seamless native localization tailored for the European market.
 
 ### 🛠️ Tech Stack
 
@@ -87,7 +87,7 @@ Built as a showcase for Senior React Native roles in the DACH region. It demonst
 
 - **Runtime Native Icon Swapping**: Leverages `react-native-change-icon` to dynamically update the iOS Alternate Icon and Android `activity-alias` at runtime without requiring an app restart.
 - **Theme-Synchronized Branding**: Deep integration with native OS capabilities allowing the app icon to seamlessly transition between Light and Dark variants based on user preferences.
-- **Native Configuration Mastery**: Fully customized `Info.plist` (iOS) and `AndroidManifest.xml` (Android) to register alternative app icons, showcasing platform-specific native engineering skills to recruiters.
+- **Native Configuration Mastery**: Fully customized `Info.plist` (iOS) and `AndroidManifest.xml` (Android) to register alternative app icons, demonstrating robust platform-specific native engineering capabilities.
 
 ---
 
@@ -148,5 +148,5 @@ To keep this README concise, the detailed architecture documentation—including
 
 ## 📄 License & Compliance
 
-Designed & Developed as a showcase project for React Native engineering roles in Germany & EU.
+Designed & Developed as a showcase of scalable React Native engineering practices for the European market.
 Complies with EU General Data Protection Regulation (GDPR) and German Telecommunications-Telemedia Data Protection Act (TDDDG).
